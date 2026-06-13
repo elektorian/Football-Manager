@@ -1,0 +1,21 @@
+# Gradle
+.gradle/
+build/
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# OS
+.DS_Store
+thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Temp
+tmp/
+temp/
