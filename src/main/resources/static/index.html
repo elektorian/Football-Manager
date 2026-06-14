@@ -5,11 +5,21 @@
     <title>Football Manager - Calendar</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a1a; color: white; margin: 0; overflow: hidden; }
-        #ui-container { display: flex; height: 100vh; width: 100vw; justify-content: center; align-items: center; }
+        #ui-container { display: flex; height: 100vh; width: 100vw; }
+        
+        /* Sidebar Styles */
+        #sidebar { width: 220px; background-color: #111; border-right: 1px solid #333; display: flex; flex-direction: column; padding-top: 20px; }
+        .nav-item { padding: 12px 20px; cursor: pointer; font-size: 0.95rem; color: #aaa; transition: all 0.2s; border-left: 4px solid transparent; }
+        .nav-item:hover { background-color: #222; color: white; }
+        .nav-item.active { background-color: #2a2a2a; color: white; border-left: 4px solid #4CAF50; font-weight: bold; }
+
+        /* Main Content Area */
+        #main-content { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; background-color: #1a1a1a; }
         
         #main-viewport { text-align: center; font-size: 1.5rem; color: #888; border: 2px dashed #444; padding: 100px; border-radius: 15px; background: #2a2a2a; }
         
         #top-right-menu { position: absolute; top: 20px; right: 20px; display: flex; gap: 10px; align-items: center; z-index: 100; }
+
         
         button { padding: 10px 20px; cursor: pointer; font-size: 0.9rem; border: none; border-radius: 5px; transition: background 0.2s; }
         .btn-next { background-color: #4CAF50; color: white; font-weight: bold; }
@@ -46,23 +56,29 @@
 <body onclick="closeModal(event)">
 
 <div id="ui-container">
-    <div id="main-viewport">Main Game View (Empty)</div>
-    
-    <div id="top-right-menu">
-        <!-- Save/Load Menu -->
-        <div class="dropdown">
-            <button class="dropbtn">💾 Game</button>
-            <div class="dropdown-content">
-                <a onclick="saveGame()">Save As...</a>
-                <a onclick="loadGame()">Load Game...</a>
-            </div>
-        </div>
+    <div id="sidebar">
+        <div class="nav-item active" onclick="switchPage('my_page')">Моя страница</div>
+    </div>
 
-        <!-- Small Calendar Display -->
-        <div id="date-display" onclick="openCalendar(event)">Loading date...</div>
+    <div id="main-content">
+        <div id="main-viewport">Main Game View (Empty)</div>
         
-        <!-- Next Button -->
-        <button class="btn-next" onclick="advanceTime()">Далее ➔</button>
+        <div id="top-right-menu">
+            <!-- Save/Load Menu -->
+            <div class="dropdown">
+                <button class="dropbtn">💾 Game</button>
+                <div class="dropdown-content">
+                    <a onclick="saveGame()">Save As...</a>
+                    <a onclick="loadGame()">Load Game...</a>
+                </div>
+            </div>
+
+            <!-- Small Calendar Display -->
+            <div id="date-display" onclick="openCalendar(event)">Loading date...</div>
+            
+            <!-- Next Button -->
+            <button id="action-btn" class="btn-next" onclick="advanceTime()">Далее ➔</button>
+        </div>
     </div>
 </div>
 
@@ -75,17 +91,54 @@
     </div>
 </div>
 
-<script>
-    async function updateUI() {
-        const res = await fetch('/api/game/state');
-        const data = await res.json();
-        document.getElementById('date-display').innerText = data.currentDate;
-    }
+    <script>
+        let activePageId = 'my_page';
+        
+        // Initialize page on load
+        window.onload = () => {
+            renderPage();
+            updateUI();
+        };
 
-    async function advanceTime() {
-        await fetch('/api/game/next', { method: 'POST' });
-        updateUI();
-    }
+        async function updateUI() {
+            const res = await fetch('/api/game/state');
+            const data = await res.json();
+            document.getElementById('date-display').innerText = data.currentDate;
+        }
+
+        function switchPage(pageId) {
+            activePageId = pageId;
+            
+            // Update sidebar visual state
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active');
+                if (el.innerText === 'Моя страница' && pageId === 'my_page') {
+                    el.classList.add('active');
+                }
+            });
+
+            renderPage();
+        }
+
+        function renderPage() {
+            const viewport = document.getElementById('main-viewport');
+            const actionBtn = document.getElementById('action-btn');
+
+            if (activePageId === 'my_page') {
+                viewport.innerHTML = "<h1 style='color: white;'>Моя страница</h1><p style='color: #ccc;'>Ваш общий дашборд</p>";
+                actionBtn.innerText = "Далее ➔";
+                actionBtn.onclick = advanceTime;
+                actionBtn.style.display = 'block';
+            } else {
+                viewport.innerHTML = "<h1 style='color: white;'>Страница не найдена</h1>";
+                actionBtn.style.display = 'none';
+            }
+        }
+
+        async function advanceTime() {
+            await fetch('/api/game/next', { method: 'POST' });
+            updateUI();
+        }
 
     async function saveGame() {
         const name = prompt("Enter save name:");
