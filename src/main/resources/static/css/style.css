@@ -286,3 +286,32 @@ body {
     margin-bottom: 24px;
     color: var(--text-primary);
 }
+
+.profile-card {
+    background: var(--sidebar-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 24px;
+    max-width: 400px;
+}
+
+.profile-field {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.profile-field:last-child {
+    border-bottom: none;
+}
+
+.profile-label {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.profile-value {
+    color: var(--text-primary);
+    font-weight: 500;
+}

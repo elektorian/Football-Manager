@@ -10,6 +10,7 @@ function navigate() {
   document.querySelectorAll('.nav-item').forEach(function(el) {
     el.classList.toggle('active', el.getAttribute('data-tab') === tab)
   })
+  if (tab === 'profile') fetchProfile()
 }
 
 function toggleCalendar() {
@@ -18,6 +19,17 @@ function toggleCalendar() {
 
 function toggleMenu() {
   document.getElementById('menuBody').classList.toggle('show')
+}
+
+function fetchProfile() {
+  fetch('/profile/coach')
+    .then(function(r) { return r.json() })
+    .then(function(c) {
+      document.getElementById('profileFirstName').textContent = c.firstName
+      document.getElementById('profileLastName').textContent = c.lastName
+      document.getElementById('profileBirthDate').textContent = c.birthDate
+    })
+    .catch(function() {})
 }
 
 function renderCalendarGrid(timestamp) {
