@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Football Manager - Calendar</title>
     <style>
+    <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a1a; color: white; margin: 0; overflow: hidden; }
         #ui-container { display: flex; height: 100vh; width: 100vw; }
         
@@ -16,9 +17,30 @@
         /* Main Content Area */
         #main-content { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; background-color: #1a1a1a; }
         
-        #main-viewport { text-align: center; font-size: 1.5rem; color: #888; border: 2px dashed #444; padding: 100px; border-radius: 15px; background: #2a2a2a; }
+        #main-viewport { text-align: center; font-size: 1.5rem; color: #888; border: 2px dashed #444; padding: 40px; border-radius: 15px; background: #2a2a2a; min-width: 600px; max-width: 90%; }
         
         #top-right-menu { position: absolute; top: 20px; right: 20px; display: flex; gap: 10px; align-items: center; z-index: 100; }
+
+        /* Table Styles */
+        .game-table { width: 100%; border-collapse: collapse; margin: 20px 0; color: white; font-size: 0.9rem; }
+        .game-table th, .game-table td { padding: 8px; text-align: left; border-bottom: 1px solid #444; }
+        .game-table th { background-color: #333; color: #aaa; font-weight: normal; }
+        .link-text { color: #4CAF50; cursor: pointer; text-decoration: underline; }
+        .link-text:hover { color: #66bb6a; }
+
+        /* Matches list styles */
+        .round-section { margin-bottom: 30px; text-align: left; }
+        .round-title { font-size: 1.2rem; color: #4CAF50; border-bottom: 1px solid #4CAF50; padding-bottom: 5px; margin-bottom: 10px; }
+        .match-row { display: flex; justify-content: space-between; align-items: center; padding: 8px; background: #333; margin-bottom: 4px; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+        .match-row:hover { background: #444; }
+        .match-teams { display: flex; gap: 15px; align-items: center; width: 70%; justify-content: center; }
+        .score-box { background: #1a1a1a; padding: 2px 8px; border-radius: 3px; font-weight: bold; color: #fff; min-width: 40px; text-align: center; }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+        .tab-btn { padding: 8px 16px; background: #333; color: #aaa; border: none; cursor: pointer; border-radius: 4px; }
+        .tab-btn.active { background: #4CAF50; color: white; }
+
 
         
         button { padding: 10px 20px; cursor: pointer; font-size: 0.9rem; border: none; border-radius: 5px; transition: background 0.2s; }
@@ -56,9 +78,10 @@
 <body onclick="closeModal(event)">
 
 <div id="ui-container">
-    <div id="sidebar">
-        <div class="nav-item active" onclick="switchPage('my_page')">Моя страница</div>
-    </div>
+<div id="sidebar">
+    <div class="nav-item active" onclick="switchPage('my_page')">Моя страница</div>
+    <div class="nav-item" onclick="switchPage('tournaments')">Турниры</div>
+</div>
 
     <div id="main-content">
         <div id="main-viewport">Main Game View (Empty)</div>
@@ -106,21 +129,20 @@
             document.getElementById('date-display').innerText = data.currentDate;
         }
 
-        function switchPage(pageId) {
+        function switchPage(pageId, params = {}) {
             activePageId = pageId;
             
             // Update sidebar visual state
             document.querySelectorAll('.nav-item').forEach(el => {
                 el.classList.remove('active');
-                if (el.innerText === 'Моя страница' && pageId === 'my_page') {
-                    el.classList.add('active');
-                }
+                if (el.innerText === 'Моя страница' && pageId === 'my_page') el.classList.add('active');
+                if (el.innerText === 'Турниры' && pageId === 'tournaments') el.classList.add('active');
             });
 
-            renderPage();
+            renderPage(params);
         }
 
-        function renderPage() {
+        async function renderPage(params = {}) {
             const viewport = document.getElementById('main-viewport');
             const actionBtn = document.getElementById('action-btn');
 
@@ -129,10 +151,98 @@
                 actionBtn.innerText = "Далее ➔";
                 actionBtn.onclick = advanceTime;
                 actionBtn.style.display = 'block';
+            } else if (activePageId === 'tournaments') {
+                viewport.innerHTML = "<h1 style='color: white;'>Турниры</h1><div id='tournaments-list'>Загрузка...</div>";
+                actionBtn.style.display = 'none';
+                loadTournaments();
+            } else if (activePageId === 'league') {
+                const leagueId = params.id;
+                viewport.innerHTML = `<h1 style='color: white;'>Лига: ${leagueId}</h1><div class="tabs"><button class="tab-btn active" onclick="switchLeagueTab('table', '${leagueId}')">Таблица</button><button class="tab-btn" onclick="switchLeagueTab('results', '${leagueId}')">Результаты</button></div><div id='league-content'>Загрузка...</div>`;
+                actionBtn.style.display, 'none'; // Fix: missing =
+                actionBtn.style.display = 'none';
+                switchLeagueTab('table', leagueId);
+            } else if (activePageId === 'match') {
+                const matchId = params.id;
+                viewport.innerHTML = `<h1 style='color: white;'>Матч #${matchId}</h1><div id='match-details'>Загрузка...</div>`;
+                actionBtn.style.display = 'none';
+                loadMatchDetails(matchId);
             } else {
                 viewport.innerHTML = "<h1 style='color: white;'>Страница не найдена</h1>";
                 actionBtn.style.display = 'none';
             }
+        }
+
+        async function loadTournaments() {
+            const res = await fetch('/api/game/tournaments');
+            const data = await res.json();
+            let html = "<div style='text-align: left; max-width: 800px; margin: 0 auto;'>";
+            data.forEach(l => {
+                html += `<div style='background: #333; padding: 15px; border-radius: 10px; margin-bottom: 20px;'>`;
+                html += `<h2 style='color: #4CAF50; margin-top: 0;'>${l.name}</h2>`;
+                html += `<table class="game-table"><thead><tr><th>Команда</th><th>Очки</th></tr></thead><tbody>`;
+                l.topStandings.forEach(s => {
+                    html += `<tr><td>${s.teamId}</td><td>${s.points}</td></tr>`;
+                });
+                html += `</tbody></table>`;
+                html += `<div style='text-align: right;'><span class="link-text" onclick="switchPage('league', {id: '${l.id}'})">Открыть лигу ➔</span></div>`;
+                html += `</div>`;
+            });
+            html += "</div>";
+            document.getElementById('tournaments-list').innerHTML = html;
+        }
+
+        async function switchLeagueTab(tab, leagueId) {
+            const content = document.getElementById('league-content');
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs[0].classList.toggle('active', tab === 'table');
+            tabs[1].classList.toggle('active', tab === 'results');
+
+            if (tab === 'table') {
+                content.innerHTML = "Загрузка таблицы...";
+                const res = await fetch(`/api/game/leagues/${leagueId}`);
+                const data = await res.json();
+                let html = `<table class="game-table"><thead><tr><th>Команда</th><th>И</th><th>В</th><th>Н</th><th>П</th><th>ГЗ-ГП</th><th>Очки</th></tr></thead><tbody>`;
+                data.standings.forEach(s => {
+                    html += `<tr><td>${s.teamId}</td><td>${s.played}</td><td>${s.won}</td><td>${s.drawn}</td><td>${s.lost}</td><td>${s.gf}-${s.ga}</td><td><b>${s.points}</b></td></tr>`;
+                });
+                html += `</tbody></table>`;
+                content.innerHTML = html;
+            } else {
+                content.innerHTML = "Загрузка результатов...";
+                const res = await fetch(`/api/game/leagues/${leagueId}/matches`);
+                const data = await res.json();
+                let html = "";
+                for (const [round, matches] of Object.entries(data)) {
+                    html += `<div class="round-section"><div class="round-title">Тур ${round}</div>`;
+                    matches.forEach(m => {
+                        const sA = m.result ? m.result.scoreA : '-';
+                        const sB = m.result ? m.result.scoreB : '-';
+                        html += `<div class="match-row" onclick="switchPage('match', {id: '${m.id}'})">
+                            <div class="match-teams"><span>${m.teamA}</span> <div class="score-box">${sA}:${sB}</div> <span>${m.teamB}</span></div>
+                            <div style='font-size: 0.7rem; color: #888;'>${m.date}</div>
+                        </div>`;
+                    });
+                    html += `</div>`;
+                }
+                content.innerHTML = html;
+            }
+        }
+
+        async function loadMatchDetails(matchId) {
+            const res = await fetch(`/api/game/matches/${matchId}`);
+            const data = await res.json();
+            if (data.error) {
+                document.getElementById('match-details').innerHTML = data.error;
+                return;
+            }
+            const sA = data.result ? data.result.scoreA : 'Не сыграно';
+            const sB = data.result ? data.result.scoreB : 'Не сыграно';
+            document.getElementById('match-details').innerHTML = `
+                <div style='background: #333; padding: 20px; border-radius: 10px; display: inline-block;'>
+                    <div style='font-size: 1.2rem; margin-bottom: 10px;'>${data.teamA} vs ${data.teamB}</div>
+                    <div style='font-size: 2.5rem; font-weight: bold; color: #4CAF50;'>${sA} : ${sB}</div>
+                    <div style='color: #aaa; margin-top: 10px;'>Дата: ${data.date}</div>
+                </div>`;
         }
 
         async function advanceTime() {

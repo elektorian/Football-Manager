@@ -1,28 +1,67 @@
 package com.footballmanager.application
 
-import com.footballmanager.domain.model.GameMeta
+import com.footballmanager.domain.model.*
+import com.footballmanager.domain.service.LeagueService
 import org.springframework.stereotype.Service
+import java.time.LocalDate
+import kotlin.random.Random
 
-/**
- * GameSessionManager manages the currently active game state in memory.
- * 
- * Architecture Note:
- * - It acts as a singleton holding the current session's [GameMeta].
- * - Provides a way to synchronize in-memory state with persistence (Save/Load).
- */
 @Service
 class GameSessionManager {
-    private var _activeState: GameMeta = GameMeta()
-    val activeState: GameMeta 
+    private var _activeState: GameState = GameState()
+    val activeState: GameState 
         get() = _activeState
 
-    fun updateState(newState: GameMeta) {
+    private val leagueService = LeagueService()
+
+    init {
+        // Initialize RPL by default for now
+        val (league, matches) = leagueService.generateRPL()
+        _activeState = GameState(
+            meta = GameMeta(),
+            leagues = listOf(league),
+            teams = generateTeamListForLeague(league), 
+            matches = matches
+        )
+    }
+
+    private fun generateTeamListForLeague(league: League): List<Team> {
+        val teamNames = listOf(
+            "Zenit", "Spartak", "CSKA", "Lokomotiv", "Krasnodar", 
+            "Dynamo", "Rostov", "Krylya Sovetov", "Akhmat", "Ural", 
+            "Fakel", "Pari NB", "Torpedo", "Rubin", "Khimki", "FC Rostov 2"
+        )
+        return teamNames.mapIndexed { index, name -> Team(index.toString(), name) }
+    }
+
+    fun updateState(newState: GameState) {
         this._activeState = newState
     }
 
-    fun getCurrentDate(): java.time.LocalDate = activeState.currentDate
+    // Business Logic for time progression
+    fun advanceTime() {
+        val oldDate = _activeState.meta.currentDate
+        val newDate = oldDate.plusDays(1)
+        _activeState.meta.currentDate = newDate
 
-    fun setCurrentDate(date: java.time.LocalDate) {
-        _activeState.currentDate = date
+        // Check if it's Sunday to simulate games
+        if (newDate.dayOfWeek == java.time.DayOfWeek.SUNDAY) {
+            simulateSundayMatches(newDate)
+        }
     }
+
+    private fun simulateSundayMatches(date: LocalDate) {
+        _activeState.matches.filter { it.scheduledDate == date }.forEach { match ->
+            match.result = MatchResult(Random.nextInt(0, 5), Random.nextInt(0, 5))
+        }
+    }
+
+    fun getCurrentDate(): LocalDate = activeState.meta.currentDate
 }
+
+data class GameState(
+    var meta: GameMeta = GameMeta(),
+    val leagues: List<League> = emptyList(),
+    val teams: List<Team> = emptyList(),
+    val matches: List<Match> = emptyList()
+)
