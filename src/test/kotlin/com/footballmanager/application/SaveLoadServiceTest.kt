@@ -9,16 +9,16 @@ class SaveLoadServiceTest {
     private val service = SaveLoadService()
 
     @Test
-    fun `saveGame and loadGame should persist GameMeta correctly`() {
+    fun `saveGame and loadGame should persist GameState correctly`() {
         val saveName = "test_save_${System.currentTimeMillis()}"
-        val meta = GameMeta(currentDate = LocalDate.of(2025, 1, 1), gameName = "Persistence Test")
+        val state = GameState(meta = GameMeta(currentDate = LocalDate.of(2025, 1, 1), gameName = "Persistence Test"))
 
-        service.saveGame(saveName, meta)
+        service.saveGame(saveName, state)
         val loaded = service.loadGame(saveName)
 
         assertNotNull(loaded)
-        assertEquals("Persistence Test", loaded?.gameName)
-        assertEquals(LocalDate.of(2025, 1, 1), loaded?.currentDate)
+        assertEquals("Persistence Test", loaded?.meta?.gameName)
+        assertEquals(LocalDate.of(2025, 1, 1), loaded?.meta?.currentDate)
     }
 
     @Test

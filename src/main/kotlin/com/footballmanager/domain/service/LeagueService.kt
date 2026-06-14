@@ -11,9 +11,9 @@ class LeagueService {
 
     companion object {
         val DEFAULT_TEAM_NAMES = listOf(
-            "Zenit", "Spartak", "CSKA", "Lokomotiv", "Krasnodar", 
-            "Dynamo", "Rostov", "Krylya Sovetov", "Akhmat", "Ural", 
-            "Fakel", "Pari NB", "Torpedo", "Rubin", "Khimki", "FC Rostov 2"
+            "Zenit", "Spartak", "CSKA", "Krasnodar", "Lokomotiv",
+            "Sochi", "Rostov", "Dynamo", "Khimki", "Rubin",
+            "Ural", "Akhmat", "Ufa", "Arsenal Tula", "Rotor", "Tambov"
         )
     }
 
@@ -90,8 +90,9 @@ class LeagueService {
     }
 
     fun calculateStandings(leagueId: String, matches: List<Match>, teams: List<Team>): List<StandingsEntry> {
+        val teamNames = teams.associate { it.id to it.name }
         val scores = mutableMapOf<String, TeamStats>()
-        teams.forEach { scores[it.id] = TeamStats(it.id) }
+        teams.forEach { scores[it.id] = TeamStats(it.id, it.name) }
 
         matches.filter { it.leagueId == leagueId && it.result != null }.forEach { match ->
             val res = match.result!!
@@ -123,23 +124,27 @@ class LeagueService {
 
         return scores.values.map { it.toEntry() }
             .sortedWith(compareByDescending<StandingsEntry> { it.points }
-                .thenByDescending { it.gf - it.ga }
-                .thenByDescending { it.gf })
+                .thenByDescending { it.gd }
+                .thenByDescending { it.gf }
+                .thenBy { it.teamName })
     }
 
-    private class TeamStats(val id: String) {
+    private class TeamStats(val id: String, val teamName: String) {
         var played = 0; var won = 0; var drawn = 0; var lost = 0; var gf = 0; var ga = 0; var points = 0
-        fun toEntry() = StandingsEntry(id, played, won, drawn, lost, gf, ga, points)
+        val gd get() = gf - ga
+        fun toEntry() = StandingsEntry(id, teamName, played, won, drawn, lost, gf, ga, gd, points)
     }
 }
 
 data class StandingsEntry(
     val teamId: String,
+    val teamName: String,
     val played: Int,
     val won: Int,
     val drawn: Int,
     val lost: Int,
     val gf: Int,
     val ga: Int,
+    val gd: Int,
     val points: Int
 )

@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Football Manager - Calendar</title>
     <style>
-    <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a1a; color: white; margin: 0; overflow: hidden; }
         #ui-container { display: flex; height: 100vh; width: 100vw; }
         
@@ -158,7 +157,6 @@
             } else if (activePageId === 'league') {
                 const leagueId = params.id;
                 viewport.innerHTML = `<h1 style='color: white;'>Лига: ${leagueId}</h1><div class="tabs"><button class="tab-btn active" onclick="switchLeagueTab('table', '${leagueId}')">Таблица</button><button class="tab-btn" onclick="switchLeagueTab('results', '${leagueId}')">Результаты</button></div><div id='league-content'>Загрузка...</div>`;
-                actionBtn.style.display, 'none'; // Fix: missing =
                 actionBtn.style.display = 'none';
                 switchLeagueTab('table', leagueId);
             } else if (activePageId === 'match') {
@@ -179,9 +177,9 @@
             data.forEach(l => {
                 html += `<div style='background: #333; padding: 15px; border-radius: 10px; margin-bottom: 20px;'>`;
                 html += `<h2 style='color: #4CAF50; margin-top: 0;'>${l.name}</h2>`;
-                html += `<table class="game-table"><thead><tr><th>Команда</th><th>Очки</th></tr></thead><tbody>`;
+                html += `<table class="game-table"><thead><tr><th>Команда</th><th>И</th><th>В</th><th>Н</th><th>П</th><th>ГЗ</th><th>ГП</th><th>РМ</th><th>Очки</th></tr></thead><tbody>`;
                 l.topStandings.forEach(s => {
-                    html += `<tr><td>${s.teamId}</td><td>${s.points}</td></tr>`;
+                    html += `<tr><td>${s.teamName}</td><td>${s.played}</td><td>${s.won}</td><td>${s.drawn}</td><td>${s.lost}</td><td>${s.gf}</td><td>${s.ga}</td><td>${s.gd}</td><td><b>${s.points}</b></td></tr>`;
                 });
                 html += `</tbody></table>`;
                 html += `<div style='text-align: right;'><span class="link-text" onclick="switchPage('league', {id: '${l.id}'})">Открыть лигу ➔</span></div>`;
@@ -189,6 +187,57 @@
             });
             html += "</div>";
             document.getElementById('tournaments-list').innerHTML = html;
+        }
+
+        let standingsCache = [];
+        let teamPositionMap = {};
+        let sortColumn = null;
+        let sortAsc = true;
+
+        function sortStandings(key, asc) {
+            standingsCache.sort((a, b) => {
+                let va, vb;
+                if (key === 'teamName') {
+                    va = a[key]; vb = b[key];
+                } else {
+                    va = Number(a[key]); vb = Number(b[key]);
+                }
+                if (va < vb) return asc ? -1 : 1;
+                if (va > vb) return asc ? 1 : -1;
+                return 0;
+            });
+        }
+
+        function renderStandingsTable() {
+            let html = `<table class="game-table"><thead><tr>
+                <th style="cursor:pointer;width:40px">#</th>
+                <th onclick="sortBy('teamName')" style="cursor:pointer">Команда ${sortColumn === 'teamName' ? (sortAsc ? '▲' : '▼') : ''}</th>
+                <th onclick="sortBy('played')" style="cursor:pointer">И ${sortColumn === 'played' ? (sortAsc ? '▲' : '▼') : ''}</th>
+                <th onclick="sortBy('won')" style="cursor:pointer">В ${sortColumn === 'won' ? (sortAsc ? '▲' : '▼') : ''}</th>
+                <th onclick="sortBy('drawn')" style="cursor:pointer">Н ${sortColumn === 'drawn' ? (sortAsc ? '▲' : '▼') : ''}</th>
+                <th onclick="sortBy('lost')" style="cursor:pointer">П ${sortColumn === 'lost' ? (sortAsc ? '▲' : '▼') : ''}</th>
+                <th onclick="sortBy('gf')" style="cursor:pointer">ГЗ ${sortColumn === 'gf' ? (sortAsc ? '▲' : '▼') : ''}</th>
+                <th onclick="sortBy('ga')" style="cursor:pointer">ГП ${sortColumn === 'ga' ? (sortAsc ? '▲' : '▼') : ''}</th>
+                <th onclick="sortBy('gd')" style="cursor:pointer">РМ ${sortColumn === 'gd' ? (sortAsc ? '▲' : '▼') : ''}</th>
+                <th onclick="sortBy('points')" style="cursor:pointer">Очки ${sortColumn === 'points' ? (sortAsc ? '▲' : '▼') : ''}</th>
+            </tr></thead><tbody>`;
+            standingsCache.forEach(s => {
+                const pos = teamPositionMap[s.teamId] || '-';
+                html += `<tr><td>${pos}</td><td>${s.teamName}</td><td>${s.played}</td><td>${s.won}</td><td>${s.drawn}</td><td>${s.lost}</td><td>${s.gf}</td><td>${s.ga}</td><td>${s.gd}</td><td><b>${s.points}</b></td></tr>`;
+            });
+            html += `</tbody></table>`;
+            document.getElementById('league-content').innerHTML = html;
+        }
+
+        function sortBy(key) {
+            if (sortColumn === key) {
+                sortAsc = !sortAsc;
+            } else {
+                sortColumn = key;
+                sortAsc = key === 'teamName';
+            }
+            sortStandings(key, sortAsc);
+            renderStandingsTable();
         }
 
         async function switchLeagueTab(tab, leagueId) {
@@ -201,12 +250,12 @@
                 content.innerHTML = "Загрузка таблицы...";
                 const res = await fetch(`/api/game/leagues/${leagueId}`);
                 const data = await res.json();
-                let html = `<table class="game-table"><thead><tr><th>Команда</th><th>И</th><th>В</th><th>Н</th><th>П</th><th>ГЗ-ГП</th><th>Очки</th></tr></thead><tbody>`;
-                data.standings.forEach(s => {
-                    html += `<tr><td>${s.teamId}</td><td>${s.played}</td><td>${s.won}</td><td>${s.drawn}</td><td>${s.lost}</td><td>${s.gf}-${s.ga}</td><td><b>${s.points}</b></td></tr>`;
-                });
-                html += `</tbody></table>`;
-                content.innerHTML = html;
+                standingsCache = data.standings;
+                teamPositionMap = {};
+                data.standings.forEach((s, i) => { teamPositionMap[s.teamId] = i + 1; });
+                sortColumn = null;
+                sortAsc = true;
+                renderStandingsTable();
             } else {
                 content.innerHTML = "Загрузка результатов...";
                 const res = await fetch(`/api/game/leagues/${leagueId}/matches`);
