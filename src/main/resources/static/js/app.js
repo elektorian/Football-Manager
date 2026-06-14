@@ -1,7 +1,7 @@
-var tabs = ['inbox', 'squad', 'tactics', 'tournaments', 'schedule', 'club']
+var tabs = ['profile', 'inbox', 'squad', 'tactics', 'tournaments', 'schedule', 'club']
 
 function navigate() {
-  var tab = location.hash.replace(/^#/, '') || 'inbox'
+  var tab = location.hash.replace(/^#/, '') || 'profile'
   document.querySelectorAll('.page-content').forEach(function(el) {
     el.style.display = 'none'
   })
