@@ -258,6 +258,10 @@ body {
     background: var(--sidebar-hover);
 }
 
+.calendar-grid .day.empty {
+    visibility: hidden;
+}
+
 .calendar-grid .day.today {
     background: var(--accent);
     color: #000;
