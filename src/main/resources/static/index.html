@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Football Manager</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="layout">
+
+  <div class="sidebar">
+    <div class="sidebar-header">Football Manager</div>
+    <nav class="sidebar-nav">
+      <a href="#inbox" class="nav-item" data-tab="inbox">Входящие</a>
+      <a href="#squad" class="nav-item" data-tab="squad">Состав</a>
+      <a href="#tactics" class="nav-item" data-tab="tactics">Тактика</a>
+      <a href="#tournaments" class="nav-item" data-tab="tournaments">Турниры</a>
+      <a href="#schedule" class="nav-item" data-tab="schedule">Расписание</a>
+      <a href="#club" class="nav-item" data-tab="club">Клуб</a>
+    </nav>
+  </div>
+
+  <div class="right-panel">
+    <div class="topbar">
+      <div class="js-menu" style="position: relative;">
+        <button class="topbar-btn" onclick="toggleMenu()">☰</button>
+        <div class="dropdown-menu" id="menuBody">
+          <button class="dropdown-item">💾 Сохранить</button>
+          <button class="dropdown-item">📂 Загрузить</button>
+        </div>
+      </div>
+      <button class="topbar-date js-calendar" onclick="toggleCalendar()">
+        <span>📅</span>
+        <span id="currentDate">15.06.2026</span>
+      </button>
+      <div style="position: relative;">
+        <div class="calendar-popup" id="calendarBody">
+          <div class="calendar-header">
+            <button>◀</button>
+            <span id="currentMonth">Июнь 2026</span>
+            <button>▶</button>
+          </div>
+          <div class="calendar-grid" id="calendarDays">
+            <span class="day-name">Пн</span>
+            <span class="day-name">Вт</span>
+            <span class="day-name">Ср</span>
+            <span class="day-name">Чт</span>
+            <span class="day-name">Пт</span>
+            <span class="day-name">Сб</span>
+            <span class="day-name">Вс</span>
+          </div>
+        </div>
+      </div>
+      <button class="topbar-btn primary">Далее ▸</button>
+    </div>
+
+    <div class="content-area">
+      <section id="page-inbox" class="page-content">
+        <h1 class="page-title">Входящие</h1>
+        <p>Сообщения и уведомления.</p>
+      </section>
+      <section id="page-squad" class="page-content">
+        <h1 class="page-title">Состав</h1>
+        <p>Список игроков команды.</p>
+      </section>
+      <section id="page-tactics" class="page-content">
+        <h1 class="page-title">Тактика</h1>
+        <p>Расстановка и тактические настройки.</p>
+      </section>
+      <section id="page-tournaments" class="page-content">
+        <h1 class="page-title">Турниры</h1>
+        <p>Турнирная таблица и календарь матчей.</p>
+      </section>
+      <section id="page-schedule" class="page-content">
+        <h1 class="page-title">Расписание</h1>
+        <p>Календарь матчей и событий.</p>
+      </section>
+      <section id="page-club" class="page-content">
+        <h1 class="page-title">Клуб</h1>
+        <p>Информация о клубе, финансы и инфраструктура.</p>
+      </section>
+    </div>
+  </div>
+
+</div>
+<script src="/js/app.js"></script>
+</body>
+</html>
