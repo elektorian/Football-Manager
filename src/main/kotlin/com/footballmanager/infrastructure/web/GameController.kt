@@ -2,7 +2,6 @@ package com.footballmanager.infrastructure.web
 
 import com.footballmanager.application.GameSessionManager
 import com.footballmanager.application.SaveLoadService
-import com.footballmanager.domain.model.*
 import com.footballmanager.domain.service.LeagueService
 import org.springframework.web.bind.annotation.*
 

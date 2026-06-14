@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.footballmanager.domain.model.GameMeta
 import org.springframework.stereotype.Service
 import java.io.File
 import java.nio.file.Files
@@ -31,24 +30,24 @@ class SaveLoadService {
     }
 
     /**
-     * Saves the current meta state to a folder named after [name].
+     * Saves the full game state to a folder named after [name].
      */
-    fun saveGame(name: String, meta: GameMeta) {
+    fun saveGame(name: String, state: GameState) {
         val folder = File("$savesDir/$name")
         if (!folder.exists()) folder.mkdirs()
         
-        val file = File("${folder.absolutePath}/meta.json")
-        mapper.writeValue(file, meta)
+        val file = File("${folder.absolutePath}/state.json")
+        mapper.writeValue(file, state)
     }
 
     /**
-     * Loads the game meta from a folder named after [name].
+     * Loads the full game state from a folder named after [name].
      * Returns null if the save file does not exist.
      */
-    fun loadGame(name: String): GameMeta? {
-        val file = File("$savesDir/$name/meta.json")
+    fun loadGame(name: String): GameState? {
+        val file = File("$savesDir/$name/state.json")
         return if (file.exists()) {
-            mapper.readValue<GameMeta>(file)
+            mapper.readValue<GameState>(file)
         } else null
     }
 }

@@ -26,11 +26,7 @@ class GameSessionManager {
     }
 
     private fun generateTeamListForLeague(league: League): List<Team> {
-        val teamNames = listOf(
-            "Zenit", "Spartak", "CSKA", "Lokomotiv", "Krasnodar", 
-            "Dynamo", "Rostov", "Krylya Sovetov", "Akhmat", "Ural", 
-            "Fakel", "Pari NB", "Torpedo", "Rubin", "Khimki", "FC Rostov 2"
-        )
+        val teamNames = LeagueService.DEFAULT_TEAM_NAMES
         return teamNames.mapIndexed { index, name -> Team(index.toString(), name) }
     }
 

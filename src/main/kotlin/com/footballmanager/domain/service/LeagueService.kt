@@ -9,12 +9,16 @@ import java.util.concurrent.atomic.AtomicInteger
 class LeagueService {
     private val matchIdGen = AtomicInteger(1)
 
-    fun generateRPL(): Pair<League, List<Match>> {
-        val teamNames = listOf(
+    companion object {
+        val DEFAULT_TEAM_NAMES = listOf(
             "Zenit", "Spartak", "CSKA", "Lokomotiv", "Krasnodar", 
             "Dynamo", "Rostov", "Krylya Sovetov", "Akhmat", "Ural", 
             "Fakel", "Pari NB", "Torpedo", "Rubin", "Khimki", "FC Rostov 2"
         )
+    }
+
+    fun generateRPL(): Pair<League, List<Match>> {
+        val teamNames = DEFAULT_TEAM_NAMES
         val teams = teamNames.mapIndexed { index, name -> Team(index.toString(), name) }
         val league = League("rpl", "Russian Premier League", teams.map { it.id })
         
