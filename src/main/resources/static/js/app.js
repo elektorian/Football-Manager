@@ -11,6 +11,7 @@ function navigate() {
     el.classList.toggle('active', el.getAttribute('data-tab') === tab)
   })
   if (tab === 'profile') fetchProfile()
+  if (tab === 'tournaments') fetchLeagueTable()
 }
 
 function toggleCalendar() {
@@ -30,6 +31,44 @@ function fetchProfile() {
       document.getElementById('profileBirthDate').textContent = c.birthDate
     })
     .catch(function() {})
+}
+
+function fetchLeagueTable() {
+  var container = document.getElementById('leagueTable')
+  container.innerHTML = '<p>Загрузка...</p>'
+  fetch('/profile/league')
+    .then(function(r) {
+      if (!r.ok) throw new Error('Not found')
+      return r.json()
+    })
+    .then(function(rows) {
+      if (!rows || rows.length === 0) {
+        container.innerHTML = '<p>Нет данных</p>'
+        return
+      }
+      var html = '<table class="league-table"><thead><tr>'
+        + '<th>#</th><th>Клуб</th><th>И</th><th>В</th><th>Н</th><th>П</th>'
+        + '<th>ЗМ</th><th>ПМ</th><th>РМ</th><th>О</th>'
+        + '</tr></thead><tbody>'
+      rows.forEach(function(r) {
+        var gd = r.goalsScored - r.goalsConceded
+        html += '<tr>'
+          + '<td>' + r.position + '</td>'
+          + '<td class="td-club">' + r.name + '</td>'
+          + '<td>' + (r.victories + r.draws + r.losses) + '</td>'
+          + '<td>' + r.victories + '</td>'
+          + '<td>' + r.draws + '</td>'
+          + '<td>' + r.losses + '</td>'
+          + '<td>' + r.goalsScored + '</td>'
+          + '<td>' + r.goalsConceded + '</td>'
+          + '<td>' + (gd > 0 ? '+' : '') + gd + '</td>'
+          + '<td class="td-pts">' + r.points + '</td>'
+          + '</tr>'
+      })
+      html += '</tbody></table>'
+      container.innerHTML = html
+    })
+    .catch(function() { container.innerHTML = '<p>Нет данных</p>' })
 }
 
 function renderCalendarGrid(timestamp) {

@@ -315,3 +315,53 @@ body {
     color: var(--text-primary);
     font-weight: 500;
 }
+
+.league-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--sidebar-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 14px;
+}
+
+.league-table th {
+    background: var(--sidebar-hover);
+    color: var(--text-secondary);
+    font-weight: 600;
+    padding: 10px 8px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.league-table th:first-child,
+.league-table td:first-child {
+    text-align: center;
+    width: 32px;
+}
+
+.league-table td {
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.league-table .td-club {
+    text-align: left;
+    font-weight: 500;
+}
+
+.league-table .td-pts {
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.league-table tbody tr:hover {
+    background: var(--sidebar-hover);
+}
+
+.league-table tbody tr:last-child td {
+    border-bottom: none;
+}
