@@ -526,3 +526,110 @@ body {
 .compact-table tbody tr:last-child td {
     border-bottom: none;
 }
+
+/* Round navigation */
+.round-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.round-nav-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: none;
+    color: var(--text-primary);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.round-nav-btn:hover:not(:disabled) {
+    background: var(--sidebar-hover);
+}
+
+.round-nav-btn:disabled {
+    color: var(--text-secondary);
+    cursor: default;
+    opacity: 0.5;
+}
+
+.round-nav-input {
+    width: 60px;
+    padding: 4px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--sidebar-bg);
+    color: var(--text-primary);
+    text-align: center;
+    font-size: 14px;
+}
+
+.round-nav-input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.round-nav-total {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+/* Round match rows */
+.round-matches {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.round-match {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    background: var(--sidebar-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.round-match-date {
+    width: 100px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.round-match-teams {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.round-match-team {
+    flex: 1;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-align: right;
+}
+
+.round-match-team.away {
+    text-align: left;
+}
+
+.round-match-score {
+    flex-shrink: 0;
+    padding: 0 16px;
+    font-weight: 700;
+    color: var(--accent);
+    text-align: center;
+    font-size: 16px;
+}
+
+.round-match-score.unplayed {
+    color: var(--text-secondary);
+    font-weight: 400;
+}

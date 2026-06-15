@@ -1,6 +1,8 @@
 var tabs = ['profile', 'inbox', 'squad', 'tactics', 'tournaments', 'schedule', 'club', 'tournament']
 var navHistory = []
 var ignoreNextHashChange = false
+var roundsData = null
+var currentRoundIndex = 0
 
 function navigate() {
   var tab = location.hash.replace(/^#/, '') || 'profile'
@@ -152,6 +154,8 @@ function fetchTournamentPage() {
         return
       }
       updatePageTitle(data.leagueName)
+      roundsData = data.rounds || null
+      currentRoundIndex = 0
       renderFullTable(container, data.table)
     })
     .catch(function(err) {
@@ -192,6 +196,63 @@ function switchTournamentTab(tab) {
   })
   document.getElementById('tournamentTableFull').style.display = tab === 'table' ? 'block' : 'none'
   document.getElementById('tournamentRounds').style.display = tab === 'rounds' ? 'block' : 'none'
+  if (tab === 'rounds') renderCurrentRound()
+}
+
+// ─── Туры ───────────────────────────────────────────
+function renderCurrentRound() {
+  if (!roundsData || roundsData.length === 0) {
+    document.getElementById('roundMatchesContainer').innerHTML = '<p>Нет данных о турах</p>'
+    return
+  }
+  var round = roundsData[currentRoundIndex]
+  var total = roundsData.length
+
+  document.getElementById('roundNumberInput').value = round.number
+  document.getElementById('roundTotal').textContent = 'из ' + total
+  document.getElementById('prevRoundBtn').disabled = currentRoundIndex === 0
+  document.getElementById('nextRoundBtn').disabled = currentRoundIndex >= total - 1
+
+  var html = '<div class="round-matches">'
+  round.matches.forEach(function(m) {
+    var dateStr = new Date(m.date).toLocaleDateString('ru-RU')
+    var played = m.homeTeamScore !== '-'
+    html += '<div class="round-match">'
+      + '<span class="round-match-date">' + dateStr + '</span>'
+      + '<div class="round-match-teams">'
+      + '<span class="round-match-team">' + m.homeTeamName + '</span>'
+      + '<span class="round-match-score' + (played ? '' : ' unplayed') + '">'
+      + (played ? m.homeTeamScore + ' - ' + m.awayTeamScore : '-')
+      + '</span>'
+      + '<span class="round-match-team away">' + m.awayTeamName + '</span>'
+      + '</div>'
+      + '</div>'
+  })
+  html += '</div>'
+  document.getElementById('roundMatchesContainer').innerHTML = html
+}
+
+function prevRound() {
+  if (currentRoundIndex > 0) {
+    currentRoundIndex--
+    renderCurrentRound()
+  }
+}
+
+function nextRound() {
+  if (roundsData && currentRoundIndex < roundsData.length - 1) {
+    currentRoundIndex++
+    renderCurrentRound()
+  }
+}
+
+function jumpToRound(num) {
+  if (!roundsData) return
+  var idx = parseInt(num, 10) - 1
+  if (idx >= 0 && idx < roundsData.length) {
+    currentRoundIndex = idx
+    renderCurrentRound()
+  }
 }
 
 function renderCalendarGrid(timestamp) {

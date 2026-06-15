@@ -93,7 +93,15 @@
           <button class="tab" data-tab="rounds" onclick="switchTournamentTab('rounds')">Туры</button>
         </div>
         <div id="tournamentTableFull"></div>
-        <div id="tournamentRounds" style="display:none"><p>Туры пока не реализованы.</p></div>
+        <div id="tournamentRounds" style="display:none">
+          <div class="round-nav">
+            <button class="round-nav-btn" onclick="prevRound()" id="prevRoundBtn">←</button>
+            <input type="number" class="round-nav-input" id="roundNumberInput" value="1" min="1" onchange="jumpToRound(this.value)">
+            <span id="roundTotal" class="round-nav-total">из 0</span>
+            <button class="round-nav-btn" onclick="nextRound()" id="nextRoundBtn">→</button>
+          </div>
+          <div id="roundMatchesContainer"></div>
+        </div>
       </section>
       <section id="page-schedule" class="page-content">
         <h1 class="page-title">Расписание</h1>

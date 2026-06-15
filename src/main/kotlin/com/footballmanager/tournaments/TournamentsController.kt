@@ -1,6 +1,5 @@
 package com.footballmanager.tournaments
 
-import com.footballmanager.session.SessionState
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
