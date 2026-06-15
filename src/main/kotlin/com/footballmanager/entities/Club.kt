@@ -1,7 +1,7 @@
 package com.footballmanager.entities
 
 import com.footballmanager.entities.match.Match
-import com.footballmanager.entities.match.MatchTeamStatus
+import com.footballmanager.entities.season.Season
 import java.util.UUID
 
 data class Club(

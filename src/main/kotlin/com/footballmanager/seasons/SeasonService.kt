@@ -2,13 +2,15 @@ package com.footballmanager.seasons
 
 import com.footballmanager.entities.Club
 import com.footballmanager.entities.League
-import com.footballmanager.entities.Season
+import com.footballmanager.entities.season.Season
 import org.springframework.stereotype.Service
 import java.util.UUID
 import java.util.concurrent.CopyOnWriteArraySet
 
 @Service
-class SeasonService {
+class SeasonService(
+    private val scheduleService: ScheduleService
+) {
     fun create(
         year: Int,
         league: League,
@@ -21,6 +23,7 @@ class SeasonService {
             league = league,
             clubs = clubs,
         )
+        season.schedule = scheduleService.generateLeagueSchedule(season)
         league.seasons.add(season)
         clubs.forEach { it.leagueSeason = season }
     }

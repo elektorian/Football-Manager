@@ -2,7 +2,7 @@ package com.footballmanager.tournaments
 
 import com.footballmanager.entities.Club
 import com.footballmanager.entities.League
-import com.footballmanager.entities.Season
+import com.footballmanager.entities.season.Season
 import com.footballmanager.entities.match.MatchTeamStatus
 import com.footballmanager.tournaments.dto.LeagueTeamInfo
 import org.springframework.stereotype.Service

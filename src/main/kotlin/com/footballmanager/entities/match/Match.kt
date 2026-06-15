@@ -1,6 +1,7 @@
 package com.footballmanager.entities.match
 
 import com.footballmanager.entities.Club
+import com.footballmanager.entities.season.schedule.Round
 import java.util.Date
 import java.util.UUID
 
@@ -11,7 +12,7 @@ data class Match(
     val awayTeam: Club,
     val homeTeamResult: MatchTeamResult? = null,
     val awayTeamResult: MatchTeamResult? = null,
-    val tournamentId: UUID,
+    val round: Round,
 ) {
     fun passed(): Boolean{
         return !(awayTeamResult == null || homeTeamResult == null)
