@@ -1,0 +1,146 @@
+[
+  {
+    "id": "10000000-0000-4000-8000-000000000001",
+    "name": "FC Zenit",
+    "abbreviation": "ZEN",
+    "city": "Saint Petersburg",
+    "country": "Russia",
+    "leagueSeason": null,
+    "matches": []
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000002",
+    "name": "FC Spartak Moscow",
+    "abbreviation": "SPA",
+    "city": "Moscow",
+    "country": "Russia",
+    "leagueSeason": null,
+    "matches": []
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000003",
+    "name": "FC Lokomotiv Moscow",
+    "abbreviation": "LOK",
+    "city": "Moscow",
+    "country": "Russia",
+    "leagueSeason": null,
+    "matches": []
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000004",
+    "name": "FC Rubin Kazan",
+    "abbreviation": "RUB",
+    "city": "Kazan",
+    "country": "Russia",
+    "leagueSeason": null,
+    "matches": []
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000005",
+    "name": "PFC Sochi",
+    "abbreviation": "SOC",
+    "city": "Sochi",
+    "country": "Russia",
+    "leagueSeason": null,
+    "matches": []
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000006",
+    "name": "PFC CSKA Moscow",
+    "abbreviation": "CSK",
+    "city": "Moscow",
+    "country": "Russia",
+    "leagueSeason": null,
+    "matches": []
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000007",
+    "name": "FC Dynamo Moscow",
+    "abbreviation": "DYN",
+    "city": "Moscow",
+    "country": "Russia",
+    "leagueSeason": null,
+    "matches": []
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000008",
+    "name": "FC Khimki",
+    "abbreviation": "KHI",
+    "city": "Khimki",
+    "country": "Russia",
+    "leagueSeason": null,
+    "matches": []
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000009",
+    "name": "FC Rostov",
+    "abbreviation": "ROS",
+    "city": "Rostov-on-Don",
+    "country": "Russia",
+    "leagueSeason": null,
+    "matches": []
+  },
+  {
+    "id": "10000000-0000-4000-8000-00000000000a",
+    "name": "FC Krasnodar",
+    "abbreviation": "KRA",
+    "city": "Krasnodar",
+    "country": "Russia",
+    "leagueSeason": null,
+    "matches": []
+  },
+  {
+    "id": "10000000-0000-4000-8000-00000000000b",
+    "name": "FC Akhmat Grozny",
+    "abbreviation": "AKH",
+    "city": "Grozny",
+    "country": "Russia",
+    "leagueSeason": null,
+    "matches": []
+  },
+  {
+    "id": "10000000-0000-4000-8000-00000000000c",
+    "name": "FC Ural Yekaterinburg",
+    "abbreviation": "URA",
+    "city": "Yekaterinburg",
+    "country": "Russia",
+    "leagueSeason": null,
+    "matches": []
+  },
+  {
+    "id": "10000000-0000-4000-8000-00000000000d",
+    "name": "FC Ufa",
+    "abbreviation": "UFA",
+    "city": "Ufa",
+    "country": "Russia",
+    "leagueSeason": null,
+    "matches": []
+  },
+  {
+    "id": "10000000-0000-4000-8000-00000000000e",
+    "name": "FC Arsenal Tula",
+    "abbreviation": "ARS",
+    "city": "Tula",
+    "country": "Russia",
+    "leagueSeason": null,
+    "matches": []
+  },
+  {
+    "id": "10000000-0000-4000-8000-00000000000f",
+    "name": "FC Rotor Volgograd",
+    "abbreviation": "ROT",
+    "city": "Volgograd",
+    "country": "Russia",
+    "leagueSeason": null,
+    "matches": []
+  },
+  {
+    "id": "10000000-0000-4000-8000-000000000010",
+    "name": "FC Tambov",
+    "abbreviation": "TAM",
+    "city": "Tambov",
+    "country": "Russia",
+    "leagueSeason": null,
+    "matches": []
+  }
+]
