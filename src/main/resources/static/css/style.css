@@ -42,12 +42,32 @@ body {
 }
 
 .sidebar-header {
-    padding: 20px;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--accent);
-    letter-spacing: 0.5px;
+    padding: 0;
     border-bottom: 1px solid var(--border-color);
+}
+
+.back-btn {
+    width: 100%;
+    height: var(--topbar-height);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    border: none;
+    background: none;
+    color: var(--accent);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.back-btn:hover:not(:disabled) {
+    background: var(--sidebar-hover);
+}
+
+.back-btn:disabled {
+    color: var(--text-secondary);
+    cursor: default;
 }
 
 .sidebar-nav {
@@ -363,5 +383,146 @@ body {
 }
 
 .league-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Topbar title */
+.topbar-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    margin-right: auto;
+}
+
+/* Topbar right section (buttons wrapper) */
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Tab bar */
+.tab-bar {
+    display: inline-flex;
+    gap: 4px;
+    margin-bottom: 20px;
+    background: var(--sidebar-bg);
+    border-radius: 8px;
+    padding: 4px;
+}
+
+.tab {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 6px;
+    background: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+
+.tab:hover {
+    color: var(--text-primary);
+    background: var(--sidebar-hover);
+}
+
+.tab.active {
+    background: var(--sidebar-active);
+    color: var(--text-primary);
+}
+
+/* Tournament sections grid */
+#tournamentSections {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+/* Tournament section (card in grid) */
+.tournament-section {
+    flex: 0 0 calc(33.33% - 16px);
+    max-height: calc(50vh - 80px);
+    display: flex;
+    flex-direction: column;
+    background: var(--sidebar-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.tournament-section-header {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tournament-section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.tournament-section-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.15s ease;
+}
+
+.tournament-section-link:hover {
+    color: var(--accent-hover);
+}
+
+.tournament-section-body {
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+    padding: 16px 20px;
+}
+
+/* Compact table (5 columns) */
+.compact-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.compact-table th {
+    color: var(--text-secondary);
+    font-weight: 600;
+    padding: 8px 12px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.compact-table td {
+    padding: 8px 12px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.compact-table .td-club {
+    text-align: left;
+    font-weight: 500;
+}
+
+.compact-table .td-pts {
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.compact-table tbody tr:hover {
+    background: var(--sidebar-hover);
+}
+
+.compact-table tbody tr:last-child td {
     border-bottom: none;
 }

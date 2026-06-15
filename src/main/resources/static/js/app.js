@@ -1,17 +1,54 @@
-var tabs = ['profile', 'inbox', 'squad', 'tactics', 'tournaments', 'schedule', 'club']
+var tabs = ['profile', 'inbox', 'squad', 'tactics', 'tournaments', 'schedule', 'club', 'tournament']
+var navHistory = []
+var ignoreNextHashChange = false
 
 function navigate() {
   var tab = location.hash.replace(/^#/, '') || 'profile'
+
+  if (!ignoreNextHashChange) {
+    if (navHistory.length === 0 || navHistory[navHistory.length - 1] !== tab) {
+      navHistory.push(tab)
+    }
+  }
+  ignoreNextHashChange = false
+  updateBackButton()
+
   document.querySelectorAll('.page-content').forEach(function(el) {
     el.style.display = 'none'
   })
   var page = document.getElementById('page-' + tab)
   if (page) page.style.display = 'block'
-  document.querySelectorAll('.nav-item').forEach(function(el) {
-    el.classList.toggle('active', el.getAttribute('data-tab') === tab)
-  })
+
+  if (tab === 'tournament') {
+    document.querySelector('[data-tab="tournaments"]').classList.add('active')
+  } else {
+    document.querySelectorAll('.nav-item').forEach(function(el) {
+      el.classList.toggle('active', el.getAttribute('data-tab') === tab)
+    })
+  }
+
   if (tab === 'profile') fetchProfile()
-  if (tab === 'tournaments') fetchLeagueTable()
+  if (tab === 'tournaments') {
+    console.log('navigate: tournaments tab, calling fetchTournamentSections')
+    fetchTournamentSections()
+  }
+  if (tab === 'tournament') {
+    updatePageTitle('')
+    fetchTournamentPage()
+  }
+}
+
+function goBack() {
+  if (navHistory.length < 2) return
+  navHistory.pop()
+  var prev = navHistory[navHistory.length - 1]
+  ignoreNextHashChange = true
+  location.hash = '#' + prev
+}
+
+function updateBackButton() {
+  var btn = document.getElementById('backBtn')
+  if (btn) btn.disabled = navHistory.length < 2
 }
 
 function toggleCalendar() {
@@ -20,6 +57,10 @@ function toggleCalendar() {
 
 function toggleMenu() {
   document.getElementById('menuBody').classList.toggle('show')
+}
+
+function updatePageTitle(text) {
+  document.getElementById('pageTitle').textContent = text || ''
 }
 
 function fetchProfile() {
@@ -33,42 +74,124 @@ function fetchProfile() {
     .catch(function() {})
 }
 
-function fetchLeagueTable() {
-  var container = document.getElementById('leagueTable')
-  container.innerHTML = '<p>Загрузка...</p>'
+// ─── Страница "Турниры" (#tournaments) ─────────────────────────
+// Рендерит секции для каждого турнира с компактной таблицей
+function fetchTournamentSections() {
+  var container = document.getElementById('tournamentSections')
+  if (!container) {
+    console.error('tournamentSections element not found')
+    return
+  }
+  console.log('fetchTournamentSections: fetching /profile/league')
+  container.innerHTML = '<p>⏳ Загрузка...</p>'
+
   fetch('/profile/league')
     .then(function(r) {
-      if (!r.ok) throw new Error('Not found')
+      console.log('fetchTournamentSections: response status', r.status)
+      if (!r.ok) throw new Error('HTTP ' + r.status)
       return r.json()
     })
-    .then(function(rows) {
-      if (!rows || rows.length === 0) {
+    .then(function(data) {
+      console.log('fetchTournamentSections: data received', data)
+      if (!data || !data.table || data.table.length === 0) {
         container.innerHTML = '<p>Нет данных</p>'
         return
       }
-      var html = '<table class="league-table"><thead><tr>'
-        + '<th>#</th><th>Клуб</th><th>И</th><th>В</th><th>Н</th><th>П</th>'
-        + '<th>ЗМ</th><th>ПМ</th><th>РМ</th><th>О</th>'
-        + '</tr></thead><tbody>'
-      rows.forEach(function(r) {
-        var gd = r.goalsScored - r.goalsConceded
-        html += '<tr>'
-          + '<td>' + r.position + '</td>'
-          + '<td class="td-club">' + r.name + '</td>'
-          + '<td>' + (r.victories + r.draws + r.losses) + '</td>'
-          + '<td>' + r.victories + '</td>'
-          + '<td>' + r.draws + '</td>'
-          + '<td>' + r.losses + '</td>'
-          + '<td>' + r.goalsScored + '</td>'
-          + '<td>' + r.goalsConceded + '</td>'
-          + '<td>' + (gd > 0 ? '+' : '') + gd + '</td>'
-          + '<td class="td-pts">' + r.points + '</td>'
-          + '</tr>'
-      })
-      html += '</tbody></table>'
-      container.innerHTML = html
+      renderTournamentSection(container, data.leagueName, data.table)
     })
-    .catch(function() { container.innerHTML = '<p>Нет данных</p>' })
+    .catch(function(err) {
+      console.error('fetchTournamentSections: error', err)
+      container.innerHTML = '<p>Нет данных (' + err.message + ')</p>'
+    })
+}
+
+function renderTournamentSection(container, leagueName, rows) {
+  var html = '<div class="tournament-section">'
+    + '<div class="tournament-section-header">'
+    + '<span class="tournament-section-title">' + leagueName + '</span>'
+    + '<a href="#tournament" class="tournament-section-link">Перейти к турниру →</a>'
+    + '</div>'
+    + '<div class="tournament-section-body">'
+    + '<table class="compact-table"><thead><tr>'
+    + '<th>#</th><th>Клуб</th><th>В</th><th>Н</th><th>П</th><th>О</th>'
+    + '</tr></thead><tbody>'
+
+  rows.forEach(function(r) {
+    html += '<tr>'
+      + '<td>' + r.position + '</td>'
+      + '<td class="td-club">' + r.name + '</td>'
+      + '<td>' + r.victories + '</td>'
+      + '<td>' + r.draws + '</td>'
+      + '<td>' + r.losses + '</td>'
+      + '<td class="td-pts">' + r.points + '</td>'
+      + '</tr>'
+  })
+
+  html += '</tbody></table></div></div>'
+  container.innerHTML = html
+}
+
+// ─── Страница турнира (#tournament) ────────────────────────────
+// Показывает полную таблицу с вкладками
+function fetchTournamentPage() {
+  var container = document.getElementById('tournamentTableFull')
+  if (!container) {
+    console.error('tournamentTableFull element not found')
+    return
+  }
+  container.innerHTML = '<p>⏳ Загрузка...</p>'
+
+  fetch('/profile/league')
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status)
+      return r.json()
+    })
+    .then(function(data) {
+      if (!data || !data.table || data.table.length === 0) {
+        container.innerHTML = '<p>Нет данных</p>'
+        return
+      }
+      updatePageTitle(data.leagueName)
+      renderFullTable(container, data.table)
+    })
+    .catch(function(err) {
+      console.error('fetchTournamentPage: error', err)
+      container.innerHTML = '<p>Нет данных</p>'
+    })
+}
+
+function renderFullTable(container, rows) {
+  var html = '<table class="league-table"><thead><tr>'
+    + '<th>#</th><th>Клуб</th><th>И</th><th>В</th><th>Н</th><th>П</th>'
+    + '<th>ЗМ</th><th>ПМ</th><th>РМ</th><th>О</th>'
+    + '</tr></thead><tbody>'
+
+  rows.forEach(function(r) {
+    var gd = r.goalsScored - r.goalsConceded
+    html += '<tr>'
+      + '<td>' + r.position + '</td>'
+      + '<td class="td-club">' + r.name + '</td>'
+      + '<td>' + (r.victories + r.draws + r.losses) + '</td>'
+      + '<td>' + r.victories + '</td>'
+      + '<td>' + r.draws + '</td>'
+      + '<td>' + r.losses + '</td>'
+      + '<td>' + r.goalsScored + '</td>'
+      + '<td>' + r.goalsConceded + '</td>'
+      + '<td>' + (gd > 0 ? '+' : '') + gd + '</td>'
+      + '<td class="td-pts">' + r.points + '</td>'
+      + '</tr>'
+  })
+
+  html += '</tbody></table>'
+  container.innerHTML = html
+}
+
+function switchTournamentTab(tab) {
+  document.querySelectorAll('#page-tournament .tab').forEach(function(t) {
+    t.classList.toggle('active', t.getAttribute('data-tab') === tab)
+  })
+  document.getElementById('tournamentTableFull').style.display = tab === 'table' ? 'block' : 'none'
+  document.getElementById('tournamentRounds').style.display = tab === 'rounds' ? 'block' : 'none'
 }
 
 function renderCalendarGrid(timestamp) {

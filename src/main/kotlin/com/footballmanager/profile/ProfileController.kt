@@ -3,6 +3,7 @@ package com.footballmanager.profile
 import com.footballmanager.entities.Coach
 import com.footballmanager.session.SessionState
 import com.footballmanager.tournaments.TournamentsService
+import com.footballmanager.tournaments.dto.LeagueInfo
 import com.footballmanager.tournaments.dto.LeagueTeamInfo
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -18,12 +19,16 @@ class ProfileController(
     fun coach(): Coach = sessionState.player
 
     @GetMapping("/league")
-    fun league(): Collection<LeagueTeamInfo>? {
+    fun league(): LeagueInfo? {
         if (sessionState.club == null) return null
         if (sessionState.club!!.leagueSeason == null) return null
-        return tournamentsService.getLeagueTable(
-            leagueId = sessionState.club!!.leagueSeason!!.league.id,
-            seasonId = sessionState.club!!.leagueSeason!!.id,
+        val season = sessionState.club!!.leagueSeason!!
+        return LeagueInfo(
+            leagueName = season.league.name,
+            table = tournamentsService.getLeagueTable(
+                leagueId = season.league.id,
+                seasonId = season.id,
+            ),
         )
     }
 }

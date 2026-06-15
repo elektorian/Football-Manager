@@ -10,7 +10,9 @@
 <div class="layout">
 
   <div class="sidebar">
-    <div class="sidebar-header">Football Manager</div>
+    <div class="sidebar-header">
+      <button id="backBtn" class="back-btn" onclick="goBack()" disabled>← Назад</button>
+    </div>
     <nav class="sidebar-nav">
       <a href="#profile" class="nav-item" data-tab="profile">Профиль</a>
       <a href="#inbox" class="nav-item" data-tab="inbox">Входящие</a>
@@ -24,28 +26,31 @@
 
   <div class="right-panel">
     <div class="topbar">
-      <div class="js-menu" style="position: relative;">
-        <button class="topbar-btn" onclick="toggleMenu()">☰</button>
-        <div class="dropdown-menu" id="menuBody">
-          <button class="dropdown-item">💾 Сохранить</button>
-          <button class="dropdown-item">📂 Загрузить</button>
-        </div>
-      </div>
-      <button class="topbar-date js-calendar" onclick="toggleCalendar()">
-        <span>📅</span>
-        <span id="currentDate">15.06.2026</span>
-      </button>
-      <div style="position: relative;">
-        <div class="calendar-popup" id="calendarBody">
-          <div class="calendar-header">
-            <button>◀</button>
-            <span id="currentMonth">Июнь 2026</span>
-            <button>▶</button>
+      <div class="topbar-title" id="pageTitle"></div>
+      <div class="topbar-right">
+        <div class="js-menu" style="position: relative;">
+          <button class="topbar-btn" onclick="toggleMenu()">☰</button>
+          <div class="dropdown-menu" id="menuBody">
+            <button class="dropdown-item">💾 Сохранить</button>
+            <button class="dropdown-item">📂 Загрузить</button>
           </div>
-          <div class="calendar-grid" id="calendarDays"></div>
         </div>
+        <button class="topbar-date js-calendar" onclick="toggleCalendar()">
+          <span>📅</span>
+          <span id="currentDate">15.06.2026</span>
+        </button>
+        <div style="position: relative;">
+          <div class="calendar-popup" id="calendarBody">
+            <div class="calendar-header">
+              <button>◀</button>
+              <span id="currentMonth">Июнь 2026</span>
+              <button>▶</button>
+            </div>
+            <div class="calendar-grid" id="calendarDays"></div>
+          </div>
+        </div>
+        <button class="topbar-btn primary" onclick="advanceDay()">Далее ▸</button>
       </div>
-      <button class="topbar-btn primary" onclick="advanceDay()">Далее ▸</button>
     </div>
 
     <div class="content-area">
@@ -80,7 +85,15 @@
       </section>
       <section id="page-tournaments" class="page-content">
         <h1 class="page-title">Турниры</h1>
-        <div id="leagueTable"></div>
+        <div id="tournamentSections"></div>
+      </section>
+      <section id="page-tournament" class="page-content">
+        <div class="tab-bar">
+          <button class="tab active" data-tab="table" onclick="switchTournamentTab('table')">Таблица</button>
+          <button class="tab" data-tab="rounds" onclick="switchTournamentTab('rounds')">Туры</button>
+        </div>
+        <div id="tournamentTableFull"></div>
+        <div id="tournamentRounds" style="display:none"><p>Туры пока не реализованы.</p></div>
       </section>
       <section id="page-schedule" class="page-content">
         <h1 class="page-title">Расписание</h1>
