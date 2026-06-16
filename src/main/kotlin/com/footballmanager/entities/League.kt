@@ -1,6 +1,5 @@
 package com.footballmanager.entities
 
-import com.footballmanager.entities.season.Season
 import java.util.UUID
 import java.util.concurrent.CopyOnWriteArraySet
 
@@ -12,5 +11,5 @@ data class League(
     val rounds: Int,
     val country: String,
     val rang: Int,
-    val seasons: CopyOnWriteArraySet<Season>,
+    val seasons: CopyOnWriteArraySet<UUID>,
 )

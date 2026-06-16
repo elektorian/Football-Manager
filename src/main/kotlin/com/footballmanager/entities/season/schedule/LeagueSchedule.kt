@@ -1,5 +1,8 @@
 package com.footballmanager.entities.season.schedule
 
+import java.util.UUID
+
 data class LeagueSchedule(
-    val rounds: List<Round>,
+    val id: UUID,
+    val rounds: List<UUID>,
 )

@@ -1,18 +1,17 @@
 package com.footballmanager.entities.match
 
 import com.footballmanager.entities.Club
-import com.footballmanager.entities.season.schedule.Round
 import java.util.Date
 import java.util.UUID
 
 data class Match(
     val id: UUID,
     val date: Date,
-    val homeTeam: Club,
-    val awayTeam: Club,
+    val homeTeam: UUID,
+    val awayTeam: UUID,
     val homeTeamResult: MatchTeamResult? = null,
     val awayTeamResult: MatchTeamResult? = null,
-    val round: Round,
+    val round: UUID,
 ) {
     fun passed(): Boolean{
         return !(awayTeamResult == null || homeTeamResult == null)
@@ -22,8 +21,8 @@ data class Match(
         if (awayTeamResult == null || homeTeamResult == null) throw IllegalStateException("awayTeamResult == null or homeTeamResult == null")
         val teamResult =
             when (id) {
-                homeTeamResult.team.id -> homeTeamResult
-                awayTeamResult.team.id -> awayTeamResult
+                homeTeamResult.team -> homeTeamResult
+                awayTeamResult.team -> awayTeamResult
                 else -> throw IllegalStateException("$this match result is not connected to $team team")
             }
         return teamResult

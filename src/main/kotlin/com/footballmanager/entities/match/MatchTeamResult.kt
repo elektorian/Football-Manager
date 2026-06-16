@@ -1,9 +1,9 @@
 package com.footballmanager.entities.match
 
-import com.footballmanager.entities.Club
+import java.util.UUID
 
 data class MatchTeamResult(
-    val team: Club,
+    val team: UUID,
     val scored: Int,
     val conceded: Int,
     val status: MatchTeamStatus,

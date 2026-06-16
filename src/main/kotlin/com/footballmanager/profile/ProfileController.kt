@@ -1,7 +1,13 @@
 package com.footballmanager.profile
 
 import com.footballmanager.entities.Coach
+import com.footballmanager.entities.League
+import com.footballmanager.matches.MatchesService
+import com.footballmanager.rounds.RoundsService
+import com.footballmanager.seasons.ScheduleService
+import com.footballmanager.seasons.SeasonService
 import com.footballmanager.session.SessionState
+import com.footballmanager.team.TeamService
 import com.footballmanager.tournaments.TournamentsService
 import com.footballmanager.tournaments.dto.LeagueInfo
 import com.footballmanager.tournaments.dto.MatchInfo
@@ -9,12 +15,20 @@ import com.footballmanager.tournaments.dto.RoundInfo
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 
 @RestController
 @RequestMapping("/profile")
 class ProfileController(
     private val sessionState: SessionState,
     private val tournamentsService: TournamentsService,
+    private val seasonService: SeasonService,
+    private val scheduleService: ScheduleService,
+    private val leagues: ConcurrentHashMap<UUID, League>,
+    private val matchesService: MatchesService,
+    private val teamService: TeamService,
+    private val roundsService: RoundsService,
 ) {
     @GetMapping("/coach")
     fun coach(): Coach = sessionState.player
@@ -23,26 +37,28 @@ class ProfileController(
     fun league(): LeagueInfo? {
         if (sessionState.club == null) return null
         if (sessionState.club!!.leagueSeason == null) return null
-        val season = sessionState.club!!.leagueSeason!!
+        val season = sessionState.club!!.leagueSeason!!.let { seasonService.getSeason(it) }
+        val league = leagues[season.league]!!
         return LeagueInfo(
-            leagueName = season.league.name,
+            leagueName = league.name,
             table = tournamentsService.getLeagueTable(
-                leagueId = season.league.id,
+                leagueId = league.id,
                 seasonId = season.id,
             ),
-            rounds = season.schedule?.rounds?.map { round ->
+            rounds = season.schedule?.let { scheduleService.getSchedule(it) }?.rounds?.map { roundId ->
+                val round = roundsService.getRound(roundId)
                 RoundInfo(
                     number = round.number,
                     passed = round.passed,
-                    matches = round.matches.map { match ->
+                    matches = round.matches.map { matchesService.getMatch(it) }.map { match ->
                         MatchInfo(
                             id = match.id,
                             date = match.date,
-                            homeTeamId = match.homeTeam.id,
-                            homeTeamName = match.homeTeam.name,
+                            homeTeamId = match.homeTeam,
+                            homeTeamName = teamService.getTeam(match.homeTeam).name,
                             homeTeamScore = match.homeTeamResult?.scored?.toString() ?: "-",
-                            awayTeamId = match.awayTeam.id,
-                            awayTeamName = match.awayTeam.name,
+                            awayTeamId = match.awayTeam,
+                            awayTeamName = teamService.getTeam(match.awayTeam).name,
                             awayTeamScore = match.awayTeamResult?.scored?.toString() ?: "-",
                         )
                     }

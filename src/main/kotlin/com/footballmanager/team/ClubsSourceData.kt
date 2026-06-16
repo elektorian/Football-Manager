@@ -1,4 +1,4 @@
-package com.footballmanager.initialisation
+package com.footballmanager.team
 
 import com.footballmanager.entities.Club
 import java.util.UUID

@@ -5,20 +5,30 @@ import com.footballmanager.entities.match.Match
 import com.footballmanager.entities.season.Season
 import com.footballmanager.entities.season.schedule.LeagueSchedule
 import com.footballmanager.entities.season.schedule.Round
+import com.footballmanager.matches.MatchesService
+import com.footballmanager.rounds.RoundsService
+import com.footballmanager.team.TeamService
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.roundToInt
 
 @Service
-class ScheduleService {
-    fun generateLeagueSchedule(season: Season): LeagueSchedule {
-        val clubs = season.clubs.shuffled()
-        val n = clubs.size
+class ScheduleService(
+    private val teamService: TeamService,
+    private val matchesService: MatchesService,
+    private val roundsService: RoundsService,
+) {
+    private val schedules = ConcurrentHashMap<UUID, LeagueSchedule>()
 
-        if (n < 2) return LeagueSchedule(emptyList())
+    fun getSchedule(id: UUID) = schedules[id]!!
+
+    fun generateLeagueSchedule(season: Season): LeagueSchedule {
+        val clubs = season.clubs.shuffled().map { teamService.getTeam(it) }
+        val n = clubs.size
 
         val effectiveN = if (n % 2 == 1) n + 1 else n
         val teams: List<Club?> = clubs + List(effectiveN - n) { null }
@@ -50,7 +60,7 @@ class ScheduleService {
         }
 
         fun buildRound(arranged: List<Club?>, roundNumber: Int, isLeftHome: Boolean, matchDate: Date): Round {
-            val placeholderRound = Round(emptyList(), roundNumber, passed = false, season)
+            val roundId = UUID.randomUUID()
 
             val matches = buildList {
                 for (i in 0 until effectiveN / 2) {
@@ -59,21 +69,25 @@ class ScheduleService {
 
                     if (left != null && right != null) {
                         val (home, away) = if (isLeftHome) left to right else right to left
-                        add(
+                        val match =
                             Match(
                                 id = UUID.randomUUID(),
                                 date = matchDate,
-                                homeTeam = home,
-                                awayTeam = away,
-                                round = placeholderRound,
+                                homeTeam = home.id,
+                                awayTeam = away.id,
+                                round = roundId,
                             )
-                        )
+                        add(match)
                     }
                 }
             }
+            matches.forEach { matchesService.create(it) }
 
-            season.matches.addAll(matches)
-            return Round(matches, roundNumber, passed = false, season)
+            val matchesIds = matches.map { it.id }
+            season.matches.addAll(matchesIds)
+            val round = Round(matchesIds, roundNumber, passed = false, season, roundId)
+            roundsService.add(round)
+            return round
         }
 
         val firstHalf = buildList {
@@ -99,6 +113,11 @@ class ScheduleService {
             }
         }
 
-        return LeagueSchedule(rounds = firstHalf + secondHalf)
+        val schedule = LeagueSchedule(
+            id = UUID.randomUUID(),
+            rounds = (firstHalf + secondHalf).sortedBy { it.number }.map { it.id },
+        )
+        schedules[schedule.id] = schedule
+        return schedule
     }
 }

@@ -1,7 +1,6 @@
 package com.footballmanager.entities
 
 import com.footballmanager.entities.match.Match
-import com.footballmanager.entities.season.Season
 import java.util.UUID
 
 data class Club(
@@ -10,10 +9,10 @@ data class Club(
     val abbreviation: String,
     val city: String,
     val country: String,
-    var leagueSeason: Season?,
-    val matches: Collection<Match>,
+    var leagueSeason: UUID?,
+    val matches: Collection<UUID>,
 ) {
     fun isParticipant(match: Match): Boolean {
-        return match.homeTeam.id == id || match.awayTeam.id == id
+        return match.homeTeam == id || match.awayTeam == id
     }
 }
