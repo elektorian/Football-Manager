@@ -1,5 +1,6 @@
 package com.footballmanager.calendar
 
+import com.footballmanager.configuration.GlobalParameters
 import com.footballmanager.events.EventsEngine
 import com.footballmanager.matches.MatchesEngine
 import com.footballmanager.notifications.NotificationsService
@@ -15,13 +16,17 @@ class CalendarEngine(
     private val eventsEngine: EventsEngine,
     private val matchesEngine: MatchesEngine,
     private val notificationsService: NotificationsService,
-    initialMoment: LocalDateTime = LocalDateTime.of(LocalDate.of(2020, 7, 1), LocalTime.of(8, 0)),
+    initialMoment: LocalDateTime = LocalDateTime.of(
+        LocalDate.of(GlobalParameters.START_YEAR, 7, 1),
+        LocalTime.of(8, 0)
+    ),
 ) {
     companion object {
         private const val START_HOUR = 8
         private const val MATCH_HOUR = 16
         private const val END_HOUR = 22
     }
+
     private var currentMoment: LocalDateTime = initialMoment
 
     @Synchronized
@@ -32,10 +37,12 @@ class CalendarEngine(
                 eventsEngine.process()
                 currentMoment = currentMoment.withHour(MATCH_HOUR)
             }
+
             MATCH_HOUR -> {
                 matchesEngine.process()
                 currentMoment = currentMoment.withHour(END_HOUR)
             }
+
             END_HOUR -> {
                 currentMoment = currentMoment.plusDays(1).truncatedTo(ChronoUnit.DAYS).withHour(START_HOUR)
                 if (currentMoment.dayOfWeek == DayOfWeek.MONDAY) return currentMoment.toString()

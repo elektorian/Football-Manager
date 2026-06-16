@@ -7,18 +7,16 @@ import com.footballmanager.entities.season.schedule.LeagueSchedule
 import com.footballmanager.entities.season.schedule.Round
 import com.footballmanager.matches.MatchesService
 import com.footballmanager.rounds.RoundsService
-import com.footballmanager.team.TeamService
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.ZoneId
-import java.util.Date
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.roundToInt
 
 @Service
 class ScheduleService(
-    private val teamService: TeamService,
+    private val teams: ConcurrentHashMap<UUID, Club>,
     private val matchesService: MatchesService,
     private val roundsService: RoundsService,
 ) {
@@ -27,7 +25,7 @@ class ScheduleService(
     fun getSchedule(id: UUID) = schedules[id]!!
 
     fun generateLeagueSchedule(season: Season): LeagueSchedule {
-        val clubs = season.clubs.shuffled().map { teamService.getTeam(it) }
+        val clubs = season.clubs.shuffled().map { teams[it]!! }
         val n = clubs.size
 
         val effectiveN = if (n % 2 == 1) n + 1 else n

@@ -6,7 +6,6 @@ import com.footballmanager.entities.season.Season
 import com.footballmanager.entities.match.MatchTeamStatus
 import com.footballmanager.matches.MatchesService
 import com.footballmanager.seasons.SeasonService
-import com.footballmanager.team.TeamService
 import com.footballmanager.tournaments.dto.LeagueTeamInfo
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -17,7 +16,7 @@ class TournamentsService(
     private val leagues: ConcurrentHashMap<UUID, League>,
     private val seasonService: SeasonService,
     private val matchesService: MatchesService,
-    private val teamService: TeamService,
+    private val teams: ConcurrentHashMap<UUID, Club>,
 ) {
     fun getLeagueTable(leagueId: UUID, seasonId: UUID?): Collection<LeagueTeamInfo> {
         val league = leagues[leagueId] ?: throw IllegalStateException("League not found")
@@ -27,7 +26,7 @@ class TournamentsService(
             ?: seasons.maxByOrNull { it.year }
             ?: throw IllegalStateException("Season not found")
         return season.clubs
-            .map { teamService.getTeam(it) }
+            .map { teams[it]!! }
             .map { club -> formTeamInfo(club, season) }
             .sortedByDescending { it.points }
             .mapIndexed { index, teamInfo -> teamInfo.copy(position = index + 1) }

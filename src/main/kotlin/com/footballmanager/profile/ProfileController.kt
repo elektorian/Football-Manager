@@ -1,5 +1,6 @@
 package com.footballmanager.profile
 
+import com.footballmanager.entities.Club
 import com.footballmanager.entities.Coach
 import com.footballmanager.entities.League
 import com.footballmanager.matches.MatchesService
@@ -7,7 +8,6 @@ import com.footballmanager.rounds.RoundsService
 import com.footballmanager.seasons.ScheduleService
 import com.footballmanager.seasons.SeasonService
 import com.footballmanager.session.SessionState
-import com.footballmanager.team.TeamService
 import com.footballmanager.tournaments.TournamentsService
 import com.footballmanager.tournaments.dto.LeagueInfo
 import com.footballmanager.tournaments.dto.MatchInfo
@@ -15,7 +15,7 @@ import com.footballmanager.tournaments.dto.RoundInfo
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 @RestController
@@ -27,7 +27,7 @@ class ProfileController(
     private val scheduleService: ScheduleService,
     private val leagues: ConcurrentHashMap<UUID, League>,
     private val matchesService: MatchesService,
-    private val teamService: TeamService,
+    private val teams: ConcurrentHashMap<UUID, Club>,
     private val roundsService: RoundsService,
 ) {
     @GetMapping("/coach")
@@ -55,10 +55,10 @@ class ProfileController(
                             id = match.id,
                             date = match.date,
                             homeTeamId = match.homeTeam,
-                            homeTeamName = teamService.getTeam(match.homeTeam).name,
+                            homeTeamName = teams[match.homeTeam]!!.name,
                             homeTeamScore = match.homeTeamResult?.scored?.toString() ?: "-",
                             awayTeamId = match.awayTeam,
-                            awayTeamName = teamService.getTeam(match.awayTeam).name,
+                            awayTeamName = teams[match.awayTeam]!!.name,
                             awayTeamScore = match.awayTeamResult?.scored?.toString() ?: "-",
                         )
                     }
