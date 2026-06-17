@@ -3,6 +3,7 @@ var navHistory = []
 var ignoreNextHashChange = false
 var roundsData = null
 var currentRoundIndex = 0
+var notificationsData = []
 
 function navigate() {
   var tab = location.hash.replace(/^#/, '') || 'profile'
@@ -38,6 +39,72 @@ function navigate() {
     updatePageTitle('')
     fetchTournamentPage()
   }
+  if (tab === 'inbox') fetchNotifications()
+}
+
+// ─── Входящие / уведомления ─────────────────────────
+function fetchNotifications() {
+  var listEl = document.getElementById('inboxList')
+  if (!listEl) return
+  listEl.innerHTML = '<p style="color:var(--text-secondary);padding:12px;">⏳ Загрузка...</p>'
+
+  fetch('/notifications')
+    .then(function(r) { return r.json() })
+    .then(function(list) {
+      notificationsData = list
+      renderInboxList()
+      if (list.length > 0) selectNotification(list[0].id, false)
+    })
+    .catch(function() {})
+}
+
+function renderInboxList() {
+  var list = document.getElementById('inboxList')
+  var html = ''
+  for (var i = notificationsData.length - 1; i >= 0; i--) {
+    var n = notificationsData[i]
+    var d = parseLocalDateTime(n.timestamp)
+    html += '<div class="inbox-item' + (n.checked ? ' read' : '') + '" data-id="' + n.id + '" onclick="onInboxItemClick(\'' + n.id + '\')">'
+      + '<div class="inbox-item-title">' + n.title + '</div>'
+      + '<div class="inbox-item-date">' + d + '</div>'
+      + '</div>'
+  }
+  list.innerHTML = html || '<p class="inbox-empty">Нет уведомлений</p>'
+}
+
+function selectNotification(id, fromClick) {
+  document.querySelectorAll('.inbox-item').forEach(function(el) {
+    el.classList.toggle('active', el.getAttribute('data-id') === id)
+  })
+
+  if (fromClick) {
+    fetch('/notifications/' + id, { method: 'POST' })
+      .then(function(r) { return r.json() })
+      .then(function(n) {
+        document.getElementById('inboxContent').innerHTML =
+          '<div style="white-space:pre-wrap;">' + n.text + '</div>'
+      })
+      .catch(function() {})
+    var idx = notificationsData.findIndex(function(n) { return n.id === id })
+    if (idx !== -1) notificationsData[idx].checked = true
+    renderInboxList()
+  } else {
+    var n = notificationsData.find(function(n) { return n.id === id })
+    if (n) {
+      document.getElementById('inboxContent').innerHTML =
+        '<div style="white-space:pre-wrap;">' + n.text + '</div>'
+    }
+  }
+}
+
+function onInboxItemClick(id) {
+  selectNotification(id, true)
+}
+
+function parseLocalDateTime(arr) {
+  if (!arr || arr.length < 3) return ''
+  var d = new Date(arr[0], arr[1] - 1, arr[2], arr[3] || 0, arr[4] || 0)
+  return d.toLocaleDateString('ru-RU')
 }
 
 function goBack() {

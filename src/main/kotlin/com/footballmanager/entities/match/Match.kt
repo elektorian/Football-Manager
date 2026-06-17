@@ -1,12 +1,13 @@
 package com.footballmanager.entities.match
 
 import com.footballmanager.entities.Club
+import java.time.LocalDate
 import java.util.Date
 import java.util.UUID
 
 data class Match(
     val id: UUID,
-    val date: Date,
+    val date: LocalDate,
     val homeTeam: UUID,
     val awayTeam: UUID,
     val homeTeamResult: MatchTeamResult? = null,

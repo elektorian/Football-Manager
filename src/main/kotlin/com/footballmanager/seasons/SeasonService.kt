@@ -3,6 +3,7 @@ package com.footballmanager.seasons
 import com.footballmanager.entities.Club
 import com.footballmanager.entities.League
 import com.footballmanager.entities.season.Season
+import com.footballmanager.tournaments.enumerations.TournamentType
 import org.springframework.stereotype.Service
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -28,7 +29,7 @@ class SeasonService(
         )
         season.schedule = scheduleService.generateLeagueSchedule(season).id
         league.seasons.add(season.id)
-        clubs.forEach { it.leagueSeason = season.id }
+        clubs.forEach { it.tournaments[TournamentType.LEAGUE] = league.id }
         seasons[season.id] = season
     }
 

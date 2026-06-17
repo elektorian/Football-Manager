@@ -1,18 +1,18 @@
-package com.footballmanager.tournaments
+package com.footballmanager.functions
 
 import com.footballmanager.entities.Club
 import com.footballmanager.entities.League
-import com.footballmanager.entities.season.Season
 import com.footballmanager.entities.match.MatchTeamStatus
+import com.footballmanager.entities.season.Season
 import com.footballmanager.matches.MatchesService
 import com.footballmanager.seasons.SeasonService
 import com.footballmanager.tournaments.dto.LeagueTeamInfo
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Component
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
-@Service
-class TournamentsService(
+@Component
+class LeagueTableFunction(
     private val leagues: ConcurrentHashMap<UUID, League>,
     private val seasonService: SeasonService,
     private val matchesService: MatchesService,

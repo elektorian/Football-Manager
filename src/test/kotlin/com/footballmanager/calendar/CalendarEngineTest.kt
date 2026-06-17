@@ -1,8 +1,16 @@
 package com.footballmanager.calendar
 
+import com.footballmanager.entities.Club
+import com.footballmanager.entities.match.Match
 import com.footballmanager.events.EventsEngine
+import com.footballmanager.functions.TodayMatchesFunction
 import com.footballmanager.matches.MatchesEngine
 import com.footballmanager.notifications.NotificationsService
+import com.footballmanager.notifications.model.Notification
+import com.footballmanager.notifications.payload.RoundPreviewPayloadGenerator
+import com.footballmanager.seasons.SeasonService
+import com.footballmanager.session.SessionContext
+import com.footballmanager.tournaments.enumerations.TournamentType
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -15,26 +23,43 @@ import org.mockito.Mockito.verify
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.test.assertEquals
 
 class CalendarEngineTest {
     private lateinit var eventsEngine: EventsEngine
     private lateinit var matchesEngine: MatchesEngine
     private lateinit var notificationsService: NotificationsService
+    private lateinit var sessionContext: SessionContext
+    private lateinit var todayMatchesFunction: TodayMatchesFunction
+    private lateinit var roundPreviewPayloadGenerator: RoundPreviewPayloadGenerator
 
     @BeforeEach
     fun setUp() {
         eventsEngine = mock(EventsEngine::class.java)
         matchesEngine = mock(MatchesEngine::class.java)
         notificationsService = mock(NotificationsService::class.java)
+        todayMatchesFunction = mock(TodayMatchesFunction::class.java)
+        roundPreviewPayloadGenerator = mock(RoundPreviewPayloadGenerator::class.java)
+        sessionContext = SessionContext(
+            ConcurrentHashMap(),
+            mock(SeasonService::class.java),
+            ConcurrentHashMap(),
+        )
         `when`(notificationsService.isEmpty()).thenReturn(true)
     }
+
+    private fun createEngine() = CalendarEngine(
+        eventsEngine, matchesEngine, notificationsService,
+        sessionContext, todayMatchesFunction, roundPreviewPayloadGenerator,
+    )
 
     @Test
     @DisplayName("Блокировка: непустые нотификации — advance возвращает ту же дату")
     fun `advance blocked by notifications`() {
         `when`(notificationsService.isEmpty()).thenReturn(false)
-        val engine = CalendarEngine(eventsEngine, matchesEngine, notificationsService)
+        val engine = createEngine()
 
         val result = engine.advance()
 
@@ -46,7 +71,7 @@ class CalendarEngineTest {
     @Test
     @DisplayName("Пустые нотификации — advance со среды до понедельника")
     fun `advance from default start goes to monday`() {
-        val engine = CalendarEngine(eventsEngine, matchesEngine, notificationsService)
+        val engine = createEngine()
 
         val result = engine.advance()
 
@@ -58,7 +83,7 @@ class CalendarEngineTest {
     @Test
     @DisplayName("Несколько sequential advance — каждый раз +1 неделя")
     fun `sequential advances each go to next monday`() {
-        val engine = CalendarEngine(eventsEngine, matchesEngine, notificationsService)
+        val engine = createEngine()
 
         assertEquals("2020-07-06T08:00", engine.advance())
         assertEquals("2020-07-13T08:00", engine.advance())
@@ -69,8 +94,8 @@ class CalendarEngineTest {
     @Test
     @DisplayName("Понедельник 08:00 обрабатывается (не пропускается)")
     fun `monday morning is not skipped`() {
-        val initial = LocalDateTime.of(LocalDate.of(2020, 7, 6), LocalTime.of(8, 0))
-        val engine = CalendarEngine(eventsEngine, matchesEngine, notificationsService, initial)
+        sessionContext.currentMoment = LocalDateTime.of(LocalDate.of(2020, 7, 6), LocalTime.of(8, 0))
+        val engine = createEngine()
 
         val result = engine.advance()
 
@@ -81,8 +106,8 @@ class CalendarEngineTest {
     @Test
     @DisplayName("END_HOUR в воскресенье — останов на понедельнике без обработки")
     fun `sunday end stops at monday without processing`() {
-        val initial = LocalDateTime.of(LocalDate.of(2020, 7, 5), LocalTime.of(22, 0))
-        val engine = CalendarEngine(eventsEngine, matchesEngine, notificationsService, initial)
+        sessionContext.currentMoment = LocalDateTime.of(LocalDate.of(2020, 7, 5), LocalTime.of(22, 0))
+        val engine = createEngine()
 
         val result = engine.advance()
 
@@ -94,8 +119,8 @@ class CalendarEngineTest {
     @Test
     @DisplayName("Граница месяца: июль → август")
     fun `month boundary july to august`() {
-        val initial = LocalDateTime.of(LocalDate.of(2020, 7, 31), LocalTime.of(22, 0))
-        val engine = CalendarEngine(eventsEngine, matchesEngine, notificationsService, initial)
+        sessionContext.currentMoment = LocalDateTime.of(LocalDate.of(2020, 7, 31), LocalTime.of(22, 0))
+        val engine = createEngine()
 
         val result = engine.advance()
 
@@ -105,8 +130,8 @@ class CalendarEngineTest {
     @Test
     @DisplayName("Граница года: 2020 → 2021")
     fun `year boundary`() {
-        val initial = LocalDateTime.of(LocalDate.of(2020, 12, 31), LocalTime.of(22, 0))
-        val engine = CalendarEngine(eventsEngine, matchesEngine, notificationsService, initial)
+        sessionContext.currentMoment = LocalDateTime.of(LocalDate.of(2020, 12, 31), LocalTime.of(22, 0))
+        val engine = createEngine()
 
         val result = engine.advance()
 
@@ -117,7 +142,7 @@ class CalendarEngineTest {
     @DisplayName("Нотификация, добавленная eventsEngine, останавливает рекурсию")
     fun `notification added by events stops recursion`() {
         `when`(notificationsService.isEmpty()).thenReturn(true, false)
-        val engine = CalendarEngine(eventsEngine, matchesEngine, notificationsService)
+        val engine = createEngine()
 
         val result = engine.advance()
 
@@ -130,7 +155,7 @@ class CalendarEngineTest {
     @DisplayName("Очистка нотификации — advance продолжает с того же места")
     fun `after clearing notifications advance continues from where it stopped`() {
         `when`(notificationsService.isEmpty()).thenReturn(true, false)
-        val engine = CalendarEngine(eventsEngine, matchesEngine, notificationsService)
+        val engine = createEngine()
 
         assertEquals("2020-07-01T16:00", engine.advance())
 
@@ -139,5 +164,27 @@ class CalendarEngineTest {
 
         assertEquals("2020-07-06T08:00", result)
         verify(matchesEngine, atLeastOnce()).process()
+    }
+
+    @Test
+    @DisplayName("Когда есть матчи сегодня — создаётся нотификация")
+    fun `notification generated when matches exist today`() {
+        val tournamentId = UUID.randomUUID()
+        val club = mock(Club::class.java)
+        val matches = listOf(mock(Match::class.java))
+        val notification = Notification(title = "t", text = "t", timestamp = LocalDateTime.now())
+
+        `when`(club.tournaments).thenReturn(ConcurrentHashMap(mapOf(TournamentType.LEAGUE to tournamentId)))
+        `when`(todayMatchesFunction.execute(tournamentId)).thenReturn(matches)
+        `when`(roundPreviewPayloadGenerator.generate(tournamentId)).thenReturn(notification)
+
+        sessionContext.club = club
+        val engine = createEngine()
+
+        engine.advance()
+
+        verify(todayMatchesFunction).execute(tournamentId)
+        verify(roundPreviewPayloadGenerator).generate(tournamentId)
+        verify(notificationsService).create(notification)
     }
 }

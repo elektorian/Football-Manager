@@ -1,5 +1,6 @@
 package com.footballmanager.session
 
+import com.footballmanager.configuration.GlobalParameters
 import com.footballmanager.entities.Club
 import com.footballmanager.entities.Coach
 import com.footballmanager.entities.League
@@ -8,13 +9,18 @@ import jakarta.annotation.PostConstruct
 import org.springframework.context.annotation.DependsOn
 import org.springframework.stereotype.Component
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.random
 
+/**
+ * НЕ СОДЕРЖИТ БИЗНЕС ЛОГИКИ
+ */
 @Component
 @DependsOn("leagues", "seasonsConfiguration", "teams")
-class SessionState(
+class SessionContext(
     private val leagues: ConcurrentHashMap<UUID, League>,
     private val seasonService: SeasonService,
     private val teams: ConcurrentHashMap<UUID, Club>,

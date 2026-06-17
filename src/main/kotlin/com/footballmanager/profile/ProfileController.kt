@@ -3,15 +3,16 @@ package com.footballmanager.profile
 import com.footballmanager.entities.Club
 import com.footballmanager.entities.Coach
 import com.footballmanager.entities.League
+import com.footballmanager.functions.LeagueTableFunction
+import com.footballmanager.functions.TournamentCurrentSeasonFunction
 import com.footballmanager.matches.MatchesService
 import com.footballmanager.rounds.RoundsService
 import com.footballmanager.seasons.ScheduleService
-import com.footballmanager.seasons.SeasonService
-import com.footballmanager.session.SessionState
-import com.footballmanager.tournaments.TournamentsService
+import com.footballmanager.session.SessionContext
 import com.footballmanager.tournaments.dto.LeagueInfo
 import com.footballmanager.tournaments.dto.MatchInfo
 import com.footballmanager.tournaments.dto.RoundInfo
+import com.footballmanager.tournaments.enumerations.TournamentType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -21,27 +22,29 @@ import java.util.concurrent.ConcurrentHashMap
 @RestController
 @RequestMapping("/profile")
 class ProfileController(
-    private val sessionState: SessionState,
-    private val tournamentsService: TournamentsService,
-    private val seasonService: SeasonService,
+    private val sessionContext: SessionContext,
+    private val leagueTableFunction: LeagueTableFunction,
     private val scheduleService: ScheduleService,
     private val leagues: ConcurrentHashMap<UUID, League>,
     private val matchesService: MatchesService,
     private val teams: ConcurrentHashMap<UUID, Club>,
     private val roundsService: RoundsService,
+    private val tournamentCurrentSeasonFunction: TournamentCurrentSeasonFunction,
 ) {
     @GetMapping("/coach")
-    fun coach(): Coach = sessionState.player
+    fun coach(): Coach = sessionContext.player
 
     @GetMapping("/league")
     fun league(): LeagueInfo? {
-        if (sessionState.club == null) return null
-        if (sessionState.club!!.leagueSeason == null) return null
-        val season = sessionState.club!!.leagueSeason!!.let { seasonService.getSeason(it) }
+        if (sessionContext.club == null) return null
+        if (sessionContext.club!!.tournaments[TournamentType.LEAGUE] == null) return null
+        val season = sessionContext.club!!
+            .tournaments[TournamentType.LEAGUE]!!
+            .let { tournamentCurrentSeasonFunction.execute(it)}
         val league = leagues[season.league]!!
         return LeagueInfo(
             leagueName = league.name,
-            table = tournamentsService.getLeagueTable(
+            table = leagueTableFunction.getLeagueTable(
                 leagueId = league.id,
                 seasonId = season.id,
             ),

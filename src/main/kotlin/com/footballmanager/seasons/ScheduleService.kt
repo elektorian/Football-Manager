@@ -57,7 +57,7 @@ class ScheduleService(
             rest = listOf(rest.last()) + rest.dropLast(1)
         }
 
-        fun buildRound(arranged: List<Club?>, roundNumber: Int, isLeftHome: Boolean, matchDate: Date): Round {
+        fun buildRound(arranged: List<Club?>, roundNumber: Int, isLeftHome: Boolean, matchDate: LocalDate): Round {
             val roundId = UUID.randomUUID()
 
             val matches = buildList {
@@ -90,7 +90,7 @@ class ScheduleService(
 
         val firstHalf = buildList {
             for (roundIndex in 0 until firstHalfCount) {
-                val date = Date(baseDate.time + roundIndex * firstHalfIntervalMs)
+                val date = Date(baseDate.time + roundIndex * firstHalfIntervalMs).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
                 add(buildRound(listOf(fixed) + rest, roundIndex + 1, roundIndex % 2 == 0, date))
                 rotate()
             }
@@ -98,7 +98,7 @@ class ScheduleService(
 
         val secondHalf = buildList {
             for (roundIndex in 0 until secondHalfCount) {
-                val date = Date(springDate.time + roundIndex * secondHalfIntervalMs)
+                val date = Date(springDate.time + roundIndex * secondHalfIntervalMs).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
                 add(
                     buildRound(
                         listOf(fixed) + rest,
