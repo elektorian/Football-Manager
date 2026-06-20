@@ -42,6 +42,7 @@ class LeagueTableFunction(
         val draws = matches.count { it.status == MatchTeamStatus.DRAW }
         val losses = matches.count { it.status == MatchTeamStatus.LOSER }
         return LeagueTeamInfo(
+            teamId = club.id,
             name = club.name,
             victories = victories,
             draws = draws,

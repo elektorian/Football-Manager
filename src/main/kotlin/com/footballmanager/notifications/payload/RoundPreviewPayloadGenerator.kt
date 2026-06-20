@@ -38,7 +38,9 @@ class RoundPreviewPayloadGenerator(
                     val homeName = teams[match.homeTeam]!!.name
                     val awayName = teams[match.awayTeam]!!.name
                     MatchPair(
+                        homeTeamId = match.homeTeam,
                         homeTeam = homeName,
+                        awayTeamId = match.awayTeam,
                         awayTeam = awayName,
                         homePosition = positionByName[homeName] ?: 0,
                         awayPosition = positionByName[awayName] ?: 0,

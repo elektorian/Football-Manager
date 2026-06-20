@@ -1,4 +1,8 @@
-var tabs = ['profile', 'inbox', 'squad', 'tactics', 'tournaments', 'schedule', 'club', 'tournament']
+var tabs = ['profile', 'inbox', 'squad', 'tactics', 'tournaments', 'schedule', 'club', 'tournament', 'player', 'team', 'tournament-detail']
+
+function entityLink(type, id, label) {
+  return '<a href="#' + type + '/' + id + '" class="entity-link">' + label + '</a>'
+}
 var navHistory = []
 var ignoreNextHashChange = false
 var roundsData = null
@@ -8,11 +12,14 @@ var currentClubId = null
 var currentMoment = null
 
 function navigate() {
-  var tab = location.hash.replace(/^#/, '') || 'profile'
+  var hash = location.hash.replace(/^#/, '') || 'profile'
+  var parts = hash.split('/')
+  var tab = parts[0]
+  var entityId = parts[1]
 
   if (!ignoreNextHashChange) {
-    if (navHistory.length === 0 || navHistory[navHistory.length - 1] !== tab) {
-      navHistory.push(tab)
+    if (navHistory.length === 0 || navHistory[navHistory.length - 1] !== hash) {
+      navHistory.push(hash)
     }
   }
   ignoreNextHashChange = false
@@ -21,11 +28,24 @@ function navigate() {
   document.querySelectorAll('.page-content').forEach(function(el) {
     el.style.display = 'none'
   })
-  var page = document.getElementById('page-' + tab)
-  if (page) page.style.display = 'block'
 
-  if (tab === 'tournament') {
+  if (tab === 'tournament' && entityId) {
+    tab = 'tournament-detail'
+    var pageDetail = document.getElementById('page-tournament-detail')
+    if (pageDetail) pageDetail.style.display = 'block'
+  } else if (entityId) {
+    var pageEntity = document.getElementById('page-' + tab)
+    if (pageEntity) pageEntity.style.display = 'block'
+  } else {
+    var page = document.getElementById('page-' + tab)
+    if (page) page.style.display = 'block'
+  }
+
+  if (tab === 'tournament' || tab === 'tournament-detail') {
     document.querySelector('[data-tab="tournaments"]').classList.add('active')
+    document.querySelectorAll('.nav-item').forEach(function(el) {
+      if (el.getAttribute('data-tab') !== 'tournaments') el.classList.remove('active')
+    })
   } else {
     document.querySelectorAll('.nav-item').forEach(function(el) {
       el.classList.toggle('active', el.getAttribute('data-tab') === tab)
@@ -34,15 +54,19 @@ function navigate() {
 
   if (tab === 'profile') fetchProfile()
   if (tab === 'tournaments') {
-    console.log('navigate: tournaments tab, calling fetchTournamentSections')
     fetchTournamentSections()
   }
-  if (tab === 'tournament') {
+  if (tab === 'tournament' && !entityId) {
     updatePageTitle('')
     fetchTournamentPage()
   }
+  if (tab === 'tournament-detail') {
+    fetchTournamentDetailPage(entityId)
+  }
   if (tab === 'inbox') fetchNotifications()
   if (tab === 'club') fetchClub()
+  if (tab === 'player' && entityId) fetchPlayerPage(entityId)
+  if (tab === 'team' && entityId) fetchTeamPage(entityId)
 }
 
 // ─── Входящие / уведомления ─────────────────────────
@@ -115,9 +139,9 @@ function renderMatchPreview(payload) {
   payload.matches.forEach(function(m) {
     html += '<div class="round-match">'
       + '<div class="round-match-teams">'
-      + '<span class="round-match-team">(' + m.homePosition + ') ' + m.homeTeam + '</span>'
+      + '<span class="round-match-team">(' + m.homePosition + ') ' + entityLink('team', m.homeTeamId, m.homeTeam) + '</span>'
       + '<span class="round-match-score unplayed">-</span>'
-      + '<span class="round-match-team away">' + m.awayTeam + ' (' + m.awayPosition + ')</span>'
+      + '<span class="round-match-team away">' + entityLink('team', m.awayTeamId, m.awayTeam) + ' (' + m.awayPosition + ')</span>'
       + '</div>'
       + '</div>'
   })
@@ -218,7 +242,7 @@ function renderTournamentSection(container, leagueName, rows) {
   rows.forEach(function(r) {
     html += '<tr>'
       + '<td>' + r.position + '</td>'
-      + '<td class="td-club">' + r.name + '</td>'
+      + '<td class="td-club">' + entityLink('team', r.teamId, r.name) + '</td>'
       + '<td>' + r.victories + '</td>'
       + '<td>' + r.draws + '</td>'
       + '<td>' + r.losses + '</td>'
@@ -271,7 +295,7 @@ function renderFullTable(container, rows) {
     var gd = r.goalsScored - r.goalsConceded
     html += '<tr>'
       + '<td>' + r.position + '</td>'
-      + '<td class="td-club">' + r.name + '</td>'
+      + '<td class="td-club">' + entityLink('team', r.teamId, r.name) + '</td>'
       + '<td>' + (r.victories + r.draws + r.losses) + '</td>'
       + '<td>' + r.victories + '</td>'
       + '<td>' + r.draws + '</td>'
@@ -317,11 +341,11 @@ function renderCurrentRound() {
     html += '<div class="round-match">'
       + '<span class="round-match-date">' + dateStr + '</span>'
       + '<div class="round-match-teams">'
-      + '<span class="round-match-team">' + m.homeTeamName + '</span>'
+      + '<span class="round-match-team">' + entityLink('team', m.homeTeamId, m.homeTeamName) + '</span>'
       + '<span class="round-match-score' + (played ? '' : ' unplayed') + '">'
       + (played ? m.homeTeamScore + ' - ' + m.awayTeamScore : '-')
       + '</span>'
-      + '<span class="round-match-team away">' + m.awayTeamName + '</span>'
+      + '<span class="round-match-team away">' + entityLink('team', m.awayTeamId, m.awayTeamName) + '</span>'
       + '</div>'
       + '</div>'
   })
@@ -477,7 +501,7 @@ function renderSquadList(players) {
     var age = calculateAge(p.birthDate, currentMoment)
     var salary = p.salary != null ? formatSalary(p.salary) : '—'
     html += '<tr>'
-      + '<td class="td-player">' + name + '</td>'
+      + '<td class="td-player">' + entityLink('player', p.id, name) + '</td>'
       + '<td>' + age + '</td>'
       + '<td class="td-salary">' + salary + '</td>'
       + '</tr>'
@@ -500,4 +524,39 @@ function formatSalary(val) {
   var num = Number(val)
   if (isNaN(num)) return '—'
   return '€' + Math.round(num).toLocaleString('ru-RU') + '/нед'
+}
+
+// ─── Entity pages (empty for now) ─────────────────────
+function fetchPlayerPage(id) {
+  fetch('/players/' + id)
+    .then(function(r) { return r.json() })
+    .then(function(p) {
+      var name = p.lastName + ' ' + p.firstName
+      updatePageTitle(name)
+      var el = document.getElementById('page-player')
+      el.innerHTML = ''
+    })
+    .catch(function() { updatePageTitle('Игрок') })
+}
+
+function fetchTeamPage(id) {
+  fetch('/teams/' + id)
+    .then(function(r) { return r.json() })
+    .then(function(t) {
+      updatePageTitle(t.name)
+      var el = document.getElementById('page-team')
+      el.innerHTML = ''
+    })
+    .catch(function() { updatePageTitle('Клуб') })
+}
+
+function fetchTournamentDetailPage(id) {
+  fetch('/tournaments/' + id)
+    .then(function(r) { return r.json() })
+    .then(function(l) {
+      updatePageTitle(l.name)
+      var el = document.getElementById('page-tournament-detail')
+      el.innerHTML = ''
+    })
+    .catch(function() { updatePageTitle('Лига') })
 }

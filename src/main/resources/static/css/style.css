@@ -826,3 +826,14 @@ body {
 .squad-table tbody tr:last-child td {
     border-bottom: none;
 }
+
+.entity-link {
+    color: var(--accent);
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.entity-link:hover {
+    color: var(--accent-hover);
+}

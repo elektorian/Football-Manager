@@ -46,6 +46,7 @@ class ProfileController(
             .let { tournamentCurrentSeasonFunction.execute(it)}
         val league = leagues[season.league]!!
         return LeagueInfo(
+            leagueId = league.id,
             leagueName = league.name,
             table = leagueTableFunction.getLeagueTable(
                 leagueId = league.id,
