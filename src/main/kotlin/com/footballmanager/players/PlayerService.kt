@@ -1,6 +1,6 @@
 package com.footballmanager.players
 
-import com.footballmanager.entities.Club
+import com.footballmanager.entities.Team
 import com.footballmanager.players.dto.PlayerInfo
 import com.footballmanager.players.model.Player
 import org.springframework.stereotype.Service
@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Service
 class PlayerService(
-    private val teams: ConcurrentHashMap<UUID, Club>,
+    private val teams: ConcurrentHashMap<UUID, Team>,
 ) {
     private val players = ConcurrentHashMap<UUID, Player>()
 

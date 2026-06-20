@@ -1,6 +1,6 @@
 package com.footballmanager.players.configuration
 
-import com.footballmanager.entities.Club
+import com.footballmanager.entities.Team
 import com.footballmanager.players.PlayerService
 import com.footballmanager.players.model.Player
 import com.footballmanager.players.model.PlayerContract
@@ -15,7 +15,7 @@ import kotlin.random.Random
 
 @Configuration
 class PlayersConfiguration(
-    private val teams: ConcurrentHashMap<UUID, Club>,
+    private val teams: ConcurrentHashMap<UUID, Team>,
     private val playerService: PlayerService,
 ) {
     private companion object {

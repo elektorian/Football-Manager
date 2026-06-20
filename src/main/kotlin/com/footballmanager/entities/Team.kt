@@ -6,7 +6,7 @@ import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArraySet
 
-data class Club(
+data class Team(
     val id: UUID,
     val name: String,
     val abbreviation: String,

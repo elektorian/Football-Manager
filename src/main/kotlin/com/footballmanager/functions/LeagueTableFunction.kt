@@ -1,6 +1,6 @@
 package com.footballmanager.functions
 
-import com.footballmanager.entities.Club
+import com.footballmanager.entities.Team
 import com.footballmanager.entities.League
 import com.footballmanager.entities.match.MatchTeamStatus
 import com.footballmanager.entities.season.Season
@@ -16,7 +16,7 @@ class LeagueTableFunction(
     private val leagues: ConcurrentHashMap<UUID, League>,
     private val seasonService: SeasonService,
     private val matchesService: MatchesService,
-    private val teams: ConcurrentHashMap<UUID, Club>,
+    private val teams: ConcurrentHashMap<UUID, Team>,
 ) {
     fun getLeagueTable(leagueId: UUID, seasonId: UUID?): Collection<LeagueTeamInfo> {
         val league = leagues[leagueId] ?: throw IllegalStateException("League not found")
@@ -25,25 +25,25 @@ class LeagueTableFunction(
             .find { it.id == seasonId }
             ?: seasons.maxByOrNull { it.year }
             ?: throw IllegalStateException("Season not found")
-        return season.clubs
+        return season.teams
             .map { teams[it]!! }
-            .map { club -> formTeamInfo(club, season) }
+            .map { team -> formTeamInfo(team, season) }
             .sortedByDescending { it.points }
             .mapIndexed { index, teamInfo -> teamInfo.copy(position = index + 1) }
     }
 
-    private fun formTeamInfo(club: Club, season: Season): LeagueTeamInfo {
+    private fun formTeamInfo(team: Team, season: Season): LeagueTeamInfo {
         val matches = season.matches
             .map { matchesService.getMatch(it) }
-            .filter { club.isParticipant(it) }
+            .filter { team.isParticipant(it) }
             .filter { it.passed() }
-            .map { it.getResult(club) }
+            .map { it.getResult(team) }
         val victories = matches.count { it.status == MatchTeamStatus.WINNER }
         val draws = matches.count { it.status == MatchTeamStatus.DRAW }
         val losses = matches.count { it.status == MatchTeamStatus.LOSER }
         return LeagueTeamInfo(
-            teamId = club.id,
-            name = club.name,
+            teamId = team.id,
+            name = team.name,
             victories = victories,
             draws = draws,
             losses = losses,

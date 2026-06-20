@@ -1,6 +1,6 @@
 package com.footballmanager.seasons
 
-import com.footballmanager.entities.Club
+import com.footballmanager.entities.Team
 import com.footballmanager.entities.match.Match
 import com.footballmanager.entities.season.Season
 import com.footballmanager.entities.season.schedule.LeagueSchedule
@@ -16,7 +16,7 @@ import kotlin.math.roundToInt
 
 @Service
 class ScheduleService(
-    private val teams: ConcurrentHashMap<UUID, Club>,
+    private val teams: ConcurrentHashMap<UUID, Team>,
     private val matchesService: MatchesService,
     private val roundsService: RoundsService,
 ) {
@@ -26,11 +26,11 @@ class ScheduleService(
     fun getSchedule(id: UUID) = schedules[id]!!
 
     fun generateLeagueSchedule(season: Season): LeagueSchedule {
-        val clubs = season.clubs.shuffled().map { teams[it]!! }
-        val n = clubs.size
+        val shuffledTeams = season.teams.shuffled().map { teams[it]!! }
+        val n = shuffledTeams.size
 
         val effectiveN = if (n % 2 == 1) n + 1 else n
-        val teams: List<Club?> = clubs + List(effectiveN - n) { null }
+        val teams: List<Team?> = shuffledTeams + List(effectiveN - n) { null }
 
         val baseDate = Date.from(
             LocalDate.of(season.year, 7, 7)
@@ -58,7 +58,7 @@ class ScheduleService(
             rest = listOf(rest.last()) + rest.dropLast(1)
         }
 
-        fun buildRound(arranged: List<Club?>, roundNumber: Int, isLeftHome: Boolean, matchDate: LocalDate): Round {
+        fun buildRound(arranged: List<Team?>, roundNumber: Int, isLeftHome: Boolean, matchDate: LocalDate): Round {
             val roundId = UUID.randomUUID()
 
             val matches = buildList {

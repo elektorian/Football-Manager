@@ -1,7 +1,7 @@
 package com.footballmanager.calendar
 
 import com.footballmanager.application.events.NewDayEvent
-import com.footballmanager.entities.Club
+import com.footballmanager.entities.Team
 import com.footballmanager.entities.match.Match
 import com.footballmanager.events.EventsEngine
 import com.footballmanager.functions.TournamentTodayMatchesFunction
@@ -165,7 +165,7 @@ class CalendarEngineTest {
     @DisplayName("Когда есть матчи сегодня — создаётся нотификация")
     fun `notification generated when matches exist today`() {
         val tournamentId = UUID.randomUUID()
-        val club = mock(Club::class.java)
+        val team = mock(Team::class.java)
         val matches = listOf(mock(Match::class.java))
         val notification = Notification(title = "t", type = NotificationType.MATCH_PREVIEW, payload = MatchPreviewPayload("", emptyList()), timestamp = LocalDateTime.now(), date = LocalDate.now())
         val tournamentTodayMatchesFunction = mock(TournamentTodayMatchesFunction::class.java)
@@ -176,11 +176,11 @@ class CalendarEngineTest {
             ConcurrentHashMap(),
         )
 
-        `when`(club.tournaments).thenReturn(ConcurrentHashMap(mapOf(TournamentType.LEAGUE to tournamentId)))
+        `when`(team.tournaments).thenReturn(ConcurrentHashMap(mapOf(TournamentType.LEAGUE to tournamentId)))
         `when`(tournamentTodayMatchesFunction.execute(tournamentId)).thenReturn(matches)
         `when`(roundPreviewPayloadGenerator.generate(tournamentId)).thenReturn(notification)
 
-        sessionContext.club = club
+        sessionContext.team = team
         val processor = DailyNotificationsProcessor(
             sessionContext, tournamentTodayMatchesFunction, roundPreviewPayloadGenerator, notificationsService,
         )

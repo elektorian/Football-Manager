@@ -23,7 +23,7 @@ class DailyNotificationsProcessor(
     }
 
     private fun checkTodayMatchesNotification(): Boolean {
-        sessionContext.club?.tournaments?.forEach { (_, tournamentId) ->
+        sessionContext.team?.tournaments?.forEach { (_, tournamentId) ->
             val todayMatches = tournamentTodayMatchesFunction.execute(tournamentId)
             if (!todayMatches.isNullOrEmpty()) {
                 notificationsService.create(roundPreviewPayloadGenerator.generate(tournamentId))

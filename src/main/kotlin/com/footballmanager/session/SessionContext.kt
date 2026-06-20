@@ -1,7 +1,6 @@
 package com.footballmanager.session
 
-import com.footballmanager.configuration.GlobalParameters
-import com.footballmanager.entities.Club
+import com.footballmanager.entities.Team
 import com.footballmanager.entities.Coach
 import com.footballmanager.entities.League
 import com.footballmanager.seasons.SeasonService
@@ -9,8 +8,6 @@ import jakarta.annotation.PostConstruct
 import org.springframework.context.annotation.DependsOn
 import org.springframework.stereotype.Component
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.random
@@ -23,7 +20,7 @@ import kotlin.collections.random
 class SessionContext(
     private val leagues: ConcurrentHashMap<UUID, League>,
     private val seasonService: SeasonService,
-    private val teams: ConcurrentHashMap<UUID, Club>,
+    private val teams: ConcurrentHashMap<UUID, Team>,
 ) {
     val player: Coach = Coach(
         id = UUID.randomUUID(),
@@ -33,16 +30,16 @@ class SessionContext(
     )
 
     @Volatile
-    var club: Club? = null
+    var team: Team? = null
 
     @PostConstruct
     fun init() {
-        club = leagues.values
+        team = leagues.values
             .random()
             .seasons
             .random()
             .let { seasonService.getSeason(it) }
-            .clubs
+            .teams
             .random()
             .let { teams[it]!! }
     }

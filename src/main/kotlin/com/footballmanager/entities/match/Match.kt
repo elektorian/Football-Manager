@@ -1,6 +1,6 @@
 package com.footballmanager.entities.match
 
-import com.footballmanager.entities.Club
+import com.footballmanager.entities.Team
 import java.time.LocalDate
 import java.util.UUID
 
@@ -28,7 +28,7 @@ data class Match(
     }
 
     @Synchronized
-    fun getResult(team: Club): MatchTeamResult {
+    fun getResult(team: Team): MatchTeamResult {
         if (awayTeamResult == null || homeTeamResult == null) throw IllegalStateException("awayTeamResult == null or homeTeamResult == null")
         val teamResult =
             when (team.id) {

@@ -7,7 +7,7 @@ data class Season(
     val id : UUID,
     val league: UUID,
     val year: Int,
-    val clubs: CopyOnWriteArraySet<UUID>,
+    val teams: CopyOnWriteArraySet<UUID>,
     val matches: CopyOnWriteArraySet<UUID>,
     var schedule: UUID? = null,
 )

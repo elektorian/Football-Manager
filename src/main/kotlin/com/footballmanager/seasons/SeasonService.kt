@@ -1,6 +1,6 @@
 package com.footballmanager.seasons
 
-import com.footballmanager.entities.Club
+import com.footballmanager.entities.Team
 import com.footballmanager.entities.League
 import com.footballmanager.entities.season.Season
 import com.footballmanager.tournaments.enumerations.TournamentType
@@ -18,18 +18,18 @@ class SeasonService(
     fun create(
         year: Int,
         league: League,
-        clubs: CopyOnWriteArraySet<Club>,
+        teams: CopyOnWriteArraySet<Team>,
     ) {
         val season = Season(
             id = UUID.randomUUID(),
             year = year,
             matches = CopyOnWriteArraySet(),
             league = league.id,
-            clubs = CopyOnWriteArraySet(clubs.map { it.id }),
+            teams = CopyOnWriteArraySet(teams.map { it.id }),
         )
         season.schedule = scheduleService.generateLeagueSchedule(season).id
         league.seasons.add(season.id)
-        clubs.forEach { it.tournaments[TournamentType.LEAGUE] = league.id }
+        teams.forEach { it.tournaments[TournamentType.LEAGUE] = league.id }
         seasons[season.id] = season
     }
 

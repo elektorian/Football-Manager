@@ -6,5 +6,5 @@ import java.util.concurrent.CopyOnWriteArraySet
 data class FirstSeasonData(
     val id : UUID,
     val league: UUID,
-    val clubs: CopyOnWriteArraySet<UUID>,
+    val teams: CopyOnWriteArraySet<UUID>,
 )

@@ -1,6 +1,6 @@
 package com.footballmanager.profile
 
-import com.footballmanager.entities.Club
+import com.footballmanager.entities.Team
 import com.footballmanager.entities.Coach
 import com.footballmanager.entities.League
 import com.footballmanager.functions.LeagueTableFunction
@@ -29,7 +29,7 @@ class ProfileController(
     private val scheduleService: ScheduleService,
     private val leagues: ConcurrentHashMap<UUID, League>,
     private val matchesService: MatchesService,
-    private val teams: ConcurrentHashMap<UUID, Club>,
+    private val teams: ConcurrentHashMap<UUID, Team>,
     private val roundsService: RoundsService,
     private val tournamentCurrentSeasonFunction: TournamentCurrentSeasonFunction,
     private val teamService: TeamService,
@@ -39,9 +39,9 @@ class ProfileController(
 
     @GetMapping("/league")
     fun league(): LeagueInfo? {
-        if (sessionContext.club == null) return null
-        if (sessionContext.club!!.tournaments[TournamentType.LEAGUE] == null) return null
-        val season = sessionContext.club!!
+        if (sessionContext.team == null) return null
+        if (sessionContext.team!!.tournaments[TournamentType.LEAGUE] == null) return null
+        val season = sessionContext.team!!
             .tournaments[TournamentType.LEAGUE]!!
             .let { tournamentCurrentSeasonFunction.execute(it)}
         val league = leagues[season.league]!!
@@ -76,13 +76,13 @@ class ProfileController(
 
     @GetMapping("/team")
     fun getTeam(): TeamInfo? {
-        sessionContext.club ?: return null
-        return teamService.getTeamInfo(sessionContext.club!!.id)
+        sessionContext.team ?: return null
+        return teamService.getTeamInfo(sessionContext.team!!.id)
     }
 
     @GetMapping("/schedule")
     fun schedule(): List<MatchInfo> {
-        val club = sessionContext.club ?: return emptyList()
-        return teamService.getTeamSchedule(club.id)
+        val team = sessionContext.team ?: return emptyList()
+        return teamService.getTeamSchedule(team.id)
     }
 }

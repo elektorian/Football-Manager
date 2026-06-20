@@ -3,7 +3,7 @@ package com.footballmanager.seasons.configuration
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.footballmanager.configuration.GlobalParameters
-import com.footballmanager.entities.Club
+import com.footballmanager.entities.Team
 import com.footballmanager.entities.League
 import com.footballmanager.seasons.SeasonService
 import jakarta.annotation.PostConstruct
@@ -19,7 +19,7 @@ class SeasonsConfiguration(
     private val resolver: PathMatchingResourcePatternResolver,
     private val seasonService: SeasonService,
     private val leagues: ConcurrentHashMap<UUID, League>,
-    private val teams: ConcurrentHashMap<UUID, Club>,
+    private val teams: ConcurrentHashMap<UUID, Team>,
 ) {
     @PostConstruct
     fun setupFirstSeasons() {
@@ -28,7 +28,7 @@ class SeasonsConfiguration(
             seasonService.create(
                 year = GlobalParameters.START_YEAR,
                 league = leagues[season.league]!!,
-                clubs = season.clubs.mapTo(CopyOnWriteArraySet()) { teams[it]!! },
+                teams = season.teams.mapTo(CopyOnWriteArraySet()) { teams[it]!! },
             )
         }
     }

@@ -1,6 +1,6 @@
 package com.footballmanager.players
 
-import com.footballmanager.entities.Club
+import com.footballmanager.entities.Team
 import com.footballmanager.players.dto.PlayerInfo
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap
 @RequestMapping("/players")
 class PlayerController(
     private val playerService: PlayerService,
-    private val teams: ConcurrentHashMap<UUID, Club>,
+    private val teams: ConcurrentHashMap<UUID, Team>,
 ) {
     @GetMapping("{id}")
     fun getPlayer(@PathVariable id: UUID): PlayerInfo {

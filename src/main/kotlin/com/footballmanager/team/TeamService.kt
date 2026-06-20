@@ -1,6 +1,6 @@
 package com.footballmanager.team
 
-import com.footballmanager.entities.Club
+import com.footballmanager.entities.Team
 import com.footballmanager.functions.TournamentScheduleFunction
 import com.footballmanager.matches.MatchesService
 import com.footballmanager.team.dto.TeamInfo
@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Service
 class TeamService(
-    private val teams: ConcurrentHashMap<UUID, Club>,
+    private val teams: ConcurrentHashMap<UUID, Team>,
     private val matchesService: MatchesService,
     private val tournamentScheduleFunction: TournamentScheduleFunction,
 ) {
@@ -27,12 +27,12 @@ class TeamService(
     }
 
     fun getTeamSchedule(teamId: UUID): List<MatchInfo> {
-        val club = teams[teamId] ?: return emptyList()
+        val team = teams[teamId] ?: return emptyList()
 
-        return club.tournaments.values.flatMap { tournamentId ->
+        return team.tournaments.values.flatMap { tournamentId ->
             tournamentScheduleFunction.execute(tournamentId)
                 ?.flatMap { round -> round.matches.map { matchesService.getMatch(it) } }
-                ?.filter { club.isParticipant(it) }
+                ?.filter { team.isParticipant(it) }
                 ?.map { match ->
                     MatchInfo(
                         id = match.id,

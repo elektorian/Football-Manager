@@ -1,7 +1,7 @@
 package com.footballmanager.notifications.payload
 
 import com.footballmanager.calendar.CurrentMomentHolder
-import com.footballmanager.entities.Club
+import com.footballmanager.entities.Team
 import com.footballmanager.entities.League
 import com.footballmanager.functions.LeagueTableFunction
 import com.footballmanager.functions.TournamentCurrentSeasonFunction
@@ -19,7 +19,7 @@ class RoundPreviewPayloadGenerator(
     private val tournamentCurrentSeasonFunction: TournamentCurrentSeasonFunction,
     private val leagueTableFunction: LeagueTableFunction,
     private val leagues: ConcurrentHashMap<UUID, League>,
-    private val teams: ConcurrentHashMap<UUID, Club>,
+    private val teams: ConcurrentHashMap<UUID, Team>,
     private val currentMomentHolder: CurrentMomentHolder,
 ) {
     fun generate(tournamentId: UUID): Notification {
