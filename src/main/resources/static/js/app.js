@@ -380,8 +380,14 @@ function updateDate(timestamp) {
 
 function advanceDay() {
   fetch('/calendar/advance', { method: 'POST' })
-    .then(function(r) { return r.text() })
-    .then(function(str) { updateDate(str) })
+    .then(function(r) { return r.json() })
+    .then(function(data) {
+      updateDate(data.currentMoment)
+      if (data.anyUnreadNotifications) {
+        if (location.hash === '#inbox') fetchNotifications()
+        else location.hash = '#inbox'
+      }
+    })
     .catch(function() { alert('Ошибка при продвижении дня') })
 }
 
