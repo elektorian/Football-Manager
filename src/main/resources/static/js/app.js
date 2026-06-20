@@ -29,6 +29,10 @@ function navigate() {
     el.style.display = 'none'
   })
 
+  if (tab === 'team' && entityId) {
+    tab = 'club'
+  }
+
   if (tab === 'tournament' && entityId) {
     tab = 'tournament-detail'
     var pageDetail = document.getElementById('page-tournament-detail')
@@ -64,9 +68,8 @@ function navigate() {
     fetchTournamentDetailPage(entityId)
   }
   if (tab === 'inbox') fetchNotifications()
-  if (tab === 'club') fetchClub()
+  if (tab === 'club') fetchClub(entityId)
   if (tab === 'player' && entityId) fetchPlayerPage(entityId)
-  if (tab === 'team' && entityId) fetchTeamPage(entityId)
 }
 
 // ─── Входящие / уведомления ─────────────────────────
@@ -278,6 +281,7 @@ function fetchTournamentPage() {
       roundsData = data.rounds || null
       currentRoundIndex = 0
       renderFullTable(container, data.table)
+      switchTournamentTab('table')
     })
     .catch(function(err) {
       console.error('fetchTournamentPage: error', err)
@@ -457,17 +461,17 @@ document.addEventListener('click', function(e) {
   }
 })
 
-// ─── Страница "Клуб" (#club) ─────────────────────────
-function fetchClub() {
-  fetch('/profile/team')
+// ─── Страница "Клуб" (#club / #club/{teamId}) ────────
+function fetchClub(teamId) {
+  var url = teamId ? '/teams/' + teamId : '/profile/team'
+  fetch(url)
     .then(function(r) { return r.json() })
     .then(function(team) {
       currentClubId = team.id
       document.getElementById('clubName').textContent = team.name
       document.getElementById('clubCountry').textContent = team.country
       document.getElementById('clubCity').textContent = team.city
-      var activeTab = document.querySelector('#page-club .tab.active')
-      if (activeTab && activeTab.getAttribute('data-tab') === 'squad') fetchSquad()
+      switchClubTab('info')
     })
     .catch(function() {})
 }
