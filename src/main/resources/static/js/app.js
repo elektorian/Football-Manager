@@ -86,8 +86,7 @@ function selectNotification(id, fromClick) {
     fetch('/notifications/' + id, { method: 'POST' })
       .then(function(r) { return r.json() })
       .then(function(n) {
-        document.getElementById('inboxContent').innerHTML =
-          '<div style="white-space:pre-wrap;">' + n.text + '</div>'
+        renderNotificationContent(n)
       })
       .catch(function() {})
     var idx = notificationsData.findIndex(function(n) { return n.id === id })
@@ -95,11 +94,32 @@ function selectNotification(id, fromClick) {
     renderInboxList()
   } else {
     var n = notificationsData.find(function(n) { return n.id === id })
-    if (n) {
-      document.getElementById('inboxContent').innerHTML =
-        '<div style="white-space:pre-wrap;">' + n.text + '</div>'
-    }
+    if (n) renderNotificationContent(n)
   }
+}
+
+function renderNotificationContent(n) {
+  var el = document.getElementById('inboxContent')
+  if (n.type === 'MATCH_PREVIEW') {
+    el.innerHTML = '<div style="white-space:normal;">' + renderMatchPreview(n.payload) + '</div>'
+  } else {
+    el.innerHTML = '<div style="white-space:pre-wrap;">' + JSON.stringify(n.payload) + '</div>'
+  }
+}
+
+function renderMatchPreview(payload) {
+  var html = '<div class="round-matches">'
+  payload.matches.forEach(function(m) {
+    html += '<div class="round-match">'
+      + '<div class="round-match-teams">'
+      + '<span class="round-match-team">(' + m.homePosition + ') ' + m.homeTeam + '</span>'
+      + '<span class="round-match-score unplayed">-</span>'
+      + '<span class="round-match-team away">' + m.awayTeam + ' (' + m.awayPosition + ')</span>'
+      + '</div>'
+      + '</div>'
+  })
+  html += '</div>'
+  return html
 }
 
 function onInboxItemClick(id) {

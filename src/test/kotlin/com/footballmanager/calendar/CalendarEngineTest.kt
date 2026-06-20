@@ -8,6 +8,8 @@ import com.footballmanager.functions.TournamentTodayMatchesFunction
 import com.footballmanager.matches.MatchesEngine
 import com.footballmanager.notifications.NotificationsService
 import com.footballmanager.notifications.model.Notification
+import com.footballmanager.notifications.model.NotificationType
+import com.footballmanager.notifications.payload.MatchPreviewPayload
 import com.footballmanager.notifications.payload.RoundPreviewPayloadGenerator
 import com.footballmanager.seasons.SeasonService
 import com.footballmanager.session.SessionContext
@@ -165,7 +167,7 @@ class CalendarEngineTest {
         val tournamentId = UUID.randomUUID()
         val club = mock(Club::class.java)
         val matches = listOf(mock(Match::class.java))
-        val notification = Notification(title = "t", text = "t", timestamp = LocalDateTime.now(), date = LocalDate.now())
+        val notification = Notification(title = "t", type = NotificationType.MATCH_PREVIEW, payload = MatchPreviewPayload("", emptyList()), timestamp = LocalDateTime.now(), date = LocalDate.now())
         val tournamentTodayMatchesFunction = mock(TournamentTodayMatchesFunction::class.java)
         val roundPreviewPayloadGenerator = mock(RoundPreviewPayloadGenerator::class.java)
         val sessionContext = SessionContext(

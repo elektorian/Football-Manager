@@ -37,7 +37,8 @@ class NotificationsService {
     fun convert(notification: Notification): NotificationInfo =
         NotificationInfo(
             title = notification.title,
-            text = notification.text,
+            type = notification.type,
+            payload = notification.payload,
             timestamp = notification.timestamp,
             id = notification.id,
             checked = notification.checked,
