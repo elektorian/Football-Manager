@@ -20,6 +20,7 @@ class ScheduleService(
     private val matchesService: MatchesService,
     private val roundsService: RoundsService,
 ) {
+    // todo нельзя ставить матч на день когда у команды уже есть матч в другой лиге
     private val schedules = ConcurrentHashMap<UUID, LeagueSchedule>()
 
     fun getSchedule(id: UUID) = schedules[id]!!

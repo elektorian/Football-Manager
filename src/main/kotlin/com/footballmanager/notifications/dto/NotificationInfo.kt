@@ -1,5 +1,6 @@
 package com.footballmanager.notifications.dto
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -9,4 +10,5 @@ data class NotificationInfo(
     val text: String,
     val timestamp: LocalDateTime,
     val checked: Boolean,
+    val date: LocalDate,
 )

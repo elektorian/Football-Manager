@@ -1,6 +1,8 @@
 package com.footballmanager.calendar
 
+import com.footballmanager.application.events.NewDayEvent
 import com.footballmanager.configuration.GlobalParameters
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -8,7 +10,7 @@ import java.time.LocalTime
 
 @Component
 class CurrentMomentHolder(
-    private val dailyNotificationsProcessor: DailyNotificationsProcessor,
+    private val eventPublisher: ApplicationEventPublisher,
 ) {
 
     private var currentMoment: LocalDateTime = LocalDateTime.of(
@@ -26,7 +28,7 @@ class CurrentMomentHolder(
         if (newCurrentMoment < currentMoment) throw IllegalStateException("Время не может двигаться взад")
         currentMoment = newCurrentMoment
         if (currentMoment.hour == DayHour.START_HOUR.value) {
-            dailyNotificationsProcessor.process()
+            eventPublisher.publishEvent(NewDayEvent)
         }
     }
 

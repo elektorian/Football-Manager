@@ -1,9 +1,10 @@
 package com.footballmanager.calendar
 
+import com.footballmanager.application.events.NewDayEvent
 import com.footballmanager.entities.Club
 import com.footballmanager.entities.match.Match
 import com.footballmanager.events.EventsEngine
-import com.footballmanager.functions.TodayMatchesFunction
+import com.footballmanager.functions.TournamentTodayMatchesFunction
 import com.footballmanager.matches.MatchesEngine
 import com.footballmanager.notifications.NotificationsService
 import com.footballmanager.notifications.model.Notification
@@ -20,6 +21,7 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
+import org.springframework.context.ApplicationEventPublisher
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -31,28 +33,19 @@ class CalendarEngineTest {
     private lateinit var eventsEngine: EventsEngine
     private lateinit var matchesEngine: MatchesEngine
     private lateinit var notificationsService: NotificationsService
-    private lateinit var sessionContext: SessionContext
-    private lateinit var todayMatchesFunction: TodayMatchesFunction
-    private lateinit var roundPreviewPayloadGenerator: RoundPreviewPayloadGenerator
+    private lateinit var currentMomentHolder: CurrentMomentHolder
 
     @BeforeEach
     fun setUp() {
         eventsEngine = mock(EventsEngine::class.java)
         matchesEngine = mock(MatchesEngine::class.java)
         notificationsService = mock(NotificationsService::class.java)
-        todayMatchesFunction = mock(TodayMatchesFunction::class.java)
-        roundPreviewPayloadGenerator = mock(RoundPreviewPayloadGenerator::class.java)
-        sessionContext = SessionContext(
-            ConcurrentHashMap(),
-            mock(SeasonService::class.java),
-            ConcurrentHashMap(),
-        )
+        currentMomentHolder = CurrentMomentHolder(mock(ApplicationEventPublisher::class.java))
         `when`(notificationsService.isEmpty()).thenReturn(true)
     }
 
     private fun createEngine() = CalendarEngine(
-        eventsEngine, matchesEngine, notificationsService,
-        sessionContext, todayMatchesFunction, roundPreviewPayloadGenerator,
+        eventsEngine, matchesEngine, notificationsService, currentMomentHolder,
     )
 
     @Test
@@ -94,7 +87,7 @@ class CalendarEngineTest {
     @Test
     @DisplayName("Понедельник 08:00 обрабатывается (не пропускается)")
     fun `monday morning is not skipped`() {
-        sessionContext.currentMoment = LocalDateTime.of(LocalDate.of(2020, 7, 6), LocalTime.of(8, 0))
+        currentMomentHolder.set(LocalDateTime.of(LocalDate.of(2020, 7, 6), LocalTime.of(8, 0)))
         val engine = createEngine()
 
         val result = engine.advance()
@@ -106,7 +99,7 @@ class CalendarEngineTest {
     @Test
     @DisplayName("END_HOUR в воскресенье — останов на понедельнике без обработки")
     fun `sunday end stops at monday without processing`() {
-        sessionContext.currentMoment = LocalDateTime.of(LocalDate.of(2020, 7, 5), LocalTime.of(22, 0))
+        currentMomentHolder.set(LocalDateTime.of(LocalDate.of(2020, 7, 5), LocalTime.of(22, 0)))
         val engine = createEngine()
 
         val result = engine.advance()
@@ -119,7 +112,7 @@ class CalendarEngineTest {
     @Test
     @DisplayName("Граница месяца: июль → август")
     fun `month boundary july to august`() {
-        sessionContext.currentMoment = LocalDateTime.of(LocalDate.of(2020, 7, 31), LocalTime.of(22, 0))
+        currentMomentHolder.set(LocalDateTime.of(LocalDate.of(2020, 7, 31), LocalTime.of(22, 0)))
         val engine = createEngine()
 
         val result = engine.advance()
@@ -130,7 +123,7 @@ class CalendarEngineTest {
     @Test
     @DisplayName("Граница года: 2020 → 2021")
     fun `year boundary`() {
-        sessionContext.currentMoment = LocalDateTime.of(LocalDate.of(2020, 12, 31), LocalTime.of(22, 0))
+        currentMomentHolder.set(LocalDateTime.of(LocalDate.of(2020, 12, 31), LocalTime.of(22, 0)))
         val engine = createEngine()
 
         val result = engine.advance()
@@ -172,18 +165,27 @@ class CalendarEngineTest {
         val tournamentId = UUID.randomUUID()
         val club = mock(Club::class.java)
         val matches = listOf(mock(Match::class.java))
-        val notification = Notification(title = "t", text = "t", timestamp = LocalDateTime.now())
+        val notification = Notification(title = "t", text = "t", timestamp = LocalDateTime.now(), date = LocalDate.now())
+        val tournamentTodayMatchesFunction = mock(TournamentTodayMatchesFunction::class.java)
+        val roundPreviewPayloadGenerator = mock(RoundPreviewPayloadGenerator::class.java)
+        val sessionContext = SessionContext(
+            ConcurrentHashMap(),
+            mock(SeasonService::class.java),
+            ConcurrentHashMap(),
+        )
 
         `when`(club.tournaments).thenReturn(ConcurrentHashMap(mapOf(TournamentType.LEAGUE to tournamentId)))
-        `when`(todayMatchesFunction.execute(tournamentId)).thenReturn(matches)
+        `when`(tournamentTodayMatchesFunction.execute(tournamentId)).thenReturn(matches)
         `when`(roundPreviewPayloadGenerator.generate(tournamentId)).thenReturn(notification)
 
         sessionContext.club = club
-        val engine = createEngine()
+        val processor = DailyNotificationsProcessor(
+            sessionContext, tournamentTodayMatchesFunction, roundPreviewPayloadGenerator, notificationsService,
+        )
 
-        engine.advance()
+        processor.onNewDay(NewDayEvent)
 
-        verify(todayMatchesFunction).execute(tournamentId)
+        verify(tournamentTodayMatchesFunction).execute(tournamentId)
         verify(roundPreviewPayloadGenerator).generate(tournamentId)
         verify(notificationsService).create(notification)
     }

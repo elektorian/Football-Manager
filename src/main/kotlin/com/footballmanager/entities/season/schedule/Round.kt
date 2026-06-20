@@ -6,6 +6,7 @@ import java.util.UUID
 data class Round(
     val matches: List<UUID>,
     val number: Int,
+    @Volatile
     var passed: Boolean,
     val season: Season,
     val id: UUID,

@@ -10,22 +10,33 @@ data class Match(
     val date: LocalDate,
     val homeTeam: UUID,
     val awayTeam: UUID,
-    val homeTeamResult: MatchTeamResult? = null,
-    val awayTeamResult: MatchTeamResult? = null,
     val round: UUID,
 ) {
-    fun passed(): Boolean{
+    var homeTeamResult: MatchTeamResult? = null
+        @Synchronized
+        get
+        @Synchronized
+        set
+    var awayTeamResult: MatchTeamResult? = null
+        @Synchronized
+        get
+        @Synchronized
+        set
+
+    @Synchronized
+    fun passed(): Boolean {
         return !(awayTeamResult == null || homeTeamResult == null)
     }
 
+    @Synchronized
     fun getResult(team: Club): MatchTeamResult {
         if (awayTeamResult == null || homeTeamResult == null) throw IllegalStateException("awayTeamResult == null or homeTeamResult == null")
         val teamResult =
-            when (id) {
-                homeTeamResult.team -> homeTeamResult
-                awayTeamResult.team -> awayTeamResult
+            when (team.id) {
+                homeTeamResult!!.team -> homeTeamResult
+                awayTeamResult!!.team -> awayTeamResult
                 else -> throw IllegalStateException("$this match result is not connected to $team team")
             }
-        return teamResult
+        return teamResult!!
     }
 }

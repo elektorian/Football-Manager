@@ -18,7 +18,7 @@ class NotificationsService {
 
     fun getAll(): List<NotificationInfo> {
         val notifications = notifications.values
-        return notifications.map(this::convert)
+        return notifications.map(this::convert).sortedBy { it.timestamp }
     }
 
     fun read(id: UUID): NotificationInfo {
@@ -41,5 +41,6 @@ class NotificationsService {
             timestamp = notification.timestamp,
             id = notification.id,
             checked = notification.checked,
+            date = notification.date,
         )
 }

@@ -53,7 +53,12 @@ function fetchNotifications() {
     .then(function(list) {
       notificationsData = list
       renderInboxList()
-      if (list.length > 0) selectNotification(list[0].id, false)
+      if (list.length > 0) {
+        var target = list.filter(function(n) { return !n.checked })
+          .sort(function(a, b) { return new Date(b.timestamp) - new Date(a.timestamp) })[0]
+        if (!target) target = list.sort(function(a, b) { return new Date(b.timestamp) - new Date(a.timestamp) })[0]
+        selectNotification(target.id, false)
+      }
     })
     .catch(function() {})
 }
@@ -63,7 +68,7 @@ function renderInboxList() {
   var html = ''
   for (var i = notificationsData.length - 1; i >= 0; i--) {
     var n = notificationsData[i]
-    var d = parseLocalDateTime(n.timestamp)
+    var d = new Date(n.date).toLocaleDateString('ru-RU')
     html += '<div class="inbox-item' + (n.checked ? ' read' : '') + '" data-id="' + n.id + '" onclick="onInboxItemClick(\'' + n.id + '\')">'
       + '<div class="inbox-item-title">' + n.title + '</div>'
       + '<div class="inbox-item-date">' + d + '</div>'
@@ -102,7 +107,9 @@ function onInboxItemClick(id) {
 }
 
 function parseLocalDateTime(arr) {
-  if (!arr || arr.length < 3) return ''
+  if (!arr) return ''
+  if (typeof arr === 'string') return new Date(arr).toLocaleDateString('ru-RU')
+  if (arr.length < 3) return ''
   var d = new Date(arr[0], arr[1] - 1, arr[2], arr[3] || 0, arr[4] || 0)
   return d.toLocaleDateString('ru-RU')
 }
