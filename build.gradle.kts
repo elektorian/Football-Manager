@@ -24,10 +24,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("com.github.javafaker:javafaker:1.0.2") {
-        exclude(group = "org.yaml", module = "snakeyaml")
-    }
-    implementation("org.yaml:snakeyaml:2.0")
+    implementation("net.datafaker:datafaker:2.6.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")

@@ -39,8 +39,52 @@ object Transliterator {
 
     fun transliterate(text: String): String {
         val sb = StringBuilder()
-        for (ch in text) {
+        var i = 0
+        while (i < text.length) {
+            val ch = text[i]
+
+            if (ch == 'е' && (i == 0 || !text[i - 1].isLetter())) {
+                sb.append("ye")
+                i++
+                continue
+            }
+
+            if ((ch == 'ь' || ch == 'ъ') && i + 1 < text.length) {
+                val next = text[i + 1]
+                when (next) {
+                    'е' -> { sb.append("je"); i += 2; continue }
+                    'ё' -> { sb.append("jo"); i += 2; continue }
+                    'ю' -> { sb.append("ju"); i += 2; continue }
+                    'я' -> { sb.append("ja"); i += 2; continue }
+                }
+            }
+            if ((ch == 'Ь' || ch == 'Ъ') && i + 1 < text.length) {
+                val next = text[i + 1]
+                when (next) {
+                    'Е' -> { sb.append("Je"); i += 2; continue }
+                    'Ё' -> { sb.append("Jo"); i += 2; continue }
+                    'Ю' -> { sb.append("Ju"); i += 2; continue }
+                    'Я' -> { sb.append("Ja"); i += 2; continue }
+                }
+            }
+
+            if (ch == 'и' && i + 1 < text.length && text[i + 1] == 'й') {
+                if (i + 2 >= text.length || !text[i + 2].isLetter()) {
+                    sb.append("iy")
+                    i += 2
+                    continue
+                }
+            }
+            if (ch == 'И' && i + 1 < text.length && text[i + 1] == 'Й') {
+                if (i + 2 >= text.length || !text[i + 2].isLetter()) {
+                    sb.append("IY")
+                    i += 2
+                    continue
+                }
+            }
+
             sb.append(map[ch] ?: ch)
+            i++
         }
         return sb.toString()
     }

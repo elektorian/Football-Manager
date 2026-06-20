@@ -6,6 +6,7 @@ import com.footballmanager.players.model.Player
 import com.footballmanager.players.model.PlayerContract
 import com.footballmanager.utils.Transliterator
 import jakarta.annotation.PostConstruct
+import net.datafaker.Faker
 import org.springframework.context.annotation.Configuration
 import java.time.LocalDate
 import java.util.*
@@ -18,7 +19,7 @@ class PlayersConfiguration(
     private val playerService: PlayerService,
 ) {
     private companion object {
-        private val faker = com.github.javafaker.Faker(Locale("ru"))
+        private val faker = Faker(Locale("ru"))
     }
 
     @PostConstruct
@@ -32,8 +33,8 @@ class PlayersConfiguration(
     }
 
     private fun generatePlayer(team: UUID): Player {
-        val firstName = Transliterator.transliterate(faker.name().firstName())
-        val lastName = Transliterator.transliterate(faker.name().lastName())
+        val firstName = Transliterator.transliterate(faker.expression("#{Name.male_first_name}"))
+        val lastName = Transliterator.transliterate(faker.expression("#{Name.male_last_name}"))
         return Player(
             id = UUID.randomUUID(),
             firstName = firstName,
