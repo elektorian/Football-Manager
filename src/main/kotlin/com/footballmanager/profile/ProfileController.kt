@@ -9,6 +9,8 @@ import com.footballmanager.matches.MatchesService
 import com.footballmanager.rounds.RoundsService
 import com.footballmanager.seasons.ScheduleService
 import com.footballmanager.session.SessionContext
+import com.footballmanager.team.TeamService
+import com.footballmanager.team.dto.TeamInfo
 import com.footballmanager.tournaments.dto.LeagueInfo
 import com.footballmanager.tournaments.dto.MatchInfo
 import com.footballmanager.tournaments.dto.RoundInfo
@@ -30,6 +32,7 @@ class ProfileController(
     private val teams: ConcurrentHashMap<UUID, Club>,
     private val roundsService: RoundsService,
     private val tournamentCurrentSeasonFunction: TournamentCurrentSeasonFunction,
+    private val teamService: TeamService,
 ) {
     @GetMapping("/coach")
     fun coach(): Coach = sessionContext.player
@@ -68,5 +71,11 @@ class ProfileController(
                 )
             },
         )
+    }
+
+    @GetMapping("/team")
+    fun getTeam(): TeamInfo? {
+        sessionContext.club ?: return null
+        return teamService.getTeamInfo(sessionContext.club!!.id)
     }
 }

@@ -30,6 +30,7 @@ class PlayerService(
             lastName = player.lastName,
             nickname = player.nickname,
             birthDate = player.birthDate,
+            salary = player.contract?.salary,
         )
     }
 }

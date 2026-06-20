@@ -703,3 +703,126 @@ body {
     color: var(--text-secondary);
     font-weight: 400;
 }
+
+/* ─── Club page ─────────────────────────── */
+.club-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.club-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.club-name {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.club-country {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.club-header-right {
+    text-align: right;
+}
+
+.club-geo {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.club-tab-content {
+    padding-top: 4px;
+}
+
+.player-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.player-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    background: var(--sidebar-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.player-name {
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.player-age {
+    margin-left: auto;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+/* Squad table */
+.squad-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--sidebar-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 14px;
+}
+
+.squad-table th {
+    background: var(--sidebar-hover);
+    color: var(--text-secondary);
+    font-weight: 600;
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.squad-table th:first-child {
+    width: auto;
+}
+
+.squad-table th:nth-child(2),
+.squad-table th:nth-child(3) {
+    text-align: center;
+    width: 120px;
+}
+
+.squad-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.squad-table td:nth-child(2),
+.squad-table td:nth-child(3) {
+    text-align: center;
+}
+
+.squad-table .td-player {
+    font-weight: 500;
+}
+
+.squad-table .td-salary {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.squad-table tbody tr:hover {
+    background: var(--sidebar-hover);
+}
+
+.squad-table tbody tr:last-child td {
+    border-bottom: none;
+}

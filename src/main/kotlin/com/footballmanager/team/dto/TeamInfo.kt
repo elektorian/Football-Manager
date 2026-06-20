@@ -1,6 +1,5 @@
 package com.footballmanager.team.dto
 
-import com.footballmanager.players.dto.PlayerInfo
 import java.util.UUID
 
 data class TeamInfo(
@@ -9,5 +8,4 @@ data class TeamInfo(
     val abbreviation: String,
     val city: String,
     val country: String,
-    val players: Collection<PlayerInfo>,
 )

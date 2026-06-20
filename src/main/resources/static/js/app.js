@@ -4,6 +4,8 @@ var ignoreNextHashChange = false
 var roundsData = null
 var currentRoundIndex = 0
 var notificationsData = []
+var currentClubId = null
+var currentMoment = null
 
 function navigate() {
   var tab = location.hash.replace(/^#/, '') || 'profile'
@@ -40,6 +42,7 @@ function navigate() {
     fetchTournamentPage()
   }
   if (tab === 'inbox') fetchNotifications()
+  if (tab === 'club') fetchClub()
 }
 
 // ─── Входящие / уведомления ─────────────────────────
@@ -392,6 +395,7 @@ function parseMoment(str) {
 }
 
 function updateDate(timestamp) {
+  currentMoment = timestamp
   var d = new Date(timestamp)
   document.getElementById('currentDate').textContent = d.toLocaleDateString('ru-RU')
   document.getElementById('currentMonth').textContent = d.toLocaleString('ru-RU', { month: 'long', year: 'numeric' })
@@ -428,3 +432,72 @@ document.addEventListener('click', function(e) {
     if (mb) mb.classList.remove('show')
   }
 })
+
+// ─── Страница "Клуб" (#club) ─────────────────────────
+function fetchClub() {
+  fetch('/profile/team')
+    .then(function(r) { return r.json() })
+    .then(function(team) {
+      currentClubId = team.id
+      document.getElementById('clubName').textContent = team.name
+      document.getElementById('clubCountry').textContent = team.country
+      document.getElementById('clubCity').textContent = team.city
+      var activeTab = document.querySelector('#page-club .tab.active')
+      if (activeTab && activeTab.getAttribute('data-tab') === 'squad') fetchSquad()
+    })
+    .catch(function() {})
+}
+
+function switchClubTab(tab) {
+  document.querySelectorAll('#page-club .tab').forEach(function(t) {
+    t.classList.toggle('active', t.getAttribute('data-tab') === tab)
+  })
+  document.getElementById('clubTabInfo').style.display = tab === 'info' ? 'block' : 'none'
+  document.getElementById('clubTabSquad').style.display = tab === 'squad' ? 'block' : 'none'
+  if (tab === 'squad') fetchSquad()
+}
+
+function fetchSquad() {
+  if (!currentClubId) return
+  var listEl = document.getElementById('clubSquadList')
+  listEl.innerHTML = '<p style="color:var(--text-secondary);">⏳ Загрузка...</p>'
+  fetch('/players?team=' + currentClubId)
+    .then(function(r) { return r.json() })
+    .then(function(players) { renderSquadList(players) })
+    .catch(function() { listEl.innerHTML = '<p style="color:var(--text-secondary);">Ошибка загрузки</p>' })
+}
+
+function renderSquadList(players) {
+  var html = '<table class="squad-table"><thead><tr>'
+    + '<th>Игрок</th><th>Возраст</th><th>Зарплата</th>'
+    + '</tr></thead><tbody>'
+  for (var i = 0; i < players.length; i++) {
+    var p = players[i]
+    var name = p.lastName + ' ' + p.firstName
+    var age = calculateAge(p.birthDate, currentMoment)
+    var salary = p.salary != null ? formatSalary(p.salary) : '—'
+    html += '<tr>'
+      + '<td class="td-player">' + name + '</td>'
+      + '<td>' + age + '</td>'
+      + '<td class="td-salary">' + salary + '</td>'
+      + '</tr>'
+  }
+  html += '</tbody></table>'
+  document.getElementById('clubSquadList').innerHTML = html
+}
+
+function calculateAge(birthDate, fromDate) {
+  if (!fromDate) return '—'
+  var birth = new Date(birthDate)
+  var now = new Date(fromDate)
+  var age = now.getFullYear() - birth.getFullYear()
+  var m = now.getMonth() - birth.getMonth()
+  if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--
+  return age
+}
+
+function formatSalary(val) {
+  var num = Number(val)
+  if (isNaN(num)) return '—'
+  return '€' + Math.round(num).toLocaleString('ru-RU') + '/нед'
+}
