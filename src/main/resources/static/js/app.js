@@ -519,7 +519,45 @@ function switchClubTab(tab) {
   })
   document.getElementById('clubTabInfo').style.display = tab === 'info' ? 'block' : 'none'
   document.getElementById('clubTabSquad').style.display = tab === 'squad' ? 'block' : 'none'
+  document.getElementById('clubTabMatches').style.display = tab === 'matches' ? 'block' : 'none'
   if (tab === 'squad') fetchSquad()
+  if (tab === 'matches') fetchClubSchedule()
+}
+
+function fetchClubSchedule() {
+  if (!currentClubId) return
+  var tbody = document.getElementById('clubScheduleBody')
+  if (!tbody) return
+  tbody.innerHTML = '<tr><td colspan="2" style="color:var(--text-secondary);padding:12px;">⏳ Загрузка...</td></tr>'
+
+  fetch('/teams/' + currentClubId + '/schedule')
+    .then(function(r) { return r.json() })
+    .then(function(matches) {
+      if (!matches || matches.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="2" style="color:var(--text-secondary);padding:12px;">Нет матчей</td></tr>'
+        return
+      }
+      var html = ''
+      for (var i = 0; i < matches.length; i++) {
+        var m = matches[i]
+        var dateStr = new Date(m.date).toLocaleDateString('ru-RU')
+        var played = m.homeTeamScore !== '-'
+        html += '<tr>'
+          + '<td class="schedule-match">'
+          + '<span class="round-match-team">' + entityLink('team', m.homeTeamId, m.homeTeamName) + '</span>'
+          + '<span class="round-match-score' + (played ? '' : ' unplayed') + '">'
+          + (played ? m.homeTeamScore + ' - ' + m.awayTeamScore : '-')
+          + '</span>'
+          + '<span class="round-match-team away">' + entityLink('team', m.awayTeamId, m.awayTeamName) + '</span>'
+          + '</td>'
+          + '<td class="schedule-date">' + dateStr + '</td>'
+          + '</tr>'
+      }
+      tbody.innerHTML = html
+    })
+    .catch(function() {
+      tbody.innerHTML = '<tr><td colspan="2" style="color:var(--text-secondary);padding:12px;">Ошибка загрузки</td></tr>'
+    })
 }
 
 function fetchSquad() {
