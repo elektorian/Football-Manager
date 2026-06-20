@@ -79,4 +79,10 @@ class ProfileController(
         sessionContext.club ?: return null
         return teamService.getTeamInfo(sessionContext.club!!.id)
     }
+
+    @GetMapping("/schedule")
+    fun schedule(): List<MatchInfo> {
+        val club = sessionContext.club ?: return emptyList()
+        return teamService.getTeamSchedule(club.id)
+    }
 }

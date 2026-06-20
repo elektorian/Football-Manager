@@ -1,7 +1,10 @@
 package com.footballmanager.team
 
 import com.footballmanager.entities.Club
+import com.footballmanager.functions.TournamentScheduleFunction
+import com.footballmanager.matches.MatchesService
 import com.footballmanager.team.dto.TeamInfo
+import com.footballmanager.tournaments.dto.MatchInfo
 import org.springframework.stereotype.Service
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -9,6 +12,8 @@ import java.util.concurrent.ConcurrentHashMap
 @Service
 class TeamService(
     private val teams: ConcurrentHashMap<UUID, Club>,
+    private val matchesService: MatchesService,
+    private val tournamentScheduleFunction: TournamentScheduleFunction,
 ) {
     fun getTeamInfo(id: UUID): TeamInfo {
         val team = teams[id]!!
@@ -19,5 +24,28 @@ class TeamService(
             city = team.city,
             country = team.country,
         )
+    }
+
+    fun getTeamSchedule(teamId: UUID): List<MatchInfo> {
+        val club = teams[teamId] ?: return emptyList()
+
+        return club.tournaments.values.flatMap { tournamentId ->
+            tournamentScheduleFunction.execute(tournamentId)
+                ?.flatMap { round -> round.matches.map { matchesService.getMatch(it) } }
+                ?.filter { club.isParticipant(it) }
+                ?.map { match ->
+                    MatchInfo(
+                        id = match.id,
+                        date = match.date,
+                        homeTeamId = match.homeTeam,
+                        homeTeamName = teams[match.homeTeam]!!.name,
+                        homeTeamScore = match.homeTeamResult?.scored?.toString() ?: "-",
+                        awayTeamId = match.awayTeam,
+                        awayTeamName = teams[match.awayTeam]!!.name,
+                        awayTeamScore = match.awayTeamResult?.scored?.toString() ?: "-",
+                    )
+                }
+                ?: emptyList()
+        }.sortedBy { it.date }
     }
 }

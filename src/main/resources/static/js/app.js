@@ -68,6 +68,7 @@ function navigate() {
     fetchTournamentDetailPage(entityId)
   }
   if (tab === 'inbox') fetchNotifications()
+  if (tab === 'schedule') fetchSchedule()
   if (tab === 'club') fetchClub(entityId)
   if (tab === 'player' && entityId) fetchPlayerPage(entityId)
 }
@@ -460,6 +461,42 @@ document.addEventListener('click', function(e) {
     if (mb) mb.classList.remove('show')
   }
 })
+
+// ─── Расписание (#schedule) ──────────────────────────
+function fetchSchedule() {
+  var tbody = document.getElementById('scheduleBody')
+  if (!tbody) return
+  tbody.innerHTML = '<tr><td colspan="2" style="color:var(--text-secondary);padding:12px;">⏳ Загрузка...</td></tr>'
+
+  fetch('/profile/schedule')
+    .then(function(r) { return r.json() })
+    .then(function(matches) {
+      if (!matches || matches.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="2" style="color:var(--text-secondary);padding:12px;">Нет матчей</td></tr>'
+        return
+      }
+      var html = ''
+      for (var i = 0; i < matches.length; i++) {
+        var m = matches[i]
+        var dateStr = new Date(m.date).toLocaleDateString('ru-RU')
+        var played = m.homeTeamScore !== '-'
+        html += '<tr>'
+          + '<td class="schedule-match">'
+          + '<span class="round-match-team">' + entityLink('team', m.homeTeamId, m.homeTeamName) + '</span>'
+          + '<span class="round-match-score' + (played ? '' : ' unplayed') + '">'
+          + (played ? m.homeTeamScore + ' - ' + m.awayTeamScore : '-')
+          + '</span>'
+          + '<span class="round-match-team away">' + entityLink('team', m.awayTeamId, m.awayTeamName) + '</span>'
+          + '</td>'
+          + '<td class="schedule-date">' + dateStr + '</td>'
+          + '</tr>'
+      }
+      tbody.innerHTML = html
+    })
+    .catch(function() {
+      tbody.innerHTML = '<tr><td colspan="2" style="color:var(--text-secondary);padding:12px;">Ошибка загрузки</td></tr>'
+    })
+}
 
 // ─── Страница "Клуб" (#club / #club/{teamId}) ────────
 function fetchClub(teamId) {
