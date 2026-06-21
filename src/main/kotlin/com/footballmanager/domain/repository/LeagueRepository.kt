@@ -6,4 +6,5 @@ import java.util.UUID
 interface LeagueRepository {
     fun findById(id: UUID): League?
     fun findAll(): List<League>
+    fun save(league: League)
 }

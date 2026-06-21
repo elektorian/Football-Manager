@@ -14,7 +14,7 @@ class InMemoryLeagueRepository : LeagueRepository {
 
     override fun findAll(): List<League> = store.values.toList()
 
-    fun save(league: League) {
+    override fun save(league: League) {
         store[league.id] = league
     }
 }

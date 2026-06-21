@@ -7,14 +7,14 @@ import com.footballmanager.domain.model.Player
 import com.footballmanager.domain.model.PlayerContract
 import com.footballmanager.domain.model.Season
 import com.footballmanager.domain.model.Team
+import com.footballmanager.domain.repository.LeagueRepository
 import com.footballmanager.domain.service.ScheduleGenerator
-import com.footballmanager.infrastructure.persistence.InMemoryLeagueRepository
-import com.footballmanager.infrastructure.persistence.InMemoryMatchRepository
-import com.footballmanager.infrastructure.persistence.InMemoryPlayerRepository
-import com.footballmanager.infrastructure.persistence.InMemoryRoundRepository
-import com.footballmanager.infrastructure.persistence.InMemoryScheduleRepository
-import com.footballmanager.infrastructure.persistence.InMemorySeasonRepository
-import com.footballmanager.infrastructure.persistence.InMemoryTeamRepository
+import com.footballmanager.domain.repository.MatchRepository
+import com.footballmanager.domain.repository.PlayerRepository
+import com.footballmanager.domain.repository.RoundRepository
+import com.footballmanager.domain.repository.ScheduleRepository
+import com.footballmanager.domain.repository.SeasonRepository
+import com.footballmanager.domain.repository.TeamRepository
 import com.footballmanager.utils.Transliterator
 import jakarta.annotation.PostConstruct
 import net.datafaker.Faker
@@ -28,13 +28,14 @@ import kotlin.random.Random
 class DataSeeder(
     private val mapper: ObjectMapper,
     private val resolver: org.springframework.core.io.support.PathMatchingResourcePatternResolver,
-    private val teamRepository: InMemoryTeamRepository,
-    private val leagueRepository: InMemoryLeagueRepository,
-    private val seasonRepository: InMemorySeasonRepository,
-    private val matchRepository: InMemoryMatchRepository,
-    private val roundRepository: InMemoryRoundRepository,
-    private val playerRepository: InMemoryPlayerRepository,
-    private val scheduleRepository: InMemoryScheduleRepository,
+    private val teamRepository: TeamRepository,
+    private val leagueRepository: LeagueRepository,
+    private val seasonRepository: SeasonRepository,
+    private val matchRepository: MatchRepository,
+    private val roundRepository: RoundRepository,
+    private val playerRepository: PlayerRepository,
+    private val scheduleRepository: ScheduleRepository,
+    private val scheduleGenerator: ScheduleGenerator,
     private val profileService: com.footballmanager.application.service.ProfileApplicationService,
 ) {
 
@@ -78,7 +79,7 @@ class DataSeeder(
                 matches = HashSet(),
             )
 
-            val result = ScheduleGenerator().generateLeagueSchedule(season, teams.map { it.id })
+            val result = scheduleGenerator.generateLeagueSchedule(season, teams.map { it.id })
 
             result.matches.forEach { matchRepository.save(it) }
             season.matches.addAll(result.matches.map { it.id })

@@ -16,6 +16,7 @@ data class GeneratedSchedule(
     val matches: List<Match>,
 )
 
+@org.springframework.stereotype.Component
 class ScheduleGenerator {
     fun generateLeagueSchedule(season: Season, teams: List<UUID>): GeneratedSchedule {
         val shuffledTeams = teams.shuffled()

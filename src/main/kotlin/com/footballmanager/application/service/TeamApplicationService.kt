@@ -3,9 +3,11 @@ package com.footballmanager.application.service
 import com.footballmanager.application.dto.MatchInfoDto
 import com.footballmanager.application.dto.TeamInfoDto
 import com.footballmanager.application.port.input.TeamUseCase
+import com.footballmanager.domain.repository.LeagueRepository
 import com.footballmanager.domain.repository.MatchRepository
 import com.footballmanager.domain.repository.RoundRepository
 import com.footballmanager.domain.repository.ScheduleRepository
+import com.footballmanager.domain.repository.SeasonRepository
 import com.footballmanager.domain.repository.TeamRepository
 import org.springframework.stereotype.Component
 import java.util.UUID
@@ -16,6 +18,8 @@ class TeamApplicationService(
     private val matchRepository: MatchRepository,
     private val roundRepository: RoundRepository,
     private val scheduleRepository: ScheduleRepository,
+    private val leagueRepository: LeagueRepository,
+    private val seasonRepository: SeasonRepository,
 ) : TeamUseCase {
 
     override fun getTeam(id: UUID): TeamInfoDto {
@@ -38,11 +42,16 @@ class TeamApplicationService(
     }
 
     private fun buildTournamentMatches(
-        tournamentId: UUID,
+        leagueId: UUID,
         team: com.footballmanager.domain.model.Team,
         allTeams: Map<UUID, com.footballmanager.domain.model.Team>,
     ): List<MatchInfoDto> {
-        val schedule = scheduleRepository.findById(tournamentId) ?: return emptyList()
+        val scheduleId = leagueRepository.findById(leagueId)
+            ?.let { league -> seasonRepository.findByIds(league.seasons.toList()) }
+            ?.maxByOrNull { it.year }
+            ?.schedule
+            ?: return emptyList()
+        val schedule = scheduleRepository.findById(scheduleId) ?: return emptyList()
         return schedule.rounds
             .mapNotNull { roundRepository.findById(it) }
             .flatMap { it.matches }
