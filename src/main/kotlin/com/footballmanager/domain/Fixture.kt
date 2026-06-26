@@ -8,14 +8,17 @@ data class Fixture(
     val date: LocalDate,
     val homeClubId: Long,
     val awayClubId: Long,
-    val played: Boolean = false,
-    val homeGoals: Int? = null,
-    val awayGoals: Int? = null
+    var played: Boolean = false,
+    var homeGoals: Int? = null,
+    var awayGoals: Int? = null
 ) {
     val result: MatchResult?
-        get() = if (played && homeGoals != null && awayGoals != null)
-            MatchResult(homeGoals, awayGoals)
-        else null
+        get() {
+            if (!played) return null
+            val hg = homeGoals ?: return null
+            val ag = awayGoals ?: return null
+            return MatchResult(hg, ag)
+        }
 }
 
 data class MatchResult(

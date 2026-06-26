@@ -33,8 +33,9 @@ class GameEngine(
     }
 
     private fun tick(): LocalDate {
+        val date = world.clock.currentDate
         world.clock = world.clock.advance(1)
-        return world.clock.currentDate
+        return date
     }
 
     private fun processDate(date: LocalDate): List<GameEvent> {

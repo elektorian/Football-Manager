@@ -1,9 +1,10 @@
 function renderHeader() {
     const el = document.getElementById('header');
+    const clubName = AppState.club ? AppState.club.name : 'Football Manager';
     el.innerHTML = `
         <div class="header-left">
             <span class="header-logo">FM</span>
-            <span class="header-club">${AppState.clubName}</span>
+            <span class="header-club">${clubName}</span>
             <span class="header-date">${AppState.date || '—'}</span>
         </div>
         <div class="header-right">

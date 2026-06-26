@@ -67,6 +67,12 @@ html, body {
     letter-spacing: -0.5px;
 }
 
+.header-club {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
 .header-date {
     font-size: 14px;
     color: var(--text-secondary);

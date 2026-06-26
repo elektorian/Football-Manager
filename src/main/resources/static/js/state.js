@@ -1,38 +1,25 @@
 const AppState = {
     date: null,
-    clubName: 'Manchester United',
+    club: null,
+    nextMatch: null,
+    leagueTable: [],
+    recentForm: [],
+    upcomingFixtures: [],
     activeTab: 'home',
     loading: false,
-
-    nextMatch: {
-        opponent: 'Arsenal',
-        venue: 'A',
-        date: '28 Jul 2024',
-        time: '15:00',
-        competition: 'Premier League'
-    },
-
-    leagueTable: {
-        position: 3,
-        total: 20,
-        competition: 'Premier League',
-        pts: 0,
-        gd: 0
-    },
-
-    form: ['W', 'D', 'W', 'L', 'D'],
-
-    fixtures: [
-        { date: '28 Jul', opponent: 'Arsenal', venue: 'A', time: '15:00' },
-        { date: '4 Aug', opponent: 'Chelsea', venue: 'H', time: '15:00' },
-        { date: '11 Aug', opponent: 'Liverpool', venue: 'A', time: '15:00' },
-        { date: '18 Aug', opponent: 'Man City', venue: 'H', time: '15:00' },
-        { date: '25 Aug', opponent: 'Tottenham', venue: 'A', time: '15:00' }
-    ],
 
     setTab(tab) {
         this.activeTab = tab;
         render();
+    },
+
+    updateFrom(data) {
+        this.date = data.date;
+        this.club = data.club;
+        this.nextMatch = data.nextMatch;
+        this.leagueTable = data.leagueTable || [];
+        this.recentForm = data.recentForm || [];
+        this.upcomingFixtures = data.upcomingFixtures || [];
     },
 
     async load() {
@@ -40,7 +27,7 @@ const AppState = {
         render();
         try {
             const state = await API.getState();
-            this.date = state.date;
+            this.updateFrom(state);
         } catch (err) {
             console.error('Failed to load state:', err);
             this.date = 'error';
@@ -56,7 +43,7 @@ const AppState = {
         render();
         try {
             const result = await API.advance(1);
-            this.date = result.date;
+            this.updateFrom(result);
         } catch (err) {
             console.error('Failed to advance:', err);
         } finally {

@@ -1,5 +1,6 @@
 package com.footballmanager.config
 
+import com.footballmanager.data.SeedDataGenerator
 import com.footballmanager.engine.DayProcessor
 import com.footballmanager.engine.GameEngine
 import com.footballmanager.engine.GameWorld
@@ -8,11 +9,15 @@ import org.springframework.context.annotation.Configuration
 import java.time.LocalDate
 
 @Configuration
-class GameConfig {
+class GameConfig(
+    private val seedData: SeedDataGenerator
+) {
 
     @Bean
     fun gameWorld(): GameWorld {
-        return GameWorld(LocalDate.of(2024, 7, 1))
+        val world = GameWorld(LocalDate.of(2024, 7, 1))
+        seedData.populate(world)
+        return world
     }
 
     @Bean
