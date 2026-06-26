@@ -9,10 +9,6 @@ class GameEngine(
     private val sortedProcessors: List<DayProcessor> =
         processors.sortedBy { it.priority }
 
-    init {
-        require(processors.isNotEmpty()) { "At least one DayProcessor is required" }
-    }
-
     fun advance(days: Int): List<GameEvent> {
         require(days > 0) { "Must advance by at least 1 day, got $days" }
 
