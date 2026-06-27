@@ -1,6 +1,7 @@
 package com.footballmanager.calendar
 
 import com.footballmanager.application.events.NewDayEvent
+import com.footballmanager.application.repository.NotificationRepository
 import com.footballmanager.functions.TournamentTodayMatchesFunction
 import com.footballmanager.notifications.NotificationsService
 import com.footballmanager.notifications.payload.RoundPreviewPayloadGenerator
@@ -15,7 +16,7 @@ class DailyNotificationsProcessor(
     private val sessionContext: SessionContext,
     private val tournamentTodayMatchesFunction: TournamentTodayMatchesFunction,
     private val roundPreviewPayloadGenerator: RoundPreviewPayloadGenerator,
-    private val notificationsService: NotificationsService,
+    private val notificationRepository: NotificationRepository,
 ) {
     @EventListener
     fun onNewDay(event: NewDayEvent) {
@@ -26,7 +27,7 @@ class DailyNotificationsProcessor(
         sessionContext.team?.tournaments?.forEach { (_, tournamentId) ->
             val todayMatches = tournamentTodayMatchesFunction.execute(tournamentId)
             if (!todayMatches.isNullOrEmpty()) {
-                notificationsService.create(roundPreviewPayloadGenerator.generate(tournamentId))
+                notificationRepository.save(roundPreviewPayloadGenerator.generate(tournamentId))
                 return true
             }
         }

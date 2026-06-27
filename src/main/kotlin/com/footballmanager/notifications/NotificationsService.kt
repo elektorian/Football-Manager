@@ -1,5 +1,6 @@
 package com.footballmanager.notifications
 
+import com.footballmanager.application.repository.NotificationRepository
 import com.footballmanager.notifications.dto.NotificationInfo
 import com.footballmanager.notifications.model.Notification
 import org.springframework.stereotype.Service
@@ -7,29 +8,23 @@ import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
 @Service
-class NotificationsService {
-    private val notifications = ConcurrentHashMap<UUID, Notification>()
-
-    fun isEmpty() = notifications.values.all { it.checked }
-
-    fun create(notification: Notification) {
-        notifications[notification.id] = notification
-    }
-
+class NotificationsService(
+    private val notificationRepository: NotificationRepository,
+) {
     fun getAll(): List<NotificationInfo> {
-        val notifications = notifications.values
+        val notifications = notificationRepository.findAll()
         return notifications.map(this::convert).sortedBy { it.timestamp }
     }
 
     fun read(id: UUID): NotificationInfo {
-        if (notifications.count() > 50) {
-            notifications.values
+        if (notificationRepository.count() > 50) {
+            notificationRepository.findAll()
                 .sortedBy { it.timestamp }
                 .takeWhile { it.checked }
                 .take(20)
-                .forEach { notifications.remove(it.id) }
+                .forEach { notificationRepository.delete(it.id) }
         }
-        val notification = notifications[id]!!
+        val notification = notificationRepository.get(id)
         notification.checked = true
         return convert(notification)
     }

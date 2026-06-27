@@ -1,5 +1,6 @@
 package com.footballmanager.calendar
 
+import com.footballmanager.application.repository.NotificationRepository
 import com.footballmanager.events.EventsEngine
 import com.footballmanager.matches.MatchesEngine
 import com.footballmanager.notifications.NotificationsService
@@ -11,12 +12,12 @@ import java.time.temporal.ChronoUnit
 class CalendarEngine(
     private val eventsEngine: EventsEngine,
     private val matchesEngine: MatchesEngine,
-    private val notificationsService: NotificationsService,
     private val currentMomentHolder: CurrentMomentHolder,
+    private val notificationRepository: NotificationRepository,
 ) {
     @Synchronized
     fun advance(): String {
-        if (!notificationsService.isEmpty()) return currentMomentHolder.get().toString()
+        if (!notificationRepository.isEmpty()) return currentMomentHolder.get().toString()
 
         when (DayHour.getByValue(currentMomentHolder.get().hour)) {
             DayHour.START_HOUR -> {
