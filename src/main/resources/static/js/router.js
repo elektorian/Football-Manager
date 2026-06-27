@@ -46,7 +46,7 @@ export const router = {
 
     document.querySelectorAll('.page-content').forEach(el => { el.style.display = 'none' })
     const pageEl = document.getElementById(`page-${resolvedTab}`)
-    if (pageEl) pageEl.style.display = 'block'
+    if (pageEl) pageEl.style.display = pageEl.id === 'page-club' ? 'flex' : 'block'
 
     document.querySelectorAll('.nav-item').forEach(el => {
       el.classList.toggle('active', isTournamentDetail ? el.dataset.tab === 'tournaments' : el.dataset.tab === tab)

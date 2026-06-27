@@ -381,6 +381,7 @@ export async function renderClub(teamId) {
     document.getElementById('clubCountry').textContent = team.country
     document.getElementById('clubCity').textContent = team.city
     switchClubTab('info')
+    renderRecentMatchesWidget()
   } catch {
     // silent
   }
@@ -390,7 +391,7 @@ export function switchClubTab(tab) {
   document.querySelectorAll('#page-club .tab').forEach(t => {
     t.classList.toggle('active', t.dataset.tab === tab)
   })
-  document.getElementById('clubTabInfo').style.display = tab === 'info' ? 'block' : 'none'
+  document.getElementById('clubTabInfo').style.display = tab === 'info' ? 'flex' : 'none'
   document.getElementById('clubTabSquad').style.display = tab === 'squad' ? 'block' : 'none'
   document.getElementById('clubTabMatches').style.display = tab === 'matches' ? 'block' : 'none'
   if (tab === 'squad') renderSquad()
@@ -422,6 +423,93 @@ export async function renderSquad() {
     `
   } catch {
     listEl.innerHTML = '<p class="placeholder-text">Ошибка загрузки</p>'
+  }
+}
+
+// ─── Recent Matches Widget ─────────────────────────────────
+
+function matchDateStr(match) {
+  const d = match.date
+  if (Array.isArray(d)) {
+    const [y, m, day] = d
+    return `${y}-${String(m).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+  }
+  return String(d).substring(0, 10)
+}
+
+function selectRecentMatches(matches) {
+  const sorted = [...matches].sort((a, b) => {
+    const da = matchDateStr(a)
+    const db = matchDateStr(b)
+    return da < db ? -1 : da > db ? 1 : 0
+  })
+
+  const currentDate = state.currentMoment.substring(0, 10)
+  const past = sorted.filter(m => matchDateStr(m) < currentDate)
+  const future = sorted.filter(m => matchDateStr(m) >= currentDate)
+
+  const recentPast = past.slice(-4)
+  const nextMatch = future.slice(0, 1)
+  const combined = [...recentPast, ...nextMatch]
+
+  if (recentPast.length < 4 && future.length > 1) {
+    const extra = future.slice(1, 1 + (4 - recentPast.length))
+    combined.push(...extra)
+  }
+
+  return combined.sort((a, b) => {
+    const da = matchDateStr(a)
+    const db = matchDateStr(b)
+    return da < db ? -1 : da > db ? 1 : 0
+  })
+}
+
+function renderMatchCard(match) {
+  const teamId = state.currentClubId
+  const isHome = match.homeTeamId === teamId
+  const opponent = isHome ? match.awayTeamName : match.homeTeamName
+  const icon = isHome ? 'д' : 'г'
+  const played = match.homeTeamScore !== '-'
+  const score = played ? `${match.homeTeamScore} - ${match.awayTeamScore}` : '—'
+  const displayDate = new Date(matchDateStr(match)).toLocaleDateString('ru-RU')
+
+  return `
+    <div class="club-recent-card ${played ? '' : 'club-recent-card--upcoming'}">
+      <div class="club-recent-opponent">${opponent}</div>
+      <div class="club-recent-icon">${icon}</div>
+      <div class="club-recent-score">${score}</div>
+      <div class="club-recent-date">${displayDate}</div>
+    </div>
+  `
+}
+
+export async function renderRecentMatchesWidget() {
+  const container = document.getElementById('clubRecentMatches')
+  if (!container || !state.currentClubId) return
+
+  try {
+    const matches = await api.getTeamSchedule(state.currentClubId)
+    const selected = selectRecentMatches(matches)
+
+    container.innerHTML = `
+      <div class="club-recent-header">
+        <span class="club-recent-title">Ближайшие матчи</span>
+        <a href="#" class="club-recent-link" data-action="show-schedule">Все матчи →</a>
+      </div>
+      <div class="club-recent-grid">
+        ${selected.map(renderMatchCard).join('')}
+      </div>
+    `
+
+    const link = container.querySelector('[data-action="show-schedule"]')
+    if (link) {
+      link.addEventListener('click', (e) => {
+        e.preventDefault()
+        switchClubTab('matches')
+      })
+    }
+  } catch {
+    container.innerHTML = ''
   }
 }
 
