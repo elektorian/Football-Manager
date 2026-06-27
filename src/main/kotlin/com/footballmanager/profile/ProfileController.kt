@@ -1,14 +1,12 @@
 package com.footballmanager.profile
 
+import com.footballmanager.application.repository.RoundRepository
 import com.footballmanager.application.repository.TeamRepository
 import com.footballmanager.application.repository.TournamentRepository
-import com.footballmanager.entities.Team
 import com.footballmanager.entities.Coach
-import com.footballmanager.entities.League
 import com.footballmanager.functions.LeagueTableFunction
 import com.footballmanager.functions.TournamentCurrentSeasonFunction
 import com.footballmanager.matches.MatchesService
-import com.footballmanager.rounds.RoundsService
 import com.footballmanager.seasons.ScheduleService
 import com.footballmanager.session.SessionContext
 import com.footballmanager.team.TeamService
@@ -20,8 +18,6 @@ import com.footballmanager.tournaments.enumerations.TournamentType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 
 @RestController
 @RequestMapping("/profile")
@@ -32,7 +28,7 @@ class ProfileController(
     private val tournamentRepository: TournamentRepository,
     private val matchesService: MatchesService,
     private val teamRepository: TeamRepository,
-    private val roundsService: RoundsService,
+    private val roundRepository: RoundRepository,
     private val tournamentCurrentSeasonFunction: TournamentCurrentSeasonFunction,
     private val teamService: TeamService,
 ) {
@@ -55,7 +51,7 @@ class ProfileController(
                 seasonId = season.id,
             ),
             rounds = season.schedule?.let { scheduleService.getSchedule(it) }?.rounds?.map { roundId ->
-                val round = roundsService.getRound(roundId)
+                val round = roundRepository.get(roundId)
                 RoundInfo(
                     number = round.number,
                     passed = round.passed,
