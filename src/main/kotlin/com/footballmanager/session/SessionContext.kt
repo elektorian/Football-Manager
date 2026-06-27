@@ -1,5 +1,6 @@
 package com.footballmanager.session
 
+import com.footballmanager.application.repository.SeasonRepository
 import com.footballmanager.application.repository.TeamRepository
 import com.footballmanager.application.repository.TournamentRepository
 import com.footballmanager.entities.Team
@@ -21,7 +22,7 @@ import kotlin.collections.random
 @DependsOn("leagues", "seasonsConfiguration", "teams")
 class SessionContext(
     private val tournamentRepository: TournamentRepository,
-    private val seasonService: SeasonService,
+    private val seasonRepository: SeasonRepository,
     private val teamRepository: TeamRepository,
 ) {
     val player: Coach = Coach(
@@ -40,7 +41,7 @@ class SessionContext(
             .random()
             .seasons
             .random()
-            .let { seasonService.getSeason(it) }
+            .let { seasonRepository.get(it) }
             .teams
             .random()
             .let { teamRepository.get(it) }

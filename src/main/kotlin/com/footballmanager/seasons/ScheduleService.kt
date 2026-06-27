@@ -1,6 +1,7 @@
 package com.footballmanager.seasons
 
 import com.footballmanager.application.repository.RoundRepository
+import com.footballmanager.application.repository.ScheduleRepository
 import com.footballmanager.application.repository.TeamRepository
 import com.footballmanager.entities.Team
 import com.footballmanager.entities.match.Match
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.roundToInt
 
 @Service
@@ -20,12 +20,9 @@ class ScheduleService(
     private val teamRepository: TeamRepository,
     private val matchesService: MatchesService,
     private val roundRepository: RoundRepository,
+    private val scheduleRepository: ScheduleRepository,
 ) {
     // todo нельзя ставить матч на день когда у команды уже есть матч в другой лиге
-    private val schedules = ConcurrentHashMap<UUID, LeagueSchedule>()
-
-    fun getSchedule(id: UUID) = schedules[id]!!
-
     fun generateLeagueSchedule(season: Season): LeagueSchedule {
         val shuffledTeams = season.teams.shuffled().map { teamRepository.get(it) }
         val n = shuffledTeams.size
@@ -117,7 +114,7 @@ class ScheduleService(
             id = UUID.randomUUID(),
             rounds = (firstHalf + secondHalf).sortedBy { it.number }.map { it.id },
         )
-        schedules[schedule.id] = schedule
+        scheduleRepository.save(schedule)
         return schedule
     }
 }

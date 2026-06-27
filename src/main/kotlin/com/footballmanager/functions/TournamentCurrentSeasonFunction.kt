@@ -1,5 +1,6 @@
 package com.footballmanager.functions
 
+import com.footballmanager.application.repository.SeasonRepository
 import com.footballmanager.application.repository.TournamentRepository
 import com.footballmanager.entities.League
 import com.footballmanager.entities.season.Season
@@ -11,9 +12,9 @@ import java.util.concurrent.ConcurrentHashMap
 @Component
 class TournamentCurrentSeasonFunction(
     private val tournamentRepository: TournamentRepository,
-    private val seasonService: SeasonService,
+    private val seasonRepository: SeasonRepository,
 ) {
     fun execute(tournament: UUID): Season {
-        return tournamentRepository.get(tournament).seasons.map { season -> seasonService.getSeason(season) }.maxBy { it.year }
+        return tournamentRepository.get(tournament).seasons.map { season -> seasonRepository.get(season) }.maxBy { it.year }
     }
 }

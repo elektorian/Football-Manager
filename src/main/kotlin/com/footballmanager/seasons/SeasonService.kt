@@ -1,5 +1,6 @@
 package com.footballmanager.seasons
 
+import com.footballmanager.application.repository.SeasonRepository
 import com.footballmanager.entities.Team
 import com.footballmanager.entities.League
 import com.footballmanager.entities.season.Season
@@ -11,10 +12,9 @@ import java.util.concurrent.CopyOnWriteArraySet
 
 @Service
 class SeasonService(
-    private val scheduleService: ScheduleService
+    private val scheduleService: ScheduleService,
+    private val seasonRepository: SeasonRepository,
 ) {
-    private val seasons = ConcurrentHashMap<UUID, Season>()
-
     fun create(
         year: Int,
         league: League,
@@ -30,10 +30,6 @@ class SeasonService(
         season.schedule = scheduleService.generateLeagueSchedule(season).id
         league.seasons.add(season.id)
         teams.forEach { it.tournaments[TournamentType.LEAGUE] = league.id }
-        seasons[season.id] = season
+        seasonRepository.save(season)
     }
-
-    fun getSeason(id: UUID) = seasons[id]!!
-
-    fun getSeasons(ids: Collection<UUID>) = ids.map { getSeason(it) }
 }

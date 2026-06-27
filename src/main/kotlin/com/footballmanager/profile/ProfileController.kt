@@ -1,6 +1,7 @@
 package com.footballmanager.profile
 
 import com.footballmanager.application.repository.RoundRepository
+import com.footballmanager.application.repository.ScheduleRepository
 import com.footballmanager.application.repository.TeamRepository
 import com.footballmanager.application.repository.TournamentRepository
 import com.footballmanager.entities.Coach
@@ -31,6 +32,7 @@ class ProfileController(
     private val roundRepository: RoundRepository,
     private val tournamentCurrentSeasonFunction: TournamentCurrentSeasonFunction,
     private val teamService: TeamService,
+    private val scheduleRepository: ScheduleRepository,
 ) {
     @GetMapping("/coach")
     fun coach(): Coach = sessionContext.player
@@ -50,7 +52,7 @@ class ProfileController(
                 leagueId = league.id,
                 seasonId = season.id,
             ),
-            rounds = season.schedule?.let { scheduleService.getSchedule(it) }?.rounds?.map { roundId ->
+            rounds = season.schedule?.let { scheduleRepository.get(it) }?.rounds?.map { roundId ->
                 val round = roundRepository.get(roundId)
                 RoundInfo(
                     number = round.number,
