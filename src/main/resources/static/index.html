@@ -11,7 +11,7 @@
 
   <div class="sidebar">
     <div class="sidebar-header">
-      <button id="backBtn" class="back-btn" onclick="goBack()" disabled>← Назад</button>
+      <button id="backBtn" class="back-btn" disabled>← Назад</button>
     </div>
     <nav class="sidebar-nav">
       <a href="#profile" class="nav-item" data-tab="profile">Профиль</a>
@@ -28,18 +28,18 @@
     <div class="topbar">
       <div class="topbar-title" id="pageTitle"></div>
       <div class="topbar-right">
-        <div class="js-menu" style="position: relative;">
-          <button class="topbar-btn" onclick="toggleMenu()">☰</button>
+          <div class="js-menu">
+          <button class="topbar-btn">☰</button>
           <div class="dropdown-menu" id="menuBody">
             <button class="dropdown-item">💾 Сохранить</button>
             <button class="dropdown-item">📂 Загрузить</button>
           </div>
         </div>
-        <button class="topbar-date js-calendar" onclick="toggleCalendar()">
+        <button class="topbar-date js-calendar">
           <span>📅</span>
           <span id="currentDate">15.06.2026</span>
         </button>
-        <div style="position: relative;">
+        <div class="calendar-wrapper">
           <div class="calendar-popup" id="calendarBody">
             <div class="calendar-header">
               <button>◀</button>
@@ -49,7 +49,7 @@
             <div class="calendar-grid" id="calendarDays"></div>
           </div>
         </div>
-        <button class="topbar-btn primary" onclick="advanceDay()">Далее ▸</button>
+        <button class="topbar-btn primary">Далее ▸</button>
       </div>
     </div>
 
@@ -94,16 +94,16 @@
       </section>
       <section id="page-tournament" class="page-content">
         <div class="tab-bar">
-          <button class="tab active" data-tab="table" onclick="switchTournamentTab('table')">Таблица</button>
-          <button class="tab" data-tab="rounds" onclick="switchTournamentTab('rounds')">Туры</button>
+          <button class="tab active" data-tab="table">Таблица</button>
+          <button class="tab" data-tab="rounds">Туры</button>
         </div>
         <div id="tournamentTableFull"></div>
         <div id="tournamentRounds" style="display:none">
           <div class="round-nav">
-            <button class="round-nav-btn" onclick="prevRound()" id="prevRoundBtn">←</button>
-            <input type="number" class="round-nav-input" id="roundNumberInput" value="1" min="1" onchange="jumpToRound(this.value)">
+            <button class="round-nav-btn" id="prevRoundBtn">←</button>
+            <input type="number" class="round-nav-input" id="roundNumberInput" value="1" min="1">
             <span id="roundTotal" class="round-nav-total">из 0</span>
-            <button class="round-nav-btn" onclick="nextRound()" id="nextRoundBtn">→</button>
+            <button class="round-nav-btn" id="nextRoundBtn">→</button>
           </div>
           <div id="roundMatchesContainer"></div>
         </div>
@@ -134,9 +134,9 @@
         </div>
 
         <div class="tab-bar">
-          <button class="tab active" data-tab="info" onclick="switchClubTab('info')">Информация</button>
-          <button class="tab" data-tab="squad" onclick="switchClubTab('squad')">Состав</button>
-          <button class="tab" data-tab="matches" onclick="switchClubTab('matches')">Матчи</button>
+          <button class="tab active" data-tab="info">Информация</button>
+          <button class="tab" data-tab="squad">Состав</button>
+          <button class="tab" data-tab="matches">Матчи</button>
         </div>
 
         <div id="clubTabInfo" class="club-tab-content"></div>
@@ -162,6 +162,6 @@
   </div>
 
 </div>
-<script src="/js/app.js"></script>
+<script type="module" src="/js/app.js"></script>
 </body>
 </html>

@@ -175,6 +175,14 @@ body {
     color: var(--text-primary);
 }
 
+.js-menu {
+    position: relative;
+}
+
+.calendar-wrapper {
+    position: relative;
+}
+
 .dropdown-menu {
     display: none;
     position: absolute;
@@ -595,6 +603,25 @@ body {
     color: var(--text-secondary);
     text-align: center;
     margin-top: 40px;
+}
+
+.notification-body {
+    white-space: pre-wrap;
+}
+
+.notification-body--match {
+    white-space: normal;
+}
+
+.placeholder-text {
+    color: var(--text-secondary);
+    padding: 12px;
+}
+
+.empty-row {
+    color: var(--text-secondary);
+    padding: 12px;
+    text-align: center;
 }
 
 /* Round navigation */
