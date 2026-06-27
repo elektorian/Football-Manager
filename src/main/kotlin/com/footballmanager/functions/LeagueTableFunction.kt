@@ -1,6 +1,7 @@
 package com.footballmanager.functions
 
 import com.footballmanager.application.repository.TeamRepository
+import com.footballmanager.application.repository.TournamentRepository
 import com.footballmanager.entities.Team
 import com.footballmanager.entities.League
 import com.footballmanager.entities.match.MatchTeamStatus
@@ -14,13 +15,13 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Component
 class LeagueTableFunction(
-    private val leagues: ConcurrentHashMap<UUID, League>,
+    private val tournamentRepository: TournamentRepository,
     private val seasonService: SeasonService,
     private val matchesService: MatchesService,
     private val teamRepository: TeamRepository,
 ) {
     fun getLeagueTable(leagueId: UUID, seasonId: UUID?): Collection<LeagueTeamInfo> {
-        val league = leagues[leagueId] ?: throw IllegalStateException("League not found")
+        val league = tournamentRepository.get(leagueId) ?: throw IllegalStateException("League not found")
         val seasons = league.seasons.let { seasonService.getSeasons(it) }
         val season = seasons
             .find { it.id == seasonId }

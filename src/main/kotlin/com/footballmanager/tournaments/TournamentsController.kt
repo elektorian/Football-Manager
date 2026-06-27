@@ -1,5 +1,6 @@
 package com.footballmanager.tournaments
 
+import com.footballmanager.application.repository.TournamentRepository
 import com.footballmanager.entities.League
 import com.footballmanager.functions.LeagueTableFunction
 import com.footballmanager.tournaments.dto.TournamentInfo
@@ -15,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap
 @RequestMapping("/tournaments")
 class TournamentsController(
     private val leagueTableFunction: LeagueTableFunction,
-    private val leagues: ConcurrentHashMap<UUID, League>,
+    private val tournamentRepository: TournamentRepository,
 ) {
     @GetMapping("/league")
     fun league(
@@ -25,7 +26,7 @@ class TournamentsController(
 
     @GetMapping("/{id}")
     fun getTournament(@PathVariable id: UUID): TournamentInfo {
-        val league = leagues[id] ?: throw IllegalStateException("Tournament not found")
+        val league = tournamentRepository.get(id)
         return TournamentInfo(id = league.id, name = league.name)
     }
 }

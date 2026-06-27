@@ -1,6 +1,7 @@
 package com.footballmanager.notifications.payload
 
 import com.footballmanager.application.repository.TeamRepository
+import com.footballmanager.application.repository.TournamentRepository
 import com.footballmanager.calendar.CurrentMomentHolder
 import com.footballmanager.entities.Team
 import com.footballmanager.entities.League
@@ -19,14 +20,14 @@ class RoundPreviewPayloadGenerator(
     private val tournamentTodayMatchesFunction: TournamentTodayMatchesFunction,
     private val tournamentCurrentSeasonFunction: TournamentCurrentSeasonFunction,
     private val leagueTableFunction: LeagueTableFunction,
-    private val leagues: ConcurrentHashMap<UUID, League>,
+    private val tournamentRepository: TournamentRepository,
     private val teamRepository: TeamRepository,
     private val currentMomentHolder: CurrentMomentHolder,
 ) {
     fun generate(tournamentId: UUID): Notification {
         val todayMatches = tournamentTodayMatchesFunction.execute(tournamentId)
             ?: throw IllegalStateException("В день матча должен существовать тур")
-        val tournament = leagues[tournamentId]!!
+        val tournament = tournamentRepository.get(tournamentId)
         val season = tournamentCurrentSeasonFunction.execute(tournamentId)
         val table = leagueTableFunction.getLeagueTable(tournamentId, season.id)
         val positionByName = table.associate { it.name to it.position }

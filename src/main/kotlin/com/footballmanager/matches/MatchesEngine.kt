@@ -1,5 +1,6 @@
 package com.footballmanager.matches
 
+import com.footballmanager.application.repository.TournamentRepository
 import com.footballmanager.entities.League
 import com.footballmanager.entities.match.Match
 import com.footballmanager.entities.match.MatchTeamResult
@@ -13,13 +14,13 @@ import kotlin.random.Random
 
 @Component
 class MatchesEngine(
-    private val leagues: ConcurrentHashMap<UUID, League>,
+    private val tournamentRepository: TournamentRepository,
     private val tournamentTodayMatchesFunction: TournamentTodayMatchesFunction,
     private val tournamentCurrentRoundFunction: TournamentCurrentRoundFunction,
     private val matchesService: MatchesService,
 ) {
     fun process() {
-        leagues.values.forEach { league ->
+        tournamentRepository.findAll().forEach { league ->
             val todayMatches = tournamentTodayMatchesFunction.execute(league.id) ?: return@forEach
             todayMatches.forEach(this::playMatch)
             val round =
