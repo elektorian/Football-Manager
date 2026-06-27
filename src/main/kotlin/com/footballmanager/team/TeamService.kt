@@ -1,19 +1,17 @@
 package com.footballmanager.team
 
+import com.footballmanager.application.repository.MatchRepository
 import com.footballmanager.application.repository.TeamRepository
-import com.footballmanager.entities.Team
 import com.footballmanager.functions.TournamentScheduleFunction
-import com.footballmanager.matches.MatchesService
 import com.footballmanager.team.dto.TeamInfo
 import com.footballmanager.tournaments.dto.MatchInfo
 import org.springframework.stereotype.Service
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 
 @Service
 class TeamService(
     private val teamRepository: TeamRepository,
-    private val matchesService: MatchesService,
+    private val matchRepository: MatchRepository,
     private val tournamentScheduleFunction: TournamentScheduleFunction,
 ) {
     fun getTeamInfo(id: UUID): TeamInfo {
@@ -32,7 +30,7 @@ class TeamService(
 
         return team.tournaments.values.flatMap { tournamentId ->
             tournamentScheduleFunction.execute(tournamentId)
-                ?.flatMap { round -> round.matches.map { matchesService.getMatch(it) } }
+                ?.flatMap { round -> round.matches.map { matchRepository.get(it) } }
                 ?.filter { team.isParticipant(it) }
                 ?.map { match ->
                     MatchInfo(

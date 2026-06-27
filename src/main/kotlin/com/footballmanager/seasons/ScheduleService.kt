@@ -1,5 +1,6 @@
 package com.footballmanager.seasons
 
+import com.footballmanager.application.repository.MatchRepository
 import com.footballmanager.application.repository.RoundRepository
 import com.footballmanager.application.repository.ScheduleRepository
 import com.footballmanager.application.repository.TeamRepository
@@ -8,7 +9,6 @@ import com.footballmanager.entities.match.Match
 import com.footballmanager.entities.season.Season
 import com.footballmanager.entities.season.schedule.LeagueSchedule
 import com.footballmanager.entities.season.schedule.Round
-import com.footballmanager.matches.MatchesService
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.ZoneId
@@ -18,7 +18,7 @@ import kotlin.math.roundToInt
 @Service
 class ScheduleService(
     private val teamRepository: TeamRepository,
-    private val matchesService: MatchesService,
+    private val matchRepository: MatchRepository,
     private val roundRepository: RoundRepository,
     private val scheduleRepository: ScheduleRepository,
 ) {
@@ -78,7 +78,7 @@ class ScheduleService(
                     }
                 }
             }
-            matches.forEach { matchesService.create(it) }
+            matches.forEach { matchRepository.save(it) }
 
             val matchesIds = matches.map { it.id }
             season.matches.addAll(matchesIds)

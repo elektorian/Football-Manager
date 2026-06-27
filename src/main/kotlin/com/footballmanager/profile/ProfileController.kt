@@ -1,5 +1,6 @@
 package com.footballmanager.profile
 
+import com.footballmanager.application.repository.MatchRepository
 import com.footballmanager.application.repository.RoundRepository
 import com.footballmanager.application.repository.ScheduleRepository
 import com.footballmanager.application.repository.TeamRepository
@@ -7,8 +8,6 @@ import com.footballmanager.application.repository.TournamentRepository
 import com.footballmanager.entities.Coach
 import com.footballmanager.functions.LeagueTableFunction
 import com.footballmanager.functions.TournamentCurrentSeasonFunction
-import com.footballmanager.matches.MatchesService
-import com.footballmanager.seasons.ScheduleService
 import com.footballmanager.session.SessionContext
 import com.footballmanager.team.TeamService
 import com.footballmanager.team.dto.TeamInfo
@@ -25,9 +24,8 @@ import org.springframework.web.bind.annotation.RestController
 class ProfileController(
     private val sessionContext: SessionContext,
     private val leagueTableFunction: LeagueTableFunction,
-    private val scheduleService: ScheduleService,
+    private val matchRepository: MatchRepository,
     private val tournamentRepository: TournamentRepository,
-    private val matchesService: MatchesService,
     private val teamRepository: TeamRepository,
     private val roundRepository: RoundRepository,
     private val tournamentCurrentSeasonFunction: TournamentCurrentSeasonFunction,
@@ -57,7 +55,7 @@ class ProfileController(
                 RoundInfo(
                     number = round.number,
                     passed = round.passed,
-                    matches = round.matches.map { matchesService.getMatch(it) }.map { match ->
+                    matches = round.matches.map { matchRepository.get(it) }.map { match ->
                         MatchInfo(
                             id = match.id,
                             date = match.date,

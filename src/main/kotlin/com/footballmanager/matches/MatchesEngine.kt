@@ -1,5 +1,6 @@
 package com.footballmanager.matches
 
+import com.footballmanager.application.repository.MatchRepository
 import com.footballmanager.application.repository.TournamentRepository
 import com.footballmanager.entities.League
 import com.footballmanager.entities.match.Match
@@ -17,7 +18,7 @@ class MatchesEngine(
     private val tournamentRepository: TournamentRepository,
     private val tournamentTodayMatchesFunction: TournamentTodayMatchesFunction,
     private val tournamentCurrentRoundFunction: TournamentCurrentRoundFunction,
-    private val matchesService: MatchesService,
+    private val matchRepository: MatchRepository,
 ) {
     fun process() {
         tournamentRepository.findAll().forEach { league ->
@@ -26,7 +27,7 @@ class MatchesEngine(
             val round =
                 tournamentCurrentRoundFunction.execute(league.id)
                     ?: throw IllegalStateException("Тур должен быть когда играются его матчи")
-            if (round.matches.all{ matchesService.getMatch(it).passed() }) {
+            if (round.matches.all{ matchRepository.get(it).passed() }) {
                 round.passed = true
             }
         }

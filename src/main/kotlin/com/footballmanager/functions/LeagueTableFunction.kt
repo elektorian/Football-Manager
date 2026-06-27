@@ -1,23 +1,20 @@
 package com.footballmanager.functions
 
+import com.footballmanager.application.repository.MatchRepository
 import com.footballmanager.application.repository.SeasonRepository
 import com.footballmanager.application.repository.TeamRepository
 import com.footballmanager.application.repository.TournamentRepository
 import com.footballmanager.entities.Team
-import com.footballmanager.entities.League
 import com.footballmanager.entities.match.MatchTeamStatus
 import com.footballmanager.entities.season.Season
-import com.footballmanager.matches.MatchesService
-import com.footballmanager.seasons.SeasonService
 import com.footballmanager.tournaments.dto.LeagueTeamInfo
 import org.springframework.stereotype.Component
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 
 @Component
 class LeagueTableFunction(
     private val tournamentRepository: TournamentRepository,
-    private val matchesService: MatchesService,
+    private val matchRepository: MatchRepository,
     private val teamRepository: TeamRepository,
     private val seasonRepository: SeasonRepository,
 ) {
@@ -37,7 +34,7 @@ class LeagueTableFunction(
 
     private fun formTeamInfo(team: Team, season: Season): LeagueTeamInfo {
         val matches = season.matches
-            .map { matchesService.getMatch(it) }
+            .map { matchRepository.get(it) }
             .filter { team.isParticipant(it) }
             .filter { it.passed() }
             .map { it.getResult(team) }
