@@ -1,9 +1,9 @@
 package com.footballmanager.functions
 
-import com.footballmanager.application.repository.MatchRepository
-import com.footballmanager.application.repository.SeasonRepository
-import com.footballmanager.application.repository.TeamRepository
-import com.footballmanager.application.repository.TournamentRepository
+import com.footballmanager.domain.repository.MatchRepository
+import com.footballmanager.domain.repository.SeasonRepository
+import com.footballmanager.domain.repository.TeamRepository
+import com.footballmanager.domain.repository.TournamentRepository
 import com.footballmanager.entities.Team
 import com.footballmanager.entities.match.MatchTeamStatus
 import com.footballmanager.entities.season.Season

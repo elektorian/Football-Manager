@@ -1,6 +1,6 @@
 package com.footballmanager.functions
 
-import com.footballmanager.application.repository.MatchRepository
+import com.footballmanager.domain.repository.MatchRepository
 import com.footballmanager.calendar.CurrentMomentHolder
 import com.footballmanager.entities.match.Match
 import org.springframework.stereotype.Component

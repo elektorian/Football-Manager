@@ -1,9 +1,8 @@
 package com.footballmanager.calendar
 
-import com.footballmanager.application.repository.NotificationRepository
+import com.footballmanager.domain.repository.NotificationRepository
 import com.footballmanager.events.EventsEngine
 import com.footballmanager.matches.MatchesEngine
-import com.footballmanager.notifications.NotificationsService
 import org.springframework.stereotype.Component
 import java.time.DayOfWeek
 import java.time.temporal.ChronoUnit

@@ -1,16 +1,13 @@
 package com.footballmanager.matches
 
-import com.footballmanager.application.repository.MatchRepository
-import com.footballmanager.application.repository.TournamentRepository
-import com.footballmanager.entities.League
+import com.footballmanager.domain.repository.MatchRepository
+import com.footballmanager.domain.repository.TournamentRepository
 import com.footballmanager.entities.match.Match
 import com.footballmanager.entities.match.MatchTeamResult
 import com.footballmanager.entities.match.MatchTeamStatus
 import com.footballmanager.functions.TournamentTodayMatchesFunction
 import com.footballmanager.functions.TournamentCurrentRoundFunction
 import org.springframework.stereotype.Component
-import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.random.Random
 
 @Component

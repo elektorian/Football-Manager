@@ -2,17 +2,13 @@ package com.footballmanager.seasons.configuration
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.footballmanager.application.repository.TeamRepository
-import com.footballmanager.application.repository.TournamentRepository
+import com.footballmanager.domain.repository.TeamRepository
+import com.footballmanager.domain.repository.TournamentRepository
 import com.footballmanager.configuration.GlobalParameters
-import com.footballmanager.entities.Team
-import com.footballmanager.entities.League
 import com.footballmanager.seasons.SeasonService
 import jakarta.annotation.PostConstruct
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
-import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArraySet
 
 @Configuration

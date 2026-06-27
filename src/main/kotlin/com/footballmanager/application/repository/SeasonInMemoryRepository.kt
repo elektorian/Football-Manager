@@ -1,6 +1,6 @@
-package com.footballmanager.repository
+package com.footballmanager.application.repository
 
-import com.footballmanager.application.repository.SeasonRepository
+import com.footballmanager.domain.repository.SeasonRepository
 import com.footballmanager.entities.season.Season
 import org.springframework.stereotype.Repository
 import java.util.UUID

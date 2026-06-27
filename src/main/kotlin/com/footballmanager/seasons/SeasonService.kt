@@ -1,13 +1,12 @@
 package com.footballmanager.seasons
 
-import com.footballmanager.application.repository.SeasonRepository
+import com.footballmanager.domain.repository.SeasonRepository
 import com.footballmanager.entities.Team
 import com.footballmanager.entities.League
 import com.footballmanager.entities.season.Season
 import com.footballmanager.tournaments.enumerations.TournamentType
 import org.springframework.stereotype.Service
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArraySet
 
 @Service

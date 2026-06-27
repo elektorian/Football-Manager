@@ -1,11 +1,10 @@
 package com.footballmanager.notifications
 
-import com.footballmanager.application.repository.NotificationRepository
+import com.footballmanager.domain.repository.NotificationRepository
 import com.footballmanager.notifications.dto.NotificationInfo
 import com.footballmanager.notifications.model.Notification
 import org.springframework.stereotype.Service
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 
 @Service
 class NotificationsService(

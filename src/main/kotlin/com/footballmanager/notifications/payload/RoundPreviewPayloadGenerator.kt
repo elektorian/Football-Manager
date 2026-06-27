@@ -1,10 +1,8 @@
 package com.footballmanager.notifications.payload
 
-import com.footballmanager.application.repository.TeamRepository
-import com.footballmanager.application.repository.TournamentRepository
+import com.footballmanager.domain.repository.TeamRepository
+import com.footballmanager.domain.repository.TournamentRepository
 import com.footballmanager.calendar.CurrentMomentHolder
-import com.footballmanager.entities.Team
-import com.footballmanager.entities.League
 import com.footballmanager.functions.LeagueTableFunction
 import com.footballmanager.functions.TournamentCurrentSeasonFunction
 import com.footballmanager.functions.TournamentTodayMatchesFunction
@@ -13,7 +11,6 @@ import com.footballmanager.notifications.model.NotificationType
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 
 @Component
 class RoundPreviewPayloadGenerator(

@@ -1,13 +1,10 @@
 package com.footballmanager.functions
 
-import com.footballmanager.application.repository.SeasonRepository
-import com.footballmanager.application.repository.TournamentRepository
-import com.footballmanager.entities.League
+import com.footballmanager.domain.repository.SeasonRepository
+import com.footballmanager.domain.repository.TournamentRepository
 import com.footballmanager.entities.season.Season
-import com.footballmanager.seasons.SeasonService
 import org.springframework.stereotype.Component
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 
 @Component
 class TournamentCurrentSeasonFunction(

@@ -1,18 +1,15 @@
 package com.footballmanager.session
 
-import com.footballmanager.application.repository.SeasonRepository
-import com.footballmanager.application.repository.TeamRepository
-import com.footballmanager.application.repository.TournamentRepository
+import com.footballmanager.domain.repository.SeasonRepository
+import com.footballmanager.domain.repository.TeamRepository
+import com.footballmanager.domain.repository.TournamentRepository
 import com.footballmanager.entities.Team
 import com.footballmanager.entities.Coach
-import com.footballmanager.entities.League
-import com.footballmanager.seasons.SeasonService
 import jakarta.annotation.PostConstruct
 import org.springframework.context.annotation.DependsOn
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.random
 
 /**

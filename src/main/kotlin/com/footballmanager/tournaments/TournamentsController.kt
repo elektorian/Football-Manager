@@ -1,7 +1,6 @@
 package com.footballmanager.tournaments
 
-import com.footballmanager.application.repository.TournamentRepository
-import com.footballmanager.entities.League
+import com.footballmanager.domain.repository.TournamentRepository
 import com.footballmanager.functions.LeagueTableFunction
 import com.footballmanager.tournaments.dto.TournamentInfo
 import org.springframework.web.bind.annotation.GetMapping
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 
 @RestController
 @RequestMapping("/tournaments")

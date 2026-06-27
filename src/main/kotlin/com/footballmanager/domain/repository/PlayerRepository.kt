@@ -1,4 +1,4 @@
-package com.footballmanager.application.repository
+package com.footballmanager.domain.repository
 
 import com.footballmanager.players.model.Player
 import java.util.UUID

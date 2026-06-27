@@ -1,6 +1,6 @@
-package com.footballmanager.repository
+package com.footballmanager.application.repository
 
-import com.footballmanager.application.repository.TeamRepository
+import com.footballmanager.domain.repository.TeamRepository
 import com.footballmanager.entities.Team
 import org.springframework.stereotype.Repository
 import java.util.UUID

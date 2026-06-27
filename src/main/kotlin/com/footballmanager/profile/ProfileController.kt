@@ -1,10 +1,10 @@
 package com.footballmanager.profile
 
-import com.footballmanager.application.repository.MatchRepository
-import com.footballmanager.application.repository.RoundRepository
-import com.footballmanager.application.repository.ScheduleRepository
-import com.footballmanager.application.repository.TeamRepository
-import com.footballmanager.application.repository.TournamentRepository
+import com.footballmanager.domain.repository.MatchRepository
+import com.footballmanager.domain.repository.RoundRepository
+import com.footballmanager.domain.repository.ScheduleRepository
+import com.footballmanager.domain.repository.TeamRepository
+import com.footballmanager.domain.repository.TournamentRepository
 import com.footballmanager.entities.Coach
 import com.footballmanager.functions.LeagueTableFunction
 import com.footballmanager.functions.TournamentCurrentSeasonFunction

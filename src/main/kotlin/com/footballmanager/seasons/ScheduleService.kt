@@ -1,9 +1,9 @@
 package com.footballmanager.seasons
 
-import com.footballmanager.application.repository.MatchRepository
-import com.footballmanager.application.repository.RoundRepository
-import com.footballmanager.application.repository.ScheduleRepository
-import com.footballmanager.application.repository.TeamRepository
+import com.footballmanager.domain.repository.MatchRepository
+import com.footballmanager.domain.repository.RoundRepository
+import com.footballmanager.domain.repository.ScheduleRepository
+import com.footballmanager.domain.repository.TeamRepository
 import com.footballmanager.entities.Team
 import com.footballmanager.entities.match.Match
 import com.footballmanager.entities.season.Season

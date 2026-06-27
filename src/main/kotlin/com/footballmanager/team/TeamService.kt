@@ -1,7 +1,7 @@
 package com.footballmanager.team
 
-import com.footballmanager.application.repository.MatchRepository
-import com.footballmanager.application.repository.TeamRepository
+import com.footballmanager.domain.repository.MatchRepository
+import com.footballmanager.domain.repository.TeamRepository
 import com.footballmanager.functions.TournamentScheduleFunction
 import com.footballmanager.team.dto.TeamInfo
 import com.footballmanager.tournaments.dto.MatchInfo
