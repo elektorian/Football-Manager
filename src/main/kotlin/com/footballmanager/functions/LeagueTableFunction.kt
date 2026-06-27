@@ -1,5 +1,6 @@
 package com.footballmanager.functions
 
+import com.footballmanager.application.repository.TeamRepository
 import com.footballmanager.entities.Team
 import com.footballmanager.entities.League
 import com.footballmanager.entities.match.MatchTeamStatus
@@ -16,7 +17,7 @@ class LeagueTableFunction(
     private val leagues: ConcurrentHashMap<UUID, League>,
     private val seasonService: SeasonService,
     private val matchesService: MatchesService,
-    private val teams: ConcurrentHashMap<UUID, Team>,
+    private val teamRepository: TeamRepository,
 ) {
     fun getLeagueTable(leagueId: UUID, seasonId: UUID?): Collection<LeagueTeamInfo> {
         val league = leagues[leagueId] ?: throw IllegalStateException("League not found")
@@ -26,7 +27,7 @@ class LeagueTableFunction(
             ?: seasons.maxByOrNull { it.year }
             ?: throw IllegalStateException("Season not found")
         return season.teams
-            .map { teams[it]!! }
+            .map { teamRepository.get(it) }
             .map { team -> formTeamInfo(team, season) }
             .sortedByDescending { it.points }
             .mapIndexed { index, teamInfo -> teamInfo.copy(position = index + 1) }

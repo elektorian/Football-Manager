@@ -1,5 +1,6 @@
 package com.footballmanager.session
 
+import com.footballmanager.application.repository.TeamRepository
 import com.footballmanager.entities.Team
 import com.footballmanager.entities.Coach
 import com.footballmanager.entities.League
@@ -20,7 +21,7 @@ import kotlin.collections.random
 class SessionContext(
     private val leagues: ConcurrentHashMap<UUID, League>,
     private val seasonService: SeasonService,
-    private val teams: ConcurrentHashMap<UUID, Team>,
+    private val teamRepository: TeamRepository,
 ) {
     val player: Coach = Coach(
         id = UUID.randomUUID(),
@@ -41,6 +42,6 @@ class SessionContext(
             .let { seasonService.getSeason(it) }
             .teams
             .random()
-            .let { teams[it]!! }
+            .let { teamRepository.get(it) }
     }
 }

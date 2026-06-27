@@ -1,5 +1,6 @@
 package com.footballmanager.players.configuration
 
+import com.footballmanager.application.repository.TeamRepository
 import com.footballmanager.entities.Team
 import com.footballmanager.players.PlayerService
 import com.footballmanager.players.model.Player
@@ -15,7 +16,7 @@ import kotlin.random.Random
 
 @Configuration
 class PlayersConfiguration(
-    private val teams: ConcurrentHashMap<UUID, Team>,
+    private val teamRepository: TeamRepository,
     private val playerService: PlayerService,
 ) {
     private companion object {
@@ -24,9 +25,9 @@ class PlayersConfiguration(
 
     @PostConstruct
     fun setupFirstSeasons() {
-        teams.keys.forEach { team ->
+        teamRepository.findAll().forEach { team ->
             repeat(22) {
-                val player = generatePlayer(team)
+                val player = generatePlayer(team.id)
                 playerService.register(player)
             }
         }

@@ -1,5 +1,6 @@
 package com.footballmanager.profile
 
+import com.footballmanager.application.repository.TeamRepository
 import com.footballmanager.entities.Team
 import com.footballmanager.entities.Coach
 import com.footballmanager.entities.League
@@ -29,7 +30,7 @@ class ProfileController(
     private val scheduleService: ScheduleService,
     private val leagues: ConcurrentHashMap<UUID, League>,
     private val matchesService: MatchesService,
-    private val teams: ConcurrentHashMap<UUID, Team>,
+    private val teamRepository: TeamRepository,
     private val roundsService: RoundsService,
     private val tournamentCurrentSeasonFunction: TournamentCurrentSeasonFunction,
     private val teamService: TeamService,
@@ -62,10 +63,10 @@ class ProfileController(
                             id = match.id,
                             date = match.date,
                             homeTeamId = match.homeTeam,
-                            homeTeamName = teams[match.homeTeam]!!.name,
+                            homeTeamName = teamRepository.get(match.homeTeam).name,
                             homeTeamScore = match.homeTeamResult?.scored?.toString() ?: "-",
                             awayTeamId = match.awayTeam,
-                            awayTeamName = teams[match.awayTeam]!!.name,
+                            awayTeamName = teamRepository.get(match.awayTeam).name,
                             awayTeamScore = match.awayTeamResult?.scored?.toString() ?: "-",
                         )
                     }

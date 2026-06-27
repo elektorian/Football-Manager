@@ -1,5 +1,6 @@
 package com.footballmanager.players
 
+import com.footballmanager.application.repository.TeamRepository
 import com.footballmanager.entities.Team
 import com.footballmanager.players.dto.PlayerInfo
 import com.footballmanager.players.model.Player
@@ -9,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Service
 class PlayerService(
-    private val teams: ConcurrentHashMap<UUID, Team>,
+    private val teamRepository: TeamRepository,
 ) {
     private val players = ConcurrentHashMap<UUID, Player>()
 
@@ -18,7 +19,7 @@ class PlayerService(
     fun register(player: Player) {
         players[player.id] = player
         if (player.contract == null) return
-        val team = teams[player.contract.team]!!
+        val team = teamRepository.get(player.contract.team)
         team.players.add(player.id)
     }
 
