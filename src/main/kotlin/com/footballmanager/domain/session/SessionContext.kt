@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.*
+import java.util.concurrent.CopyOnWriteArraySet
 
 /**
  * НЕ СОДЕРЖИТ БИЗНЕС ЛОГИКИ
@@ -54,7 +55,8 @@ class SessionContext(
                 expiryDate = LocalDate.of(2025, 1, 1),
                 salary = BigDecimal.TEN,
                 role = PersonContractRole.MANAGER,
-            )
+            ),
+            positions = CopyOnWriteArraySet(),
         )
         staffService.register(avatar!!)
     }

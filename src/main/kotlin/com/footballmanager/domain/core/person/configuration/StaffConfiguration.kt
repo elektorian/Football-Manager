@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration
 import java.time.LocalDate
 import java.util.Locale
 import java.util.UUID
+import java.util.concurrent.CopyOnWriteArraySet
 import kotlin.random.Random
 
 @Configuration
@@ -52,6 +53,7 @@ class StaffConfiguration(
                 salary = salary,
                 role = role,
             ),
+            positions = CopyOnWriteArraySet(),
         )
     }
 }

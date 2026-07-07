@@ -3,6 +3,7 @@ package com.footballmanager.domain.core.person.configuration
 import com.footballmanager.domain.core.person.PlayerService
 import com.footballmanager.domain.core.person.SalaryCeiler
 import com.footballmanager.domain.core.person.enumeration.PersonContractRole
+import com.footballmanager.domain.core.person.enumeration.PlayerPosition
 import com.footballmanager.domain.core.person.model.Person
 import com.footballmanager.domain.core.person.model.PersonContract
 import com.footballmanager.domain.dao.TeamRepository
@@ -12,6 +13,7 @@ import net.datafaker.Faker
 import org.springframework.context.annotation.Configuration
 import java.time.LocalDate
 import java.util.*
+import java.util.concurrent.CopyOnWriteArraySet
 import kotlin.random.Random
 
 @Configuration
@@ -26,14 +28,16 @@ class PlayersConfiguration(
     @PostConstruct
     fun setupFirstSeasons() {
         teamRepository.findAll().forEach { team ->
-            repeat(22) {
-                val player = generatePlayer(team.id)
-                playerService.register(player)
+            PlayerPosition.entries.forEach { position ->
+                repeat(2) {
+                    val player = generatePlayer(team.id, position)
+                    playerService.register(player)
+                }
             }
         }
     }
 
-    private fun generatePlayer(team: UUID): Person {
+    private fun generatePlayer(team: UUID, position: PlayerPosition): Person {
         val firstName = Transliterator.transliterate(faker.expression("#{Name.male_first_name}"))
         val lastName = Transliterator.transliterate(faker.expression("#{Name.male_last_name}"))
         val salary = SalaryCeiler.ceiling(Random.nextInt(1000, 40000).toBigDecimal())
@@ -51,6 +55,7 @@ class PlayersConfiguration(
                 salary = salary,
                 role = PersonContractRole.PLAYER,
             ),
+            positions = CopyOnWriteArraySet(listOf(position)),
         )
     }
 }
