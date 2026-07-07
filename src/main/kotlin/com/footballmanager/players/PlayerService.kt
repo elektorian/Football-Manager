@@ -2,7 +2,7 @@ package com.footballmanager.players
 
 import com.footballmanager.domain.repository.PlayerRepository
 import com.footballmanager.domain.repository.TeamRepository
-import com.footballmanager.players.dto.PlayerInfo
+import com.footballmanager.representation.player.dto.PlayerInfo
 import com.footballmanager.players.model.Player
 import org.springframework.stereotype.Service
 import java.util.*

@@ -1,4 +1,4 @@
-package com.footballmanager.tournaments.dto
+package com.footballmanager.representation.tournament.dto
 
 data class RoundInfo(
     val matches: List<MatchInfo>,

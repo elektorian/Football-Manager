@@ -1,8 +1,8 @@
-package com.footballmanager.tournaments
+package com.footballmanager.representation.tournament
 
 import com.footballmanager.domain.repository.TournamentRepository
 import com.footballmanager.functions.LeagueTableFunction
-import com.footballmanager.tournaments.dto.TournamentInfo
+import com.footballmanager.representation.tournament.dto.TournamentInfo
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping

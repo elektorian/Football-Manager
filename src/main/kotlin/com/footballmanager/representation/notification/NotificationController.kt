@@ -1,6 +1,7 @@
-package com.footballmanager.notifications
+package com.footballmanager.representation.notification
 
-import com.footballmanager.notifications.dto.NotificationInfo
+import com.footballmanager.notifications.NotificationsService
+import com.footballmanager.representation.notification.dto.NotificationInfo
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping

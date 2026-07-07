@@ -7,7 +7,7 @@ import com.footballmanager.domain.repository.TournamentRepository
 import com.footballmanager.entities.Team
 import com.footballmanager.entities.match.MatchTeamStatus
 import com.footballmanager.entities.season.Season
-import com.footballmanager.tournaments.dto.LeagueTeamInfo
+import com.footballmanager.representation.tournament.dto.TournamentTeamInfo
 import org.springframework.stereotype.Component
 import java.util.UUID
 
@@ -18,8 +18,8 @@ class LeagueTableFunction(
     private val teamRepository: TeamRepository,
     private val seasonRepository: SeasonRepository,
 ) {
-    fun getLeagueTable(leagueId: UUID, seasonId: UUID?): Collection<LeagueTeamInfo> {
-        val league = tournamentRepository.get(leagueId) ?: throw IllegalStateException("League not found")
+    fun getLeagueTable(leagueId: UUID, seasonId: UUID?): Collection<TournamentTeamInfo> {
+        val league = tournamentRepository.get(leagueId)
         val seasons = league.seasons.let { seasonRepository.find(it) }
         val season = seasons
             .find { it.id == seasonId }
@@ -32,7 +32,7 @@ class LeagueTableFunction(
             .mapIndexed { index, teamInfo -> teamInfo.copy(position = index + 1) }
     }
 
-    private fun formTeamInfo(team: Team, season: Season): LeagueTeamInfo {
+    private fun formTeamInfo(team: Team, season: Season): TournamentTeamInfo {
         val matches = season.matches
             .map { matchRepository.get(it) }
             .filter { team.isParticipant(it) }
@@ -41,7 +41,7 @@ class LeagueTableFunction(
         val victories = matches.count { it.status == MatchTeamStatus.WINNER }
         val draws = matches.count { it.status == MatchTeamStatus.DRAW }
         val losses = matches.count { it.status == MatchTeamStatus.LOSER }
-        return LeagueTeamInfo(
+        return TournamentTeamInfo(
             teamId = team.id,
             name = team.name,
             victories = victories,

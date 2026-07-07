@@ -1,4 +1,4 @@
-package com.footballmanager.team.dto
+package com.footballmanager.representation.team.dto
 
 import java.util.UUID
 

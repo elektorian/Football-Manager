@@ -1,4 +1,4 @@
-package com.footballmanager.players.dto
+package com.footballmanager.representation.player.dto
 
 import java.math.BigDecimal
 import java.time.LocalDate

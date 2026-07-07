@@ -10,10 +10,10 @@ import com.footballmanager.functions.LeagueTableFunction
 import com.footballmanager.functions.TournamentCurrentSeasonFunction
 import com.footballmanager.session.SessionContext
 import com.footballmanager.team.TeamService
-import com.footballmanager.team.dto.TeamInfo
-import com.footballmanager.tournaments.dto.LeagueInfo
-import com.footballmanager.tournaments.dto.MatchInfo
-import com.footballmanager.tournaments.dto.RoundInfo
+import com.footballmanager.representation.team.dto.TeamInfo
+import com.footballmanager.representation.tournament.dto.LeagueInfo
+import com.footballmanager.representation.tournament.dto.MatchInfo
+import com.footballmanager.representation.tournament.dto.RoundInfo
 import com.footballmanager.tournaments.enumerations.TournamentType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping

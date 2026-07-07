@@ -3,8 +3,8 @@ package com.footballmanager.team
 import com.footballmanager.domain.repository.MatchRepository
 import com.footballmanager.domain.repository.TeamRepository
 import com.footballmanager.functions.TournamentScheduleFunction
-import com.footballmanager.team.dto.TeamInfo
-import com.footballmanager.tournaments.dto.MatchInfo
+import com.footballmanager.representation.team.dto.TeamInfo
+import com.footballmanager.representation.tournament.dto.MatchInfo
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -26,7 +26,7 @@ class TeamService(
     }
 
     fun getTeamSchedule(teamId: UUID): List<MatchInfo> {
-        val team = teamRepository.get(teamId) ?: return emptyList()
+        val team = teamRepository.get(teamId)
 
         return team.tournaments.values.flatMap { tournamentId ->
             tournamentScheduleFunction.execute(tournamentId)

@@ -1,7 +1,7 @@
 package com.footballmanager.calendar
 
 import com.footballmanager.domain.repository.NotificationRepository
-import com.footballmanager.calendar.dto.AdvanceResultDto
+import com.footballmanager.representation.advance.dto.AdvanceResultDto
 import org.springframework.stereotype.Component
 
 @Component

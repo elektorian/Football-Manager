@@ -1,8 +1,8 @@
-package com.footballmanager.tournaments.dto
+package com.footballmanager.representation.tournament.dto
 
 import java.util.UUID
 
-data class LeagueTeamInfo(
+data class TournamentTeamInfo(
     val teamId: UUID,
     val name: String,
     val victories: Int,

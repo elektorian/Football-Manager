@@ -1,7 +1,7 @@
 package com.footballmanager.notifications
 
 import com.footballmanager.domain.repository.NotificationRepository
-import com.footballmanager.notifications.dto.NotificationInfo
+import com.footballmanager.representation.notification.dto.NotificationInfo
 import com.footballmanager.notifications.model.Notification
 import org.springframework.stereotype.Service
 import java.util.UUID

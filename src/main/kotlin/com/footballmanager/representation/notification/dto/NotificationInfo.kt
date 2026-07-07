@@ -1,4 +1,4 @@
-package com.footballmanager.notifications.dto
+package com.footballmanager.representation.notification.dto
 
 import com.footballmanager.notifications.model.NotificationType
 import com.footballmanager.notifications.payload.NotificationPayload

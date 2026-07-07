@@ -1,12 +1,13 @@
-package com.footballmanager.team
+package com.footballmanager.representation.team
 
-import com.footballmanager.team.dto.TeamInfo
-import com.footballmanager.tournaments.dto.MatchInfo
+import com.footballmanager.team.TeamService
+import com.footballmanager.representation.team.dto.TeamInfo
+import com.footballmanager.representation.tournament.dto.MatchInfo
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.*
+import java.util.UUID
 
 @RestController
 @RequestMapping("/teams")

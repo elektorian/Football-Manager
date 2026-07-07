@@ -1,7 +1,8 @@
-package com.footballmanager.players
+package com.footballmanager.representation.player
 
 import com.footballmanager.domain.repository.TeamRepository
-import com.footballmanager.players.dto.PlayerInfo
+import com.footballmanager.players.PlayerService
+import com.footballmanager.representation.player.dto.PlayerInfo
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping

@@ -23,7 +23,7 @@ class NotificationInMemoryRepository : NotificationRepository {
     }
 
     override fun isEmpty(): Boolean {
-        return notifications.isEmpty()
+        return notifications.values.all { it.checked }
     }
 
     override fun get(id: UUID): Notification {

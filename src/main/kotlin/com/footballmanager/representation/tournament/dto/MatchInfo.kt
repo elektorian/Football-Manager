@@ -1,4 +1,4 @@
-package com.footballmanager.tournaments.dto
+package com.footballmanager.representation.tournament.dto
 
 import java.time.LocalDate
 import java.util.UUID

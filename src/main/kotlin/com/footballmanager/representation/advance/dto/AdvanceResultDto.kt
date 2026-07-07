@@ -1,4 +1,4 @@
-package com.footballmanager.calendar.dto
+package com.footballmanager.representation.advance.dto
 
 data class AdvanceResultDto(
     val currentMoment: String,
