@@ -1,6 +1,7 @@
 package com.footballmanager.domain.core.person.configuration
 
 import com.footballmanager.domain.core.person.PlayerService
+import com.footballmanager.domain.core.person.SalaryCeiler
 import com.footballmanager.domain.core.person.model.Person
 import com.footballmanager.domain.core.person.model.PersonContract
 import com.footballmanager.domain.dao.TeamRepository
@@ -34,6 +35,7 @@ class PlayersConfiguration(
     private fun generatePlayer(team: UUID): Person {
         val firstName = Transliterator.transliterate(faker.expression("#{Name.male_first_name}"))
         val lastName = Transliterator.transliterate(faker.expression("#{Name.male_last_name}"))
+        val salary = SalaryCeiler.ceiling(Random.nextInt(1000, 40000).toBigDecimal())
         return Person(
             id = UUID.randomUUID(),
             firstName = firstName,
@@ -45,7 +47,7 @@ class PlayersConfiguration(
                 startDate = LocalDate.of(2020, 6, 21),
                 expiryDate = LocalDate.of(2023, 6, 20),
                 team = team,
-                salary = Random.nextInt(1000, 40000).toBigDecimal(),
+                salary = salary,
             ),
         )
     }
