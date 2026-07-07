@@ -1,6 +1,6 @@
 package com.footballmanager.domain.session
 
-import com.footballmanager.domain.core.players.model.Coach
+import com.footballmanager.domain.core.person.model.Coach
 import com.footballmanager.domain.core.team.model.Team
 import com.footballmanager.domain.dao.SeasonRepository
 import com.footballmanager.domain.dao.TeamRepository

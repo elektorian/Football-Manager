@@ -1,6 +1,6 @@
 package com.footballmanager.representation.panel.profile
 
-import com.footballmanager.domain.core.players.model.Coach
+import com.footballmanager.domain.core.person.model.Coach
 import com.footballmanager.domain.core.team.TeamService
 import com.footballmanager.domain.core.tournament.enumerations.TournamentType
 import com.footballmanager.domain.dao.*

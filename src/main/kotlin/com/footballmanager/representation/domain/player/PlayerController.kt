@@ -1,6 +1,6 @@
 package com.footballmanager.representation.domain.player
 
-import com.footballmanager.domain.core.players.PlayerService
+import com.footballmanager.domain.core.person.PlayerService
 import com.footballmanager.domain.dao.TeamRepository
 import com.footballmanager.representation.domain.player.dto.PlayerInfo
 import org.springframework.web.bind.annotation.*

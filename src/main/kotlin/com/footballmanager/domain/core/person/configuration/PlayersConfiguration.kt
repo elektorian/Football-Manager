@@ -1,8 +1,8 @@
-package com.footballmanager.domain.core.players.configuration
+package com.footballmanager.domain.core.person.configuration
 
-import com.footballmanager.domain.core.players.PlayerService
-import com.footballmanager.domain.core.players.model.Player
-import com.footballmanager.domain.core.players.model.PlayerContract
+import com.footballmanager.domain.core.person.PlayerService
+import com.footballmanager.domain.core.person.model.Person
+import com.footballmanager.domain.core.person.model.PersonContract
 import com.footballmanager.domain.dao.TeamRepository
 import com.footballmanager.utils.Transliterator
 import jakarta.annotation.PostConstruct
@@ -31,16 +31,16 @@ class PlayersConfiguration(
         }
     }
 
-    private fun generatePlayer(team: UUID): Player {
+    private fun generatePlayer(team: UUID): Person {
         val firstName = Transliterator.transliterate(faker.expression("#{Name.male_first_name}"))
         val lastName = Transliterator.transliterate(faker.expression("#{Name.male_last_name}"))
-        return Player(
+        return Person(
             id = UUID.randomUUID(),
             firstName = firstName,
             lastName = lastName,
             nickname = null,
             birthDate = LocalDate.now().minusYears(17L + Random.nextInt(22)),
-            contract = PlayerContract(
+            contract = PersonContract(
                 id = UUID.randomUUID(),
                 startDate = LocalDate.of(2020, 6, 21),
                 expiryDate = LocalDate.of(2023, 6, 20),

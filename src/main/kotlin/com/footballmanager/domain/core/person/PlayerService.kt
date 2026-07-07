@@ -1,6 +1,6 @@
-package com.footballmanager.domain.core.players
+package com.footballmanager.domain.core.person
 
-import com.footballmanager.domain.core.players.model.Player
+import com.footballmanager.domain.core.person.model.Person
 import com.footballmanager.domain.dao.PlayerRepository
 import com.footballmanager.domain.dao.TeamRepository
 import com.footballmanager.representation.domain.player.dto.PlayerInfo
@@ -12,7 +12,7 @@ class PlayerService(
     private val teamRepository: TeamRepository,
     private val playerRepository: PlayerRepository,
 ) {
-    fun register(player: Player) {
+    fun register(player: Person) {
         playerRepository.save(player)
         if (player.contract == null) return
         val team = teamRepository.get(player.contract.team)

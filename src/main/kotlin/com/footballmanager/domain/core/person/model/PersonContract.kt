@@ -1,10 +1,10 @@
-package com.footballmanager.domain.core.players.model
+package com.footballmanager.domain.core.person.model
 
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.UUID
 
-data class PlayerContract(
+data class PersonContract(
     val id: UUID,
     val team: UUID,
     val startDate: LocalDate,
