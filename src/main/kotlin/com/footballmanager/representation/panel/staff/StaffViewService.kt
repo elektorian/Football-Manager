@@ -1,6 +1,5 @@
 package com.footballmanager.representation.panel.staff
 
-import com.footballmanager.domain.core.person.model.Person
 import com.footballmanager.domain.dao.PersonRepository
 import com.footballmanager.domain.dao.TeamRepository
 import com.footballmanager.representation.panel.staff.dto.StaffInfo
@@ -26,7 +25,8 @@ class StaffViewService(
         )
     }
 
-    private fun createStaffPersonInfo(person: Person): StaffPersonInfo {
+    private fun createStaffPersonInfo(id: UUID): StaffPersonInfo {
+        val person = personRepository.get(id)
         return StaffPersonInfo(
             id = person.id,
             name = person.firstName,
