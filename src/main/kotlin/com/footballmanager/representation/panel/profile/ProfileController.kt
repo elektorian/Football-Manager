@@ -1,6 +1,6 @@
 package com.footballmanager.representation.panel.profile
 
-import com.footballmanager.domain.core.person.model.Coach
+import com.footballmanager.domain.core.person.model.Person
 import com.footballmanager.domain.core.team.TeamService
 import com.footballmanager.domain.core.tournament.enumerations.TournamentType
 import com.footballmanager.domain.dao.*
@@ -29,7 +29,7 @@ class ProfileController(
     private val scheduleRepository: ScheduleRepository,
 ) {
     @GetMapping("/coach")
-    fun coach(): Coach = sessionContext.player
+    fun coach(): Person = sessionContext.avatar!!
 
     @GetMapping("/league")
     fun league(): LeagueInfo? {
