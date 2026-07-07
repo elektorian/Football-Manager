@@ -8,7 +8,20 @@ import {
   renderSchedule,
   renderClub,
   renderPlayerPage,
+  renderStaff,
+  updatePageTitle,
 } from './views.js'
+
+const PAGE_TITLES = {
+  profile: 'Профиль',
+  inbox: 'Входящие',
+  squad: 'Состав',
+  tactics: 'Тактика',
+  tournaments: 'Турниры',
+  schedule: 'Расписание',
+  staff: 'Должности',
+  club: 'Клуб',
+}
 
 const actions = {
   profile: () => renderProfile(),
@@ -17,6 +30,7 @@ const actions = {
   tournament: () => renderTournamentPage(),
   'tournament-detail': (id) => renderTournamentDetailPage(id),
   schedule: () => renderSchedule(),
+  staff: () => renderStaff(),
   club: (id) => renderClub(id),
   player: (id) => renderPlayerPage(id),
 }
@@ -51,6 +65,9 @@ export const router = {
     document.querySelectorAll('.nav-item').forEach(el => {
       el.classList.toggle('active', isTournamentDetail ? el.dataset.tab === 'tournaments' : el.dataset.tab === tab)
     })
+
+    const title = PAGE_TITLES[tab]
+    if (title) updatePageTitle(title)
 
     const fn = actions[resolvedTab]
     if (fn) fn(entityId)

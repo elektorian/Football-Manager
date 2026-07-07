@@ -1022,3 +1022,65 @@ body {
     color: var(--text-secondary);
     margin-top: 4px;
 }
+
+/* ─── Staff grid ─────────────────────────── */
+.staff-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 600px;
+}
+
+.staff-cell {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    background: var(--sidebar-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    transition: background 0.15s ease;
+}
+
+.staff-cell:hover {
+    background: var(--sidebar-hover);
+}
+
+.staff-cell--chairman {
+    grid-column: 1 / -1;
+}
+
+.staff-cell--empty {
+    opacity: 0.45;
+}
+
+.staff-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+    width: 40px;
+    text-align: center;
+}
+
+.staff-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.staff-role {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.staff-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -11,6 +11,7 @@ export const api = {
   getLeagueData: () => request('GET', '/profile/league'),
   getSchedule: () => request('GET', '/profile/schedule'),
   getTeam: (id) => request('GET', `/teams/${id}`),
+  getStaff: (teamId) => request('GET', `/staff?team=${teamId}`),
   getMyTeam: () => request('GET', '/profile/team'),
   getTeamSchedule: (id) => request('GET', `/teams/${id}/schedule`),
   getPlayers: (teamId) => request('GET', `/players?team=${teamId}`),

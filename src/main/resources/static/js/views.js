@@ -513,6 +513,66 @@ export async function renderRecentMatchesWidget() {
   }
 }
 
+// ─── Staff ─────────────────────────────────────────────────
+
+const STAFF_ICONS = {
+  chairman: '👑',
+  director: '💼',
+  manager: '🎯',
+  assistant: '📋',
+  scout: '🔍',
+  academy: '🎓',
+  physio: '🏥',
+}
+
+const STAFF_LABELS = {
+  chairman: 'Председатель',
+  director: 'Директор',
+  manager: 'Менеджер',
+  assistant: 'Ассистент',
+  scout: 'Скаут',
+  academy: 'Академия',
+  physio: 'Физиотерапевт',
+}
+
+const STAFF_ORDER = ['chairman', 'director', 'manager', 'assistant', 'scout', 'academy', 'physio']
+
+export async function renderStaff() {
+  const grid = document.getElementById('staffGrid')
+  grid.innerHTML = '<p class="placeholder-text">⏳ Загрузка...</p>'
+
+  try {
+    const team = await api.getMyTeam()
+    const data = await api.getStaff(team.id)
+    grid.innerHTML = STAFF_ORDER.map(role => {
+      const person = data[role]
+      const cls = role === 'chairman' ? 'staff-cell staff-cell--chairman' : 'staff-cell'
+      if (!person) {
+        return `
+          <div class="${cls} staff-cell--empty">
+            <span class="staff-icon">${STAFF_ICONS[role]}</span>
+            <div class="staff-info">
+              <div class="staff-role">${STAFF_LABELS[role]}</div>
+              <div class="staff-name">Нет сотрудника</div>
+            </div>
+          </div>
+        `
+      }
+      return `
+        <div class="${cls}">
+          <span class="staff-icon">${STAFF_ICONS[role]}</span>
+          <div class="staff-info">
+            <div class="staff-role">${STAFF_LABELS[role]}</div>
+            <div class="staff-name">${entityLink('player', person.id, `${person.surname} ${person.name}`)}</div>
+          </div>
+        </div>
+      `
+    }).join('')
+  } catch {
+    grid.innerHTML = '<p class="placeholder-text">Ошибка загрузки</p>'
+  }
+}
+
 // ─── Entity pages (stubs) ─────────────────────────────────
 
 export async function renderPlayerPage(id) {
