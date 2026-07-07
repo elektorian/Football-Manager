@@ -38,17 +38,17 @@ class LeagueTableFunction(
             .filter { team.isParticipant(it) }
             .filter { it.passed() }
             .map { it.getResult(team) }
-        val victories = matches.count { it.status == MatchTeamStatus.WINNER }
-        val draws = matches.count { it.status == MatchTeamStatus.DRAW }
-        val losses = matches.count { it.status == MatchTeamStatus.LOSER }
+        val victories = matches.count { it!!.status == MatchTeamStatus.WINNER }
+        val draws = matches.count { it!!.status == MatchTeamStatus.DRAW }
+        val losses = matches.count { it!!.status == MatchTeamStatus.LOSER }
         return TournamentTeamInfo(
             teamId = team.id,
             name = team.name,
             victories = victories,
             draws = draws,
             losses = losses,
-            goalsScored = matches.sumOf { it.scored },
-            goalsConceded = matches.sumOf { it.conceded },
+            goalsScored = matches.sumOf { it!!.scored },
+            goalsConceded = matches.sumOf { it!!.conceded },
             position = 0,
             points = victories * 3 + draws,
         )

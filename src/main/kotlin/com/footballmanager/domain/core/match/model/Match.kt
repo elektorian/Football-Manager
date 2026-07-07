@@ -21,6 +21,10 @@ data class Match(
         get
         @Synchronized
         set
+    @Volatile
+    var homeTeamPreview: MatchTeamPreview? = null
+    @Volatile
+    var awayTeamPreview: MatchTeamPreview? = null
 
     @Synchronized
     fun passed(): Boolean {
@@ -28,12 +32,12 @@ data class Match(
     }
 
     @Synchronized
-    fun getResult(team: Team): MatchTeamResult {
-        if (awayTeamResult == null || homeTeamResult == null) throw IllegalStateException("awayTeamResult == null or homeTeamResult == null")
+    fun getResult(team: Team): MatchTeamResult? {
+        if (awayTeamResult == null || homeTeamResult == null) return null
         val teamResult =
             when (team.id) {
-                homeTeamResult!!.team -> homeTeamResult
-                awayTeamResult!!.team -> awayTeamResult
+                homeTeam -> homeTeamResult
+                awayTeam -> awayTeamResult
                 else -> throw IllegalStateException("$this match result is not connected to $team team")
             }
         return teamResult!!

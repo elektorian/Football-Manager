@@ -13,4 +13,5 @@ data class Person(
     val birthDate: LocalDate,
     val contract: PersonContract?,
     val positions: CopyOnWriteArraySet<PlayerPosition>,
+    val staffDetails: PersonStaffDetails? = null,
 )
