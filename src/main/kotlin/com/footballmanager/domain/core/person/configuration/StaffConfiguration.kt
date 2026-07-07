@@ -1,7 +1,7 @@
 package com.footballmanager.domain.core.person.configuration
 
-import com.footballmanager.domain.core.person.PlayerService
 import com.footballmanager.domain.core.person.SalaryCeiler
+import com.footballmanager.domain.core.person.StaffService
 import com.footballmanager.domain.core.person.enumeration.PersonContractRole
 import com.footballmanager.domain.core.person.model.Person
 import com.footballmanager.domain.core.person.model.PersonContract
@@ -11,13 +11,14 @@ import jakarta.annotation.PostConstruct
 import net.datafaker.Faker
 import org.springframework.context.annotation.Configuration
 import java.time.LocalDate
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 import kotlin.random.Random
 
 @Configuration
-class PlayersConfiguration(
+class StaffConfiguration(
     private val teamRepository: TeamRepository,
-    private val playerService: PlayerService,
+    private val staffService: StaffService,
 ) {
     private companion object {
         private val faker = Faker(Locale("ru"))
@@ -26,14 +27,14 @@ class PlayersConfiguration(
     @PostConstruct
     fun setupFirstSeasons() {
         teamRepository.findAll().forEach { team ->
-            repeat(22) {
-                val player = generatePlayer(team.id)
-                playerService.register(player)
-            }
+            PersonContractRole.entries
+                .filterNot { it == PersonContractRole.PLAYER }
+                .map { person -> generateStaff(team.id, person) }
+                .forEach { staffService.register(it) }
         }
     }
 
-    private fun generatePlayer(team: UUID): Person {
+    private fun generateStaff(team: UUID, role: PersonContractRole): Person {
         val firstName = Transliterator.transliterate(faker.expression("#{Name.male_first_name}"))
         val lastName = Transliterator.transliterate(faker.expression("#{Name.male_last_name}"))
         val salary = SalaryCeiler.ceiling(Random.nextInt(1000, 40000).toBigDecimal())
@@ -49,7 +50,7 @@ class PlayersConfiguration(
                 expiryDate = LocalDate.of(2023, 6, 20),
                 team = team,
                 salary = salary,
-                role = PersonContractRole.PLAYER,
+                role = role,
             ),
         )
     }

@@ -15,6 +15,7 @@ data class Team(
     // type to tournamentId
     val tournaments: ConcurrentHashMap<TournamentType, UUID> = ConcurrentHashMap<TournamentType, UUID>(),
     val players: CopyOnWriteArraySet<UUID> = CopyOnWriteArraySet(),
+    val staff: Staff = Staff(),
 ) {
     fun isParticipant(match: Match): Boolean {
         return match.homeTeam == id || match.awayTeam == id

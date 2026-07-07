@@ -3,7 +3,7 @@ package com.footballmanager.domain.dao
 import com.footballmanager.domain.core.person.model.Person
 import java.util.UUID
 
-interface PlayerRepository {
+interface PersonRepository {
     fun get(id: UUID): Person
-    fun save(person: Person)
+    fun merge(person: Person)
 }

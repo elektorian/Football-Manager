@@ -1,5 +1,7 @@
 package com.footballmanager.domain.session
 
+import com.footballmanager.domain.core.person.StaffService
+import com.footballmanager.domain.core.person.enumeration.PersonContractRole
 import com.footballmanager.domain.core.person.model.Person
 import com.footballmanager.domain.core.person.model.PersonContract
 import com.footballmanager.domain.core.team.model.Team
@@ -22,6 +24,7 @@ class SessionContext(
     private val tournamentRepository: TournamentRepository,
     private val seasonRepository: SeasonRepository,
     private val teamRepository: TeamRepository,
+    private val staffService: StaffService,
 ) {
     @Volatile
     var avatar: Person? = null
@@ -49,8 +52,10 @@ class SessionContext(
                 team = team!!.id,
                 startDate = LocalDate.of(2020, 1, 1),
                 expiryDate = LocalDate.of(2025, 1, 1),
-                salary = BigDecimal.TEN
+                salary = BigDecimal.TEN,
+                role = PersonContractRole.MANAGER,
             )
         )
+        staffService.register(avatar!!)
     }
 }
