@@ -1,46 +1,16 @@
-page/incoming">
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Football Manager - Incoming</title>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <div class="app-container">
     <div th:replace="~{fragments/topbar :: topbar}"></div>
     <div th:replace="~{fragments/nav :: switch-panel}"></div>
-
-
-    <main class="main-panel">
-        <h1>Incoming</h1>
-        <table class="content-table">
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>From</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Transfer Offer</td>
-                    <td>FC Barcelona</td>
-                    <td>2024-01-15</td>
-                    <td>Pending</td>
-                </tr>
-                <tr>
-                    <td>Contract Renewal</td>
-                    <td>J. Smith (Forward)</td>
-                    <td>2024-01-14</td>
-                    <td>Review</td>
-                </tr>
-            </tbody>
-        </table>
-    </main>
+    <main class="main-panel"></main>
 </div>
 </body>
 </html>

@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Football Manager - Tournaments</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -9,47 +10,7 @@
 <div class="app-container">
     <div th:replace="~{fragments/topbar :: topbar}"></div>
     <div th:replace="~{fragments/nav :: switch-panel}"></div>
-    <main class="main-panel">
-        <h1>Tournaments</h1>
-        <table class="content-table">
-            <thead>
-                <tr>
-                    <th>Team</th>
-                    <th>MP</th>
-                    <th>W</th>
-                    <th>D</th>
-                    <th>L</th>
-                    <th>Pts</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>FC Barcelona</td>
-                    <td>20</td>
-                    <td>15</td>
-                    <td>3</td>
-                    <td>2</td>
-                    <td>48</td>
-                </tr>
-                <tr>
-                    <td>Real Madrid</td>
-                    <td>20</td>
-                    <td>14</td>
-                    <td>4</td>
-                    <td>2</td>
-                    <td>46</td>
-                </tr>
-                <tr>
-                    <td>Bayern Munich</td>
-                    <td>20</td>
-                    <td>13</td>
-                    <td>5</td>
-                    <td>2</td>
-                    <td>44</td>
-                </tr>
-            </tbody>
-        </table>
-    </main>
+    <main class="main-panel"></main>
 </div>
 </body>
 </html>
