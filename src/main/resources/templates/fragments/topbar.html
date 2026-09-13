@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<header class="header-bar" th:fragment="topbar">
+    <div class="header-controls">
+        <a th:href="@{/}" class="btn">Main page</a>
+    </div>
+    <div class="header-search">
+        <input type="text" class="search-input" name="search" placeholder="Search...">
+    </div>
+    <div class="header-actions">
+        <a th:href="@{/}" class="btn">menuu</a>
+        <a th:href="@{/}" class="btn">advance</a>
+    </div>
+</header>
+</body>
+</html>

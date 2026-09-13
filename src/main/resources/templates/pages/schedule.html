@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Football Manager - Schedule</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="app-container">
+    <div th:replace="~{fragments/topbar :: topbar}"></div>
+    <div th:replace="~{fragments/nav :: switch-panel}"></div>
+    <main class="main-panel">
+        <h1>Schedule</h1>
+        <table class="content-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Competition</th>
+                    <th>Home</th>
+                    <th>Away</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2024-01-20</td>
+                    <td>League</td>
+                    <td>FC Barcelona</td>
+                    <td>Real Madrid</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>2024-01-25</td>
+                    <td>Cup</td>
+                    <td>Bayern Munich</td>
+                    <td>FC Barcelona</td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+</div>
+</body>
+</html>

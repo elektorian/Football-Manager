@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Manager - Tactics</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="app-container">
+    <div th:replace="~{fragments/topbar :: topbar}"></div>
+    <div th:replace="~{fragments/nav :: switch-panel}"></div>
+
+    <main class="main-panel">
+        <h1>Tactics</h1>
+        <div class="tactics-board">
+            <div class="formation-display">
+                <h2>4-3-3 Formation</h2>
+                <div class="field">
+                    <div class="player-pos gk">GK</div>
+                    <div class="player-pos def">DEF</div>
+                    <div class="player-pos def">DEF</div>
+                    <div class="player-pos def">DEF</div>
+                    <div class="player-pos def">DEF</div>
+                    <div class="player-pos mid">MID</div>
+                    <div class="player-pos mid">MID</div>
+                    <div class="player-pos mid">MID</div>
+                    <div class="player-pos fwd">FWD</div>
+                    <div class="player-pos fwd">FWD</div>
+                    <div class="player-pos fwd">FWD</div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

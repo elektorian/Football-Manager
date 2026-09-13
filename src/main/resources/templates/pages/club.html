@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Football Manager - Club</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="app-container">
+    <div th:replace="~{fragments/topbar :: topbar}"></div>
+    <div th:replace="~{fragments/nav :: switch-panel}"></div>
+    <main class="main-panel">
+        <h1>Club Info</h1>
+        <div class="content-grid">
+            <div class="content-card">
+                <h2>FC Barcelona</h2>
+                <p>Founded: 1899</p>
+                <p>Stadium: Camp Nou</p>
+                <p>Capacity: 99,354</p>
+            </div>
+            <div class="content-card">
+                <h2>Club Info</h2>
+                <p>Manager: Pep Guardiola</p>
+                <p>Revenue: €700M</p>
+                <p>Budget: €300M</p>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<nav class="switch-panel" th:fragment="switch-panel">
+    <div class="sidebar-header">main page</div>
+    <ul class="nav-list">
+        <li><a th:href="@{/incoming}" class="nav-link" th:classappend="${activePage == 'incoming'} ? 'active'">incoming</a></li>
+        <li><a th:href="@{/squad}" class="nav-link" th:classappend="${activePage == 'squad'} ? 'active'">squad</a></li>
+        <li><a th:href="@{/tactic}" class="nav-link" th:classappend="${activePage == 'tactic'} ? 'active'">tactic</a></li>
+        <li><a th:href="@{/tournaments}" class="nav-link" th:classappend="${activePage == 'tournaments'} ? 'active'">tournaments</a></li>
+        <li><a th:href="@{/schedule}" class="nav-link" th:classappend="${activePage == 'schedule'} ? 'active'">schedule</a></li>
+        <li><a th:href="@{/club}" class="nav-link" th:classappend="${activePage == 'club'} ? 'active'">club</a></li>
+    </ul>
+    <div class="switch-panel-label">switch panel</div>
+</nav>
+</body>
+</html>

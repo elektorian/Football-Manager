@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Manager - Squad</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="app-container">
+    <div th:replace="~{fragments/topbar :: topbar}"></div>
+    <div th:replace="~{fragments/nav :: switch-panel}"></div>
+
+    <main class="main-panel">
+        <h1>Squad</h1>
+        <table class="content-table">
+            <thead>
+                <tr>
+                    <th>Position</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Rating</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>GK</td>
+                    <td>David Romero</td>
+                    <td>28</td>
+                    <td>82</td>
+                </tr>
+                <tr>
+                    <td>DEF</td>
+                    <td>Marco Silva</td>
+                    <td>25</td>
+                    <td>79</td>
+                </tr>
+                <tr>
+                    <td>MID</td>
+                    <td>Lukas Bergman</td>
+                    <td>23</td>
+                    <td>85</td>
+                </tr>
+                <tr>
+                    <td>FWD</td>
+                    <td>James Wilson</td>
+                    <td>26</td>
+                    <td>88</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+</div>
+</body>
+</html>
