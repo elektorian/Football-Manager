@@ -13,7 +13,9 @@
             <span class="datetime-date" th:text="${#temporals.format(currentDateTime, 'dd.MM.yyyy')}">08.07.2019</span>
         </div>
         <a th:href="@{/}" class="btn">menu</a>
-        <a th:href="@{/}" class="btn">advance</a>
+        <form th:action="@{/game/advance}" method="post" style="display:inline;">
+            <button type="submit" class="btn">advance</button>
+        </form>
     </div>
 </header>
 </body>

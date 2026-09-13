@@ -1,8 +1,8 @@
-package com.footballmanager.domain.datetime
+package com.footballmanager.domain.calendar
 
 import java.time.LocalDateTime
 
-interface DateTimeProvider {
+interface CalendarProvider {
     fun now(): LocalDateTime
     fun advanceOneSlot(): LocalDateTime
 }

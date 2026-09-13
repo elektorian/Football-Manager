@@ -1,4 +1,4 @@
-package com.footballmanager.domain.datetime
+package com.footballmanager.domain.calendar
 
 import java.time.LocalTime
 

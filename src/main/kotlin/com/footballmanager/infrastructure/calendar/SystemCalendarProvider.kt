@@ -1,12 +1,12 @@
-package com.footballmanager.infrastructure.datetime
+package com.footballmanager.infrastructure.calendar
 
-import com.footballmanager.domain.datetime.DateTimeProvider
-import com.footballmanager.domain.datetime.TimeSlot
+import com.footballmanager.domain.calendar.CalendarProvider
+import com.footballmanager.domain.calendar.TimeSlot
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
 @Service
-class SystemDateTimeProvider : DateTimeProvider {
+class SystemCalendarProvider : CalendarProvider {
 
     private var current: LocalDateTime = LocalDateTime.of(2019, 7, 8, 8, 0)
 
