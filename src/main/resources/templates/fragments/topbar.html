@@ -9,6 +9,9 @@
         <input type="text" class="search-input" name="search" placeholder="Search...">
     </div>
     <div class="header-actions">
+        <div class="datetime-widget">
+            <span class="datetime-date" th:text="${#temporals.format(currentDateTime, 'dd.MM.yyyy')}">08.07.2019</span>
+        </div>
         <a th:href="@{/}" class="btn">menu</a>
         <a th:href="@{/}" class="btn">advance</a>
     </div>

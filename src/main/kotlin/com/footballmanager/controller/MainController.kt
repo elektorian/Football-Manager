@@ -1,11 +1,19 @@
 package com.footballmanager.controller
 
+import com.footballmanager.application.datetime.DateTimeService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
 
 @Controller
-class MainController {
+class MainController(private val dateTimeService: DateTimeService) {
+
+    @ModelAttribute
+    fun datetimeAttributes(model: Model) {
+        val now = dateTimeService.now()
+        model.addAttribute("currentDateTime", now)
+    }
 
     @GetMapping("/")
     fun index(model: Model): String {
