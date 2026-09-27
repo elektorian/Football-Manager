@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Manager</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app">
+        <header class="top-bar">
+            <div class="top-section-1">main page</div>
+            <div class="top-section-2">
+                <input type="text" class="search-input" placeholder="search inbox">
+            </div>
+            <div class="date-display">19.01.2020</div>
+            <div class="top-section-4">menu</div>
+            <div class="top-section-5">advance</div>
+        </header>
+
+        <main class="main-container">
+            <aside class="left-panel">
+                <div class="panel-item" data-page="incoming" data-panel="incoming">incoming</div>
+                <div class="panel-item" data-page="squad" data-panel="squad">squad</div>
+                <div class="panel-item" data-page="tactic" data-panel="tactic">tactic</div>
+                <div class="panel-item" data-page="tournaments" data-panel="tournaments">tournaments</div>
+                <div class="panel-item" data-page="schedule" data-panel="schedule">schedule</div>
+                <div class="panel-item" data-page="club" data-panel="club">club</div>
+            </aside>
+
+            <section class="main-panel" id="main-panel">
+                <h1 class="panel-title" id="panel-title">incoming</h1>
+                <div class="panel-content" id="panel-content">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/state.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/panel-manager.js"></script>
+</body>
+</html>
