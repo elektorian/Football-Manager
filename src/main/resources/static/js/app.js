@@ -1,6 +1,7 @@
 const App = {
     init() {
         this.loadStoredState();
+        AdvanceWidget.init();
         this.bindGlobalEvents();
         this.renderInitialContent();
     },

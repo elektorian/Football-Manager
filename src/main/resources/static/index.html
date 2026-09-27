@@ -13,9 +13,12 @@
             <div class="top-section-2">
                 <input type="text" class="search-input" placeholder="search inbox">
             </div>
-            <div class="date-display">19.01.2020</div>
+            <div id="date-display-container" class="date-display-container">
+                <div class="date">--.--.----</div>
+                <div class="time">--:--</div>
+            </div>
             <div class="top-section-4">menu</div>
-            <div class="top-section-5">advance</div>
+            <button id="advance-btn" class="advance-btn">advance</button>
         </header>
 
         <main class="main-container">
@@ -37,6 +40,8 @@
         </main>
     </div>
 
+    <script src="js/date-display.js"></script>
+    <script src="js/advance-widget.js"></script>
     <script src="js/state.js"></script>
     <script src="js/router.js"></script>
     <script src="js/app.js"></script>
