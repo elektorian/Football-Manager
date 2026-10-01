@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap
 class RoundRepository {
     private val rounds = ConcurrentHashMap<UUID, Round>()
 
-    fun create(round: Round){
+    fun add(round: Round){
         rounds[round.id] = round
     }
 }
