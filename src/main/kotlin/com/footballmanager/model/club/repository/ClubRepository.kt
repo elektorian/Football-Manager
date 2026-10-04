@@ -12,4 +12,6 @@ class ClubRepository {
     fun addClub(club: Club) {
         clubs[club.id] = club
     }
+
+    fun getClub(id: UUID): Club = clubs[id]!!
 }

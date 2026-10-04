@@ -1,7 +1,6 @@
 package com.footballmanager.model.season
 
-import com.footballmanager.model.schedule.LeagueScheduleGenerator
-import com.footballmanager.model.schedule.repository.ScheduleRepository
+import com.footballmanager.model.schedule.generator.LeagueScheduleGenerator
 import com.footballmanager.model.season.entity.Season
 import com.footballmanager.model.season.repository.SeasonRepository
 import org.springframework.stereotype.Service
