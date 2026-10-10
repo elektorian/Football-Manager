@@ -94,7 +94,9 @@ const App = {
             return;
         }
 
-        const itemsHtml = messages.map(msg => {
+        const sorted = [...messages].sort((a, b) => new Date(b.serverTimestamp || 0) - new Date(a.serverTimestamp || 0));
+
+        const itemsHtml = sorted.map(msg => {
             const typeName = msg.type ? msg.type.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase()) : 'Unknown';
             const isRead = msg.read === true ? 'read' : '';
             return `
