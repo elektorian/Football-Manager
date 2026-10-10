@@ -19,6 +19,6 @@ class TimeController(
 
     @GetMapping("/time")
     fun getTime(): TimeResponse {
-        return TimeResponse(timeContext.getCurrentTime())
+        return TimeResponse(timeContext.getTimestamp())
     }
 }

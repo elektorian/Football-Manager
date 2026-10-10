@@ -17,9 +17,9 @@ class AdvanceProcessor(
     private val messageService: MessageService,
 ) {
     fun advance(): LocalDateTime {
-        if (messageService.hasUnread()) return timeContext.getCurrentTime()
-        
-        val time = TimePosition.findByHour(timeContext.getCurrentTime().hour)
+        if (messageService.hasUnread()) return timeContext.getTimestamp()
+
+        val time = TimePosition.findByHour(timeContext.getTimestamp().hour)
         when (time) {
             TimePosition.MORNING -> processMorning()
             TimePosition.PRE_MATCH -> processPreMatch()
@@ -27,36 +27,36 @@ class AdvanceProcessor(
             TimePosition.EVENING -> processEvening()
             else -> throw IllegalStateException("Unknown time position")
         }
-        return timeContext.getCurrentTime()
+        return timeContext.getTimestamp()
     }
 
     private fun processMorning() {
-        val current = timeContext.getCurrentTime()
+        val current = timeContext.getTimestamp()
         val next = current.withHour(TimePosition.PRE_MATCH.hour)
         timeContext.setCurrentTime(next)
     }
 
     private fun processPreMatch() {
-        val current = timeContext.getCurrentTime()
+        val current = timeContext.getTimestamp()
         val next = current.withHour(TimePosition.POST_MATCH.hour)
         timeContext.setCurrentTime(next)
 
-        val todayMatches = matchRepository.getTodayMatches()
+        val todayMatches = matchRepository.getMatches(timeContext.getDate())
         messageProducer.registerMessageOverviewMessage(todayMatches)
     }
 
     private fun processPostMatch() {
-        val current = timeContext.getCurrentTime()
+        val current = timeContext.getTimestamp()
         val next = current.withHour(TimePosition.EVENING.hour)
         timeContext.setCurrentTime(next)
 
-        val todayMatches = matchRepository.getTodayMatches()
+        val todayMatches = matchRepository.getMatches(timeContext.getDate())
         todayMatches.forEach { matchResultCalculator.calculate(it) }
         messageProducer.registerMessageOverviewMessage(todayMatches)
     }
 
     private fun processEvening() {
-        val current = timeContext.getCurrentTime()
+        val current = timeContext.getTimestamp()
         val next = current.plusDays(1).withHour(TimePosition.MORNING.hour)
         timeContext.setCurrentTime(next)
     }

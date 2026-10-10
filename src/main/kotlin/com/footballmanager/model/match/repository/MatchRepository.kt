@@ -14,7 +14,7 @@ class MatchRepository {
         matches[match.id] = match
     }
 
-    fun getTodayMatches(): List<Match> {
-        return matches.values.filter { it.date == LocalDate.now() }
+    fun getMatches(date: LocalDate): List<Match> {
+        return matches.values.filter { it.date == date }
     }
 }

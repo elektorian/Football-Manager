@@ -2,21 +2,24 @@ package com.footballmanager.time
 
 import jakarta.annotation.PostConstruct
 import org.springframework.stereotype.Component
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Component
 class TimeContext {
     @Volatile
-    private lateinit var time: LocalDateTime
+    private lateinit var timestamp: LocalDateTime
 
     @PostConstruct
     fun init() {
-        time = LocalDateTime.of(2019, 7, 1, 8, 0)
+        timestamp = LocalDateTime.of(2019, 7, 1, 8, 0)
     }
 
-    fun getCurrentTime(): LocalDateTime = time
+    fun getTimestamp(): LocalDateTime = timestamp
 
     fun setCurrentTime(newTime: LocalDateTime) {
-        time = newTime
+        timestamp = newTime
     }
+
+    fun getDate(): LocalDate = timestamp.toLocalDate()
 }
