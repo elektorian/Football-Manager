@@ -17,4 +17,8 @@ class MatchRepository {
     fun getMatches(date: LocalDate): List<Match> {
         return matches.values.filter { it.date == date }
     }
+
+    fun get(id: UUID): Match {
+        return matches[id]!!
+    }
 }

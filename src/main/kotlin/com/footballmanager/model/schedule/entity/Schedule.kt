@@ -5,4 +5,5 @@ import java.util.UUID
 data class Schedule(
     val id: UUID,
     val rounds: Collection<UUID>,
+    val season: UUID,
 )

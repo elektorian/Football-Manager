@@ -13,10 +13,12 @@ class ScheduleService(
     fun createSchedule(
         id: UUID,
         rounds: List<UUID>,
+        season: UUID,
     ) : Schedule {
         val schedule = Schedule(
             id = id,
             rounds = rounds,
+            season = season,
         )
         scheduleRepository.createSchedule(schedule)
         return schedule

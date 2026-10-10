@@ -12,4 +12,8 @@ class RoundRepository {
     fun add(round: Round){
         rounds[round.id] = round
     }
+
+    fun get(id: UUID): Round {
+        return rounds[id]!!
+    }
 }

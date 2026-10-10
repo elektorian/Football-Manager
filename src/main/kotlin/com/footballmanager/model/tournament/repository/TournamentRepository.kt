@@ -14,4 +14,8 @@ class TournamentRepository {
     fun addTournament(tournament: Tournament) {
         tournaments[tournament.id] = tournament
     }
+
+    fun get(id: UUID): Tournament {
+        return tournaments[id]!!
+    }
 }

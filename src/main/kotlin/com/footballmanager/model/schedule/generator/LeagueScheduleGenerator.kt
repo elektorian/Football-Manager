@@ -5,7 +5,8 @@ import java.util.UUID
 
 interface LeagueScheduleGenerator {
     fun generateLeagueSchedule(
+        clubs: List<UUID>,
+        seasonId: UUID,
         year: Int,
-        clubs: List<UUID>
     ): Schedule
 }

@@ -14,4 +14,8 @@ class ScheduleRepository {
     fun createSchedule(schedule: Schedule) {
         schedules[schedule.id] = schedule
     }
+
+    fun get(id: UUID): Schedule {
+        return schedules[id]!!
+    }
 }

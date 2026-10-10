@@ -6,4 +6,5 @@ data class Round(
     val id: UUID,
     val stage: Int,
     val matches: Collection<UUID>,
+    val schedule: UUID,
 )

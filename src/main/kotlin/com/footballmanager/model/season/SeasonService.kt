@@ -14,16 +14,20 @@ class SeasonService(
     fun createSeason(
         year: Int,
         clubs: List<UUID>,
+        tournament: UUID,
     ): Season {
+        val seasonId = UUID.randomUUID()
         val schedule = leagueScheduleGenerator.generateLeagueSchedule(
             year = year,
             clubs = clubs,
+            seasonId = seasonId,
         )
         val season = Season(
-            id = UUID.randomUUID(),
+            id = seasonId,
             schedule = schedule.id,
             year = year,
             clubs = clubs,
+            tournament = tournament,
         )
         seasonRepository.addSeason(season)
         return season

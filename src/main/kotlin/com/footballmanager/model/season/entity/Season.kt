@@ -7,4 +7,5 @@ data class Season(
     val schedule: UUID,
     val clubs: List<UUID>,
     val year: Int,
+    val tournament: UUID,
 )

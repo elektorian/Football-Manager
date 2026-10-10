@@ -8,6 +8,7 @@ abstract class Message(
     open val type: MessageType,
     open val id: UUID,
     open val timestamp: LocalDateTime,
+    open val title: String,
     val serverTimestamp: LocalDateTime = LocalDateTime.now(),
     @Volatile
     var read: Boolean = false,

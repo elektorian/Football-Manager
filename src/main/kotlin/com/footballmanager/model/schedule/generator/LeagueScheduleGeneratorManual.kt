@@ -1,30 +1,31 @@
 package com.footballmanager.model.schedule.generator
 
+import com.footballmanager.model.match.MatchService
 import com.footballmanager.model.match.entity.Match
-import com.footballmanager.model.match.repository.MatchRepository
+import com.footballmanager.model.schedule.RoundService
+import com.footballmanager.model.schedule.ScheduleService
 import com.footballmanager.model.schedule.entity.Round
 import com.footballmanager.model.schedule.entity.Schedule
-import com.footballmanager.model.schedule.repository.RoundRepository
-import com.footballmanager.model.schedule.repository.ScheduleRepository
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
-import java.util.LinkedList
-import java.util.UUID
+import java.util.*
 
 @Service
 @Primary
 class LeagueScheduleGeneratorManual(
-    private val scheduleRepository: ScheduleRepository,
-    private val roundRepository: RoundRepository,
-    private val matchRepository: MatchRepository,
+    private val scheduleService: ScheduleService,
+    private val roundService: RoundService,
+    private val matchService: MatchService,
 ) : LeagueScheduleGenerator {
     override fun generateLeagueSchedule(
+        clubs: List<UUID>,
+        seasonId: UUID,
         year: Int,
-        clubs: List<UUID>
     ): Schedule {
+        val scheduleId = UUID.randomUUID()
         val roundsTotal = (clubs.size - 1) * 2
         val matchesDates = LinkedList(getMatchesDates(year, roundsTotal).flatMap { d -> (1..clubs.size / 4).map { d } })
 
@@ -38,6 +39,7 @@ class LeagueScheduleGeneratorManual(
             } else {
                 clubsShuffled.indices.toList().takeLast(clubsShuffled.size / 2)
             }
+            val roundId = UUID.randomUUID()
             val matchesPerRound = mutableListOf<Match>()
             for (homeTeamIndex in homeTeams) {
                 val teamMatches = clubsMatches[homeTeamIndex]
@@ -46,29 +48,29 @@ class LeagueScheduleGeneratorManual(
                 if (awayTeamIndex == homeTeamIndex) awayTeamIndex = teamMatches.poll()
                 if (awayTeamIndex == null) continue
                 val awayTeam = clubsShuffled[awayTeamIndex]
-                val match = Match(
+                val match = matchService.create(
                     homeTeam = homeTeam,
                     awayTeam = awayTeam,
                     id = UUID.randomUUID(),
-                    date = matchesDates.poll()
+                    date = matchesDates.poll(),
+                    round = roundId,
                 )
-                matchRepository.addMatch(match)
                 matchesPerRound.add(match)
             }
-            val round = Round(
-                id = UUID.randomUUID(),
+            val round = roundService.createRound(
+                id = roundId,
                 stage = roundNumber,
                 matches = matchesPerRound.map { it.id },
+                schedule = scheduleId,
             )
-            roundRepository.add(round)
             rounds.add(round)
         }
 
-        val schedule = Schedule(
-            id = UUID.randomUUID(),
+        val schedule = scheduleService.createSchedule(
+            id = scheduleId,
             rounds = rounds.map { it.id },
+            season = seasonId,
         )
-        scheduleRepository.createSchedule(schedule)
         return schedule
     }
 

@@ -14,11 +14,13 @@ class RoundService(
         id: UUID,
         stage: Int,
         matches: List<UUID>,
+        schedule: UUID,
     ): Round {
         val round = Round(
             id = id,
             stage = stage,
             matches = matches,
+            schedule = schedule,
         )
         roundRepository.add(round)
         return round

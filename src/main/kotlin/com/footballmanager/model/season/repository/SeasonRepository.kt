@@ -14,4 +14,8 @@ class SeasonRepository {
     fun addSeason(season: Season) {
         seasons[season.id] = season
     }
+
+    fun get(id: UUID): Season {
+        return seasons[id]!!
+    }
 }

@@ -97,6 +97,7 @@ class FirstSeasonDataGenerator(
         val season = seasonService.createSeason(
             year = 2019,
             clubs = clubs.map { it.id },
+            tournament = tournament.id,
         )
         tournament.seasons.add(season.id)
         return season
