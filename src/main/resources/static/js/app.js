@@ -96,8 +96,9 @@ const App = {
 
         const itemsHtml = messages.map(msg => {
             const typeName = msg.type ? msg.type.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase()) : 'Unknown';
+            const isRead = msg.read === true ? 'read' : '';
             return `
-                <div class="message-item" data-id="${msg.id}">
+                <div class="message-item ${isRead}" data-id="${msg.id}">
                     <span class="message-type">${typeName}</span>
                 </div>
             `;

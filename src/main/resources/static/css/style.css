@@ -277,6 +277,11 @@ body {
     font-weight: bold;
 }
 
+.message-item.read {
+    background-color: #e0e0e0;
+    color: #666666;
+}
+
 .message-type {
     font-size: 14px;
     color: #333333;
@@ -313,7 +318,7 @@ body {
 
 .match-row {
     display: grid;
-    grid-template-columns: 80px 1fr 60px 1fr;
+    grid-template-columns: 80px 1fr auto 1fr;
     align-items: center;
     padding: 10px 12px;
     border-bottom: 1px solid #eeeeee;
@@ -337,7 +342,21 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding-right: 8px;
+    padding-right: 16px;
+}
+
+.match-score {
+    grid-column: 3;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    min-width: 60px;
+}
+
+.match-teams:last-child {
+    text-align: left;
+    padding-left: 16px;
+    margin-left: 0;
 }
 
 .match-teams:first-child {
