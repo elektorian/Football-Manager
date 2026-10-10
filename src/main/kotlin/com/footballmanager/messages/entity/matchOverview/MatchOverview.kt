@@ -7,7 +7,7 @@ data class MatchOverview(
     val matchId: UUID,
     val homeTeamName: String,
     val awayTeamName: String,
-    val homeTeamScore : Int,
-    val awayTeamScore : Int,
+    val homeTeamScore : Int?,
+    val awayTeamScore : Int?,
     val date: LocalDate,
 )

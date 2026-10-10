@@ -13,6 +13,7 @@ class MessageProducer(
     private val clubRepository: ClubRepository,
 ) {
     fun registerMessageOverviewMessage(matches: List<Match>) {
+        if (matches.isEmpty()) return
         val matchOverviews = matches.map {
             val homeClub = clubRepository.getClub(it.homeTeam)
             val awayClub = clubRepository.getClub(it.awayTeam)
@@ -21,8 +22,8 @@ class MessageProducer(
                 homeTeamName = homeClub.name,
                 awayTeamName = awayClub.name,
                 date = it.date,
-                homeTeamScore = it.result!!.homeTeamResult.scored,
-                awayTeamScore = it.result!!.awayTeamResult.scored,
+                homeTeamScore = it.result?.homeTeamResult?.scored,
+                awayTeamScore = it.result?.awayTeamResult?.scored,
             )
         }
         val matchOverview = MatchOverviewMessage(
