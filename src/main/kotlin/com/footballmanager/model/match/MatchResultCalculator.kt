@@ -23,6 +23,7 @@ class MatchResultCalculator {
             homeTeamResult = homeTeamResult,
             awayTeamResult = awayTeamResult,
         )
+        match.result = matchResult
         return matchResult
     }
 }
