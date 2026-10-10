@@ -17,8 +17,16 @@ class AdvanceProcessor(
     private val messageService: MessageService,
 ) {
     fun advance(): LocalDateTime {
-        if (messageService.hasUnread()) return timeContext.getTimestamp()
+        while (!messageService.hasUnread()) {
+            advanceInner()
+            if (timeContext.isHour(TimePosition.MORNING)) {
+                break
+            }
+        }
+        return timeContext.getTimestamp()
+    }
 
+    private fun advanceInner() {
         val time = TimePosition.findByHour(timeContext.getTimestamp().hour)
         when (time) {
             TimePosition.MORNING -> processMorning()
@@ -27,7 +35,6 @@ class AdvanceProcessor(
             TimePosition.EVENING -> processEvening()
             else -> throw IllegalStateException("Unknown time position")
         }
-        return timeContext.getTimestamp()
     }
 
     private fun processMorning() {

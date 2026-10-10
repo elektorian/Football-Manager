@@ -1,5 +1,6 @@
 package com.footballmanager.time
 
+import com.footballmanager.time.enumeration.TimePosition
 import jakarta.annotation.PostConstruct
 import org.springframework.stereotype.Component
 import java.time.LocalDate
@@ -22,4 +23,8 @@ class TimeContext {
     }
 
     fun getDate(): LocalDate = timestamp.toLocalDate()
+
+    fun isHour(timePosition: TimePosition): Boolean {
+        return timePosition.hour == timestamp.hour
+    }
 }
