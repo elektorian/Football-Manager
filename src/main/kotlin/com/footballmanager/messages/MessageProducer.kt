@@ -16,6 +16,7 @@ class MessageProducer(
     private val timeContext: TimeContext,
     private val commonRepository: CommonRepository,
 ) {
+    private val titleTemplate = "Обзор матчей "
     fun registerMessageOverviewMessage(matches: List<Match>) {
         if (matches.isEmpty()) return
         val tournaments = matches.map { commonRepository.getTournamentByMatch(it.id) }
@@ -40,7 +41,7 @@ class MessageProducer(
             type = MessageType.MATCHES_OVERVIEW,
             timestamp = timeContext.getTimestamp(),
             matches = matchOverviews,
-            title = tournament.name,
+            title = titleTemplate + tournament.name,
         )
         messageService.register(matchOverview)
     }

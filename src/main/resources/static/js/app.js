@@ -97,11 +97,14 @@ const App = {
         const sorted = [...messages].sort((a, b) => new Date(b.serverTimestamp || 0) - new Date(a.serverTimestamp || 0));
 
         const itemsHtml = sorted.map(msg => {
-            const typeName = msg.type ? msg.type.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase()) : 'Unknown';
             const isRead = msg.read === true ? 'read' : '';
+            const title = msg.title || msg.subject || 'No title';
+            const ts = msg.serverTimestamp || msg.timestamp || '';
+            const formattedTs = ts ? ts.substring(0, 16).replace('T', ' ') : '';
             return `
                 <div class="message-item ${isRead}" data-id="${msg.id}">
-                    <span class="message-type">${typeName}</span>
+                    <div class="message-title">${title}</div>
+                    <div class="message-time">${formattedTs}</div>
                 </div>
             `;
         }).join('');

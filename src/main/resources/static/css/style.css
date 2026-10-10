@@ -282,9 +282,15 @@ body {
     color: #666666;
 }
 
-.message-type {
+.message-title {
     font-size: 14px;
     color: #333333;
+    margin-bottom: 4px;
+}
+
+.message-time {
+    font-size: 11px;
+    color: #999999;
 }
 
 .incoming-match-overview {
