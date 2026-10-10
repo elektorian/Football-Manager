@@ -8,4 +8,6 @@ data class Match(
     val date: LocalDate,
     val homeTeam: UUID,
     val awayTeam: UUID,
+    @Volatile
+    var result: MatchResult? = null,
 )

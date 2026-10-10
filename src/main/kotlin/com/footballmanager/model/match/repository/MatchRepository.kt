@@ -1,8 +1,8 @@
 package com.footballmanager.model.match.repository
 
-import com.footballmanager.model.club.entity.Club
 import com.footballmanager.model.match.entity.Match
 import org.springframework.stereotype.Repository
+import java.time.LocalDate
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
@@ -12,5 +12,9 @@ class MatchRepository {
 
     fun addMatch(match: Match) {
         matches[match.id] = match
+    }
+
+    fun getTodayMatches(): List<Match> {
+        return matches.values.filter { it.date == LocalDate.now() }
     }
 }
