@@ -44,22 +44,22 @@ class AdvanceProcessor(
     }
 
     private fun processPreMatch() {
+        val todayMatches = matchRepository.getMatches(timeContext.getDate())
+        messageProducer.registerMessageOverviewMessage(todayMatches)
+
         val current = timeContext.getTimestamp()
         val next = current.withHour(TimePosition.POST_MATCH.hour)
         timeContext.setCurrentTime(next)
-
-        val todayMatches = matchRepository.getMatches(timeContext.getDate())
-        messageProducer.registerMessageOverviewMessage(todayMatches)
     }
 
     private fun processPostMatch() {
-        val current = timeContext.getTimestamp()
-        val next = current.withHour(TimePosition.EVENING.hour)
-        timeContext.setCurrentTime(next)
-
         val todayMatches = matchRepository.getMatches(timeContext.getDate())
         todayMatches.forEach { matchResultCalculator.calculate(it) }
         messageProducer.registerMessageOverviewMessage(todayMatches)
+
+        val current = timeContext.getTimestamp()
+        val next = current.withHour(TimePosition.EVENING.hour)
+        timeContext.setCurrentTime(next)
     }
 
     private fun processEvening() {
