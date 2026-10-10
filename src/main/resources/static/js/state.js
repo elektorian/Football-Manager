@@ -26,7 +26,7 @@ function loadState() {
             const parsed = JSON.parse(saved);
             AppState.page = parsed.page || 'main';
             AppState.panel = parsed.panel || 'incoming';
-            AppState.settings = parsed.settings || null;
+            AppState.settings = parsed.settings ?? null;
             return true;
         }
     } catch (error) {

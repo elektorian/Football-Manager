@@ -1,6 +1,5 @@
 const Router = {
     init() {
-        this.handleHashChange();
         window.addEventListener('hashchange', () => this.handleHashChange());
     },
 
@@ -27,14 +26,22 @@ const Router = {
     handleHashChange() {
         const { page, panel } = this.parseHash();
         setState(page, panel);
-        this.loadPage(page, panel);
+        this.loadPage(page, panel).then(() => {
+            if (page === 'incoming' && panel === 'incoming' && App.loadMessages) {
+                App.loadMessages();
+            }
+        });
     },
 
     async loadPage(page, panel) {
         try {
+            console.log(`[Router] loadPage called: page=${page}, panel=${panel}`);
             const content = await this.fetchContent(page, panel);
+            console.log(`[Router] content received, length=${content.length}`);
             this.renderContent(page, panel, content);
+            console.log('[Router] renderContent done');
         } catch (error) {
+            console.error('[Router] loadPage error:', error);
             this.showError(error.message);
         }
     },
@@ -49,8 +56,10 @@ const Router = {
         const title = document.getElementById('panel-title');
         const contentDiv = document.getElementById('panel-content');
         
+        console.log('[Router] DOM elements - title:', !!title, 'contentDiv:', !!contentDiv);
         title.textContent = page.charAt(0).toUpperCase() + page.slice(1);
         contentDiv.innerHTML = content;
+        console.log('[Router] Content rendered. panel-content now has', contentDiv.children.length, 'children');
     },
 
     showError(message) {
@@ -65,4 +74,4 @@ const Router = {
     }
 };
 
-Router.init();
+window.Router = Router;
