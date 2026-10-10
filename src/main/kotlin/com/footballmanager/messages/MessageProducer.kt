@@ -4,6 +4,7 @@ import com.footballmanager.messages.entity.matchOverview.MatchOverview
 import com.footballmanager.messages.entity.matchOverview.MatchOverviewMessage
 import com.footballmanager.model.club.repository.ClubRepository
 import com.footballmanager.model.match.entity.Match
+import com.footballmanager.time.TimeContext
 import org.springframework.stereotype.Component
 import java.util.UUID
 
@@ -11,6 +12,7 @@ import java.util.UUID
 class MessageProducer(
     private val messageService: MessageService,
     private val clubRepository: ClubRepository,
+    private val timeContext: TimeContext,
 ) {
     fun registerMessageOverviewMessage(matches: List<Match>) {
         if (matches.isEmpty()) return
@@ -29,6 +31,7 @@ class MessageProducer(
         val matchOverview = MatchOverviewMessage(
             id = UUID.randomUUID(),
             type = MessageType.MATCHES_OVERVIEW,
+            timestamp = timeContext.getTimestamp(),
             matches = matchOverviews,
         )
         messageService.register(matchOverview)
