@@ -42,6 +42,10 @@ const AdvanceWidget = {
             const time = data.time;
 
             DateDisplay.update(this.dateDisplayContainer, time);
+            Router.updateHash('incoming', 'incoming');
+            if (App.loadMessages) {
+                App.loadMessages();
+            }
 
         } catch (error) {
             console.error('AdvanceWidget fetch error:', error);
