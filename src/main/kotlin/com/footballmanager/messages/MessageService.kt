@@ -23,9 +23,11 @@ class MessageService {
     }
 
     @Synchronized
-    fun read(id: UUID) {
+    fun <T: Message> read(id: UUID): T {
         val message = queue.find { it.id == id }!!
         message.read = true
+        @Suppress("UNCHECKED_CAST")
+        return message as T
     }
 
     @Synchronized
