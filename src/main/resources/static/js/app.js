@@ -94,12 +94,12 @@ const App = {
             return;
         }
 
-        const sorted = [...messages].sort((a, b) => new Date(b.serverTimestamp || 0) - new Date(a.serverTimestamp || 0));
+        const sorted = [...messages].sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
 
         const itemsHtml = sorted.map(msg => {
             const isRead = msg.read === true ? 'read' : '';
             const title = msg.title || msg.subject || 'No title';
-            const ts = msg.serverTimestamp || msg.timestamp || '';
+            const ts = msg.timestamp || '';
             const formattedTs = ts ? ts.substring(0, 16).replace('T', ' ') : '';
             return `
                 <div class="message-item ${isRead}" data-id="${msg.id}">
