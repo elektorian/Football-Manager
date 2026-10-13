@@ -11,4 +11,6 @@ data class Match(
     val round: UUID,
     @Volatile
     var result: MatchResult? = null,
-)
+) {
+    fun isParticipant(teamId: UUID) = homeTeam == teamId || awayTeam == teamId
+}

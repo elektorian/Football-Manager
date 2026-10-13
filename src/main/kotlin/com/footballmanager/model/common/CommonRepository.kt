@@ -3,6 +3,7 @@ package com.footballmanager.model.common
 import com.footballmanager.model.match.repository.MatchRepository
 import com.footballmanager.model.schedule.repository.RoundRepository
 import com.footballmanager.model.schedule.repository.ScheduleRepository
+import com.footballmanager.model.season.entity.Season
 import com.footballmanager.model.season.repository.SeasonRepository
 import com.footballmanager.model.tournament.entity.Tournament
 import com.footballmanager.model.tournament.repository.TournamentRepository
@@ -23,5 +24,14 @@ class CommonRepository(
         val schedule = scheduleRepository.get(round.schedule)
         val season = seasonRepository.get(schedule.season)
         return tournamentRepository.get(season.tournament)
+    }
+
+    fun getSeasonByLeague(
+        league: UUID,
+        year: Int,
+    ): Season {
+        val league = tournamentRepository.get(league)
+        val seasons = league.seasons.map { seasonRepository.get(it) }
+        return seasons.first { it.year == year }
     }
 }
