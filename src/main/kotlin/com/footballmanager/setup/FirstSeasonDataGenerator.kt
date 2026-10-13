@@ -35,7 +35,7 @@ class FirstSeasonDataGenerator(
 
     private fun createLeague(): Tournament {
         val tournament = tournamentService.createTournament(
-            id = UUID.randomUUID(),
+            id = UUID.fromString("de124c17-15e1-4e72-80a9-c4fb22d8b5f9"),
             name = "Russian Premier League",
             size = 16,
         )
