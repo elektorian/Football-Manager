@@ -58,7 +58,7 @@ class FirstSeasonDataGenerator(
         val lokomotive = createClub("Lokomotiv Moscow")
         val kryljaSovetov = createClub("Krylja Sovetov")
         val cska = createClub("CSKA")
-        val khimki = createClub("Khimki")
+        val khimki = createClub("Orenburg")
         return listOf(
             zenit,
             spartak,
