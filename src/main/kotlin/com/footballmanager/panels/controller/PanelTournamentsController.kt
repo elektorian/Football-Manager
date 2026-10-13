@@ -1,6 +1,6 @@
 package com.footballmanager.panels.controller
 
-import com.footballmanager.tournaments.TournamentService
+import com.footballmanager.tournaments.LeagueTableCalculator
 import com.footballmanager.tournaments.model.LeagueInfo
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -12,14 +12,14 @@ import java.util.UUID
 @RestController
 @RequestMapping("/panels/tournaments")
 class PanelTournamentsController(
-    private val tournamentService: TournamentService,
+    private val leagueTableCalculator: LeagueTableCalculator,
 ) {
     @GetMapping("/leaugue/{id}")
     fun league(
         @PathVariable id: UUID,
         @RequestParam year: Int? = null,
     ): LeagueInfo {
-        return tournamentService.getLeagueInfo(
+        return leagueTableCalculator.getLeagueInfo(
             year = year,
             leagueId = id,
         )

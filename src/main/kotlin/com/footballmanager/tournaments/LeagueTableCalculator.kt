@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 import java.util.UUID
 
 @Service
-class TournamentService(
+class LeagueTableCalculator(
     private val tournamentRepository: TournamentRepository,
     private val commonRepository: CommonRepository,
     private val clubRepository: ClubRepository,
@@ -60,7 +60,6 @@ class TournamentService(
         return LeagueInfo(
             leagueId = leagueId,
             name = league.name,
-            year = year,
             teams = teams,
         )
     }
