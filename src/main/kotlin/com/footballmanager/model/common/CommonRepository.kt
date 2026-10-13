@@ -28,10 +28,11 @@ class CommonRepository(
 
     fun getSeasonByLeague(
         league: UUID,
-        year: Int,
+        year: Int? = null,
     ): Season {
         val league = tournamentRepository.get(league)
         val seasons = league.seasons.map { seasonRepository.get(it) }
+        if (year == null) return seasons.last()
         return seasons.first { it.year == year }
     }
 }

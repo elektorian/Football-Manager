@@ -17,7 +17,7 @@ class PanelTournamentsController(
     @GetMapping("/leaugue/{id}")
     fun league(
         @PathVariable id: UUID,
-        @RequestParam year: Int,
+        @RequestParam year: Int? = null,
     ): LeagueInfo {
         return tournamentService.getLeagueInfo(
             year = year,

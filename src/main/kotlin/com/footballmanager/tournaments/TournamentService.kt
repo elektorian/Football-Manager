@@ -22,7 +22,7 @@ class TournamentService(
 ) {
     fun getLeagueInfo(
         leagueId: UUID,
-        year: Int,
+        year: Int? = null,
     ): LeagueInfo {
         val league = tournamentRepository.get(leagueId)
         val season = commonRepository.getSeasonByLeague(leagueId, year)
