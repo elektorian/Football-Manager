@@ -395,3 +395,88 @@ body {
 .score-away {
     padding-left: 2px;
 }
+
+/* League table */
+.league-title {
+    color: #cc0000;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #cccccc;
+}
+
+.league-table-container {
+    width: 100%;
+    height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.league-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.league-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.league-table th {
+    background-color: #f5f5f5;
+    padding: 10px 12px;
+    text-align: center;
+    font-weight: bold;
+    color: #333333;
+    border-bottom: 2px solid #cccccc;
+    white-space: nowrap;
+    user-select: none;
+}
+
+.league-table th.sortable-header {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.league-table th.sortable-header:hover {
+    background-color: #e8e8e8;
+}
+
+.league-table th.sort-asc::after {
+    content: ' \25B2';
+    font-size: 11px;
+    color: #0066cc;
+}
+
+.league-table th.sort-desc::after {
+    content: ' \25BC';
+    font-size: 11px;
+    color: #0066cc;
+}
+
+.league-table td {
+    padding: 10px 12px;
+    text-align: center;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.league-table tbody tr:hover {
+    background-color: #f0f8ff;
+}
+
+.league-table .team-name {
+    text-align: left;
+    font-weight: bold;
+    padding-left: 16px;
+}
+
+.league-table .points-cell {
+    font-weight: bold;
+    color: #cc0000;
+}
+
+.league-table tbody tr:last-child td {
+    border-bottom: none;
+}

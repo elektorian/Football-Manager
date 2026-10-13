@@ -47,9 +47,26 @@ const Router = {
     },
 
     async fetchContent(page, panel) {
-        // Get content from page data
+        if (page === 'tournaments') {
+            return await this.fetchTournamentsContent();
+        }
         const pageData = App.getPageContent(page, panel);
         return pageData.content;
+    },
+
+    async fetchTournamentsContent() {
+        const leagueId = 'de124c17-15e1-4e72-80a9-c4fb22d8b5f9';
+        try {
+            const res = await fetch(`/panels/tournaments/league/${leagueId}`);
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status}`);
+            }
+            const data = await res.json();
+            return LeagueTable.render(data);
+        } catch (error) {
+            console.error('[Router] fetchTournamentsContent error:', error);
+            return `<div class="error-message">Failed to load league table: ${this.escapeHtml(error.message)}</div>`;
+        }
     },
 
     renderContent(page, panel, content) {

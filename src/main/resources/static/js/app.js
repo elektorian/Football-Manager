@@ -182,4 +182,5 @@ const App = {
 
 Router.init();
 PanelManager.init();
+LeagueTable.init();
 App.init();
