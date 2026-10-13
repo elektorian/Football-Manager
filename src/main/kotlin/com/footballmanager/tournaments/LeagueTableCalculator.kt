@@ -51,12 +51,13 @@ class LeagueTableCalculator(
             )
         }
         teams = teams.sortedWith(
-            compareBy<LeagueTeamInfo> { it.points }
-                .thenBy { it.diff }
-                .thenBy { it.scored }
-                .thenBy { it.wins }
+            compareByDescending <LeagueTeamInfo> { it.points }
+                .thenByDescending { it.diff }
+                .thenByDescending { it.scored }
+                .thenByDescending { it.wins }
                 .thenBy { it.name }
         )
+        teams = teams.mapIndexed { i, team -> team.copy(position = i + 1) }
         return LeagueInfo(
             leagueId = leagueId,
             name = league.name,
