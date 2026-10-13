@@ -14,7 +14,6 @@ import java.time.temporal.TemporalAdjusters
 import java.util.*
 
 @Service
-@Primary
 class LeagueScheduleGeneratorManual(
     private val scheduleService: ScheduleService,
     private val roundService: RoundService,
