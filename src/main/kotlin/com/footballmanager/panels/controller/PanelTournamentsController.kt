@@ -14,7 +14,7 @@ import java.util.UUID
 class PanelTournamentsController(
     private val leagueTableCalculator: LeagueTableCalculator,
 ) {
-    @GetMapping("/leaugue/{id}")
+    @GetMapping("/league/{id}")
     fun league(
         @PathVariable id: UUID,
         @RequestParam year: Int? = null,
